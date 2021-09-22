@@ -1,0 +1,2698 @@
+/* eslint-disable */
+// *******************************************************
+// *******************************************************
+//
+// GENERATED FILE, DO NOT MODIFY
+//
+// Made by Victor Garcia ®
+//
+// https://github.com/victorgarciaesgi
+// *******************************************************
+// *******************************************************
+// 💙
+
+export type Maybe<T> = T | null;
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+  cover: Maybe<Picture>;
+  username: string;
+  address: Maybe<string>;
+  phone: string;
+  roles: Roles;
+  metadata: Maybe<UserMetadata>;
+  balance: Maybe<number>;
+  access: Maybe<string[]>;
+  is_admin: boolean;
+  province: Province;
+  city: City;
+  district: District;
+  school: Maybe<School>;
+  participantchatrooms: Chatroom[];
+  classrooms: Classroom[];
+  examsupervising: Exam[];
+  subjects: Subject[];
+  acceses: Access[];
+  schools: School[];
+  followers: User[];
+  reqfollowers: User[];
+  followings: User[];
+  reqfollowings: User[];
+  absents: Maybe<AbsentConnection>;
+  absentreceivers: Maybe<AbsentConnection>;
+  agendas: Maybe<AgendaConnection>;
+  assigments: Maybe<AssigmentConnection>;
+  assigmentsubmissions: Maybe<AssigmentsubmissionConnection>;
+  attendances: Maybe<AttendanceConnection>;
+  audios: Maybe<AudioConnection>;
+  videos: Maybe<VideoConnection>;
+  pictures: Maybe<PictureConnection>;
+  chats: Maybe<ChatConnection>;
+  chatrooms: Maybe<ChatroomConnection>;
+  mychatrooms: Maybe<ChatroomConnection>;
+  myclassrooms: Maybe<ClassroomConnection>;
+  consultants: Maybe<ConsultationConnection>;
+  courses: Maybe<CourseConnection>;
+  exams: Maybe<ExamConnection>;
+  examplays: Maybe<ExamplayConnection>;
+  formsubmissions: Maybe<FormsubmissionConnection>;
+  questions: Maybe<QuestionConnection>;
+  Packagequestions: Maybe<PackagequestionConnection>;
+  quizzez: Maybe<QuizConnection>;
+  quizplays: Maybe<QuizplayConnection>;
+  myreports: Maybe<ReportConnection>;
+  reports: Maybe<ReportConnection>;
+  mytransactions: Maybe<TransactionConnection>;
+  transactions: Maybe<TransactionConnection>;
+  mytutorings: Maybe<TutoringConnection>;
+  tutorings: Maybe<TutoringConnection>;
+  childrens: Maybe<UserConnection>;
+  withdraws: Maybe<WithdrawConnection>;
+}
+
+export interface Picture {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  roles: string;
+  path: string;
+  pictureable: Maybe<Pictureable>;
+  pictureable_id: string;
+  pictureable_type: Maybe<string>;
+  metadata: PictureMetadata;
+}
+
+export type Pictureable =
+  | Question
+  | User
+  | Course
+  | Formsubmission
+  | Meeting
+  | School
+  | Assigmentsubmission
+  | Assigment
+  | Video;
+export interface Question {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  subject: Subject;
+  classtype: Classtype;
+  metadata: QuestionMetadata;
+  visibility: Visibility;
+  pictures: Maybe<Picture[]>;
+  audios: Maybe<Audio[]>;
+  videos: Maybe<Video[]>;
+  documents: Maybe<Document[]>;
+  exams: Exam[];
+  quizzez: Quiz[];
+}
+
+export interface Subject {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  abbreviation: Maybe<string>;
+  description: Maybe<string>;
+  type: SubjectType;
+  quizzez: Maybe<QuizConnection>;
+  questions: Maybe<QuestionConnection>;
+  Packagequestions: Maybe<PackagequestionConnection>;
+  assigments: Maybe<AssigmentConnection>;
+}
+
+export enum SubjectType {
+  General = 'GENERAL',
+  Vocational = 'VOCATIONAL',
+  Local_content = 'LOCAL_CONTENT',
+  Special_development = 'SPECIAL_DEVELOPMENT',
+}
+
+/** A paginated list of Quiz edges. */
+export interface QuizConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Quiz edges.*/
+  edges: QuizEdge[];
+}
+
+/** Information about pagination using a Relay style cursor connection. */
+export interface PageInfo {
+  /** When paginating forwards, are there more items?*/
+  hasNextPage: boolean;
+  /** When paginating backwards, are there more items?*/
+  hasPreviousPage: boolean;
+  /** The cursor to continue paginating backwards.*/
+  startCursor: Maybe<string>;
+  /** The cursor to continue paginating forwards.*/
+  endCursor: Maybe<string>;
+  /** Total number of nodes in the paginated connection.*/
+  total: number;
+  /** Number of nodes in the current page.*/
+  count: number;
+  /** Index of the current page.*/
+  currentPage: number;
+  /** Index of the last available page.*/
+  lastPage: number;
+}
+
+/** An edge that contains a node of type Quiz and a cursor. */
+export interface QuizEdge {
+  /** The Quiz node.*/
+  node: Quiz;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Quiz {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  user: User;
+  classtype: Classtype;
+  subject: Subject;
+  metadata: QuizMetadata;
+  played_count: number;
+  is_rewarded: boolean;
+  difficulty: QuizDifficulty;
+  visibility: Visibility;
+  cover: Maybe<Picture>;
+  transaction: Maybe<Transaction>;
+  questions: Question[];
+  quizplays: Maybe<QuizplayConnection>;
+}
+
+export interface Classtype {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  level: number;
+  classrooms: Maybe<ClassroomConnection>;
+  exams: Maybe<ExamConnection>;
+  Packagequestions: Maybe<PackagequestionConnection>;
+  questions: Maybe<QuestionConnection>;
+}
+
+/** A paginated list of Classroom edges. */
+export interface ClassroomConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Classroom edges.*/
+  edges: ClassroomEdge[];
+}
+
+/** An edge that contains a node of type Classroom and a cursor. */
+export interface ClassroomEdge {
+  /** The Classroom node.*/
+  node: Classroom;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Classroom {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  user: User;
+  classtype: Classtype;
+  school: School;
+  students: User[];
+  assigments: Maybe<AssigmentConnection>;
+  meetings: Maybe<MeetingConnection>;
+  exams: Maybe<ExamConnection>;
+}
+
+export interface School {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  cover: Maybe<Picture>;
+  logo: Maybe<Picture>;
+  name: string;
+  npsn: string;
+  province: Province;
+  city: City;
+  district: District;
+  metadata: Maybe<SchoolMetadata>;
+  majors: Major[];
+  extracurriculars: Extracurricular[];
+  teachers: User[];
+  homerooms: User[];
+  administrators: User[];
+  counselors: User[];
+  headmaster: Maybe<User>;
+  classrooms: Maybe<ClassroomConnection>;
+  submissions: Maybe<SubmissionConnection>;
+  students: Maybe<UserConnection>;
+}
+
+export interface Province {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  cities: Maybe<CityConnection>;
+  schools: Maybe<SchoolConnection>;
+  users: Maybe<UserConnection>;
+}
+
+/** A paginated list of City edges. */
+export interface CityConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of City edges.*/
+  edges: CityEdge[];
+}
+
+/** An edge that contains a node of type City and a cursor. */
+export interface CityEdge {
+  /** The City node.*/
+  node: City;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface City {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  province: Province;
+  districts: Maybe<DistrictConnection>;
+  users: Maybe<UserConnection>;
+}
+
+/** A paginated list of District edges. */
+export interface DistrictConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of District edges.*/
+  edges: DistrictEdge[];
+}
+
+/** An edge that contains a node of type District and a cursor. */
+export interface DistrictEdge {
+  /** The District node.*/
+  node: District;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface District {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  city: City;
+  users: Maybe<UserConnection>;
+  schools: Maybe<SchoolConnection>;
+}
+
+/** A paginated list of User edges. */
+export interface UserConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of User edges.*/
+  edges: UserEdge[];
+}
+
+/** An edge that contains a node of type User and a cursor. */
+export interface UserEdge {
+  /** The User node.*/
+  node: User;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of School edges. */
+export interface SchoolConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of School edges.*/
+  edges: SchoolEdge[];
+}
+
+/** An edge that contains a node of type School and a cursor. */
+export interface SchoolEdge {
+  /** The School node.*/
+  node: School;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface SchoolMetadata {
+  description: Maybe<string>;
+}
+
+export interface Major {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  abbreviation: Maybe<string>;
+  description: Maybe<string>;
+  type: Maybe<string>;
+  schools: School[];
+}
+
+export interface Extracurricular {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  abbreviation: Maybe<string>;
+  description: Maybe<string>;
+  type: Maybe<string>;
+  schools: School[];
+}
+
+/** A paginated list of Submission edges. */
+export interface SubmissionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Submission edges.*/
+  edges: SubmissionEdge[];
+}
+
+/** An edge that contains a node of type Submission and a cursor. */
+export interface SubmissionEdge {
+  /** The Submission node.*/
+  node: Submission;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Submission {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  school: Maybe<School>;
+  max_submission: number;
+  is_paid: boolean;
+  price: number;
+  open_at: string;
+  close_at: string;
+}
+
+/** A paginated list of Assigment edges. */
+export interface AssigmentConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Assigment edges.*/
+  edges: AssigmentEdge[];
+}
+
+/** An edge that contains a node of type Assigment and a cursor. */
+export interface AssigmentEdge {
+  /** The Assigment node.*/
+  node: Assigment;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Assigment {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  user: User;
+  classroom: Classroom;
+  subject: Subject;
+  metadata: AssigmentMetadata;
+  close_at: string;
+  is_odd_semester: boolean;
+  assigmentsubmissions: Maybe<AssigmentsubmissionConnection>;
+}
+
+export interface AssigmentMetadata {
+  description: string;
+}
+
+/** A paginated list of Assigmentsubmission edges. */
+export interface AssigmentsubmissionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Assigmentsubmission edges.*/
+  edges: AssigmentsubmissionEdge[];
+}
+
+/** An edge that contains a node of type Assigmentsubmission and a cursor. */
+export interface AssigmentsubmissionEdge {
+  /** The Assigmentsubmission node.*/
+  node: Assigmentsubmission;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Assigmentsubmission {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  assigment: Assigment;
+  grade: number;
+  graded: boolean;
+  edited_times: number;
+  turned_at: string;
+  pictures: Maybe<Picture[]>;
+  audios: Maybe<Audio[]>;
+  videos: Maybe<Video[]>;
+  documents: Maybe<Document[]>;
+}
+
+export interface Audio {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  roles: string;
+  path: string;
+  audioable: Maybe<Audioable>;
+  audioable_id: string;
+  audioable_type: Maybe<string>;
+  metadata: AudioMetadata;
+}
+
+export type Audioable = Question | Meeting | Assigmentsubmission | Assigment | Formsubmission;
+export interface Meeting {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  metadata: MeetingMetadata;
+  classroom: Classroom;
+  finish_at: string;
+  pictures: Maybe<Picture[]>;
+  audios: Maybe<Audio[]>;
+  videos: Maybe<Video[]>;
+  documents: Maybe<Document[]>;
+  chatrooms: Maybe<Chatroom[]>;
+}
+
+export interface MeetingMetadata {
+  attachment_id: Maybe<string>;
+  attachment_type: Maybe<string>;
+  description: string;
+  media: Maybe<MeetingMedia>;
+  content_type: Maybe<MeetingContentType>;
+  content: Maybe<string>;
+}
+
+export enum MeetingMedia {
+  Youtube = 'YOUTUBE',
+  Picture = 'PICTURE',
+  Audio = 'AUDIO',
+  Video = 'VIDEO',
+  Document = 'DOCUMENT',
+}
+export enum MeetingContentType {
+  Article = 'ARTICLE',
+  Draw = 'DRAW',
+}
+export interface Video {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  roles: string;
+  path: string;
+  videoable: Maybe<Videoable>;
+  videoable_id: string;
+  videoable_type: Maybe<string>;
+  metadata: VideoMetadata;
+  cover: Maybe<Picture>;
+}
+
+export type Videoable =
+  | Question
+  | Course
+  | Meeting
+  | Assigmentsubmission
+  | Assigment
+  | Formsubmission;
+export interface Course {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  views: number;
+  access: string[];
+  user: User;
+  metadata: CourseMetadata;
+  classtype: Classtype;
+  subject: Subject;
+}
+
+export interface CourseMetadata {
+  description: string;
+}
+
+export interface Formsubmission {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  submission: Submission;
+  metadata: Maybe<FormsubmissionMetadata>;
+  pictures: Maybe<Picture[]>;
+  audios: Maybe<Audio[]>;
+  videos: Maybe<Video[]>;
+  documents: Maybe<Document[]>;
+}
+
+export interface FormsubmissionMetadata {
+  content: string;
+  type: string;
+}
+
+export interface Document {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  roles: string;
+  path: string;
+  documentable: Maybe<Documentable>;
+  documentable_id: string;
+  documentable_type: Maybe<string>;
+  metadata: DocumentMetadata;
+}
+
+export type Documentable = Question | Meeting | Assigmentsubmission | Assigment | Formsubmission;
+export interface DocumentMetadata {
+  duration: number;
+  original: number;
+  compressed: number;
+}
+
+export interface VideoMetadata {
+  course_name: Maybe<string>;
+  duration: number;
+  original: number;
+  compressed: number;
+}
+
+export interface Chatroom {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  second: User;
+  metadata: ChatroomMetadata;
+  chatroomable: Maybe<Chatroomable>;
+  chatroomable_id: Maybe<string>;
+  chatroomable_type: Maybe<string>;
+  chats: Maybe<ChatConnection>;
+}
+
+export interface ChatroomMetadata {
+  is_active: boolean;
+}
+
+export type Chatroomable = Meeting | Quizsession | Tutoring;
+export interface Quizsession {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  user: User;
+  quiz: Quiz;
+  password: Maybe<string>;
+  start_at: Maybe<string>;
+  finish_at: Maybe<string>;
+  chatroom: Chatroom;
+  quizplays: Maybe<QuizplayConnection>;
+}
+
+/** A paginated list of Quizplay edges. */
+export interface QuizplayConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Quizplay edges.*/
+  edges: QuizplayEdge[];
+}
+
+/** An edge that contains a node of type Quizplay and a cursor. */
+export interface QuizplayEdge {
+  /** The Quizplay node.*/
+  node: Quizplay;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Quizplay {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  quiz: Quiz;
+  user: User;
+  quizsession: Quizsession;
+  start_at: Maybe<string>;
+  finish_at: Maybe<string>;
+  grade: number;
+  graded: boolean;
+  answers_map: Maybe<AnswerMap[]>;
+}
+
+export interface AnswerMap {
+  grade: Maybe<number>;
+  question: Maybe<string>;
+  answer: Maybe<Answer>;
+}
+
+export interface Answer {
+  uuid: string;
+  content: Maybe<string>;
+  attachment: Maybe<string>;
+  attachment_type: Maybe<string>;
+}
+
+export interface Tutoring {
+  user: User;
+  tutor: User;
+  start_at: string;
+  finish_at: string;
+  metadata: Maybe<TutoringMetadata>;
+  rate: number;
+  is_approved: boolean;
+  status: TutoringStatus;
+  agenda: Agenda;
+  chatroom: Chatroom;
+}
+
+export interface TutoringMetadata {
+  address: string;
+  geolocation: string;
+}
+
+export enum TutoringStatus {
+  Pending = 'PENDING',
+}
+export interface Agenda {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  uuid: string;
+  agendaable: Maybe<Agendaable>;
+  agendaable_id: Maybe<string>;
+  agendaable_type: Maybe<string>;
+  metadata: AgendaMetadata;
+  start_at: string;
+  finish_at: string;
+  attendances: Maybe<AttendanceConnection>;
+}
+
+export type Agendaable = Meeting | Exam | Tutoring;
+export interface Exam {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  subject: Subject;
+  user: User;
+  examtype: Examtype;
+  classroom: Classroom;
+  classtype: Classtype;
+  metadata: Maybe<ExamMetadata>;
+  is_odd_semester: boolean;
+  agenda: Agenda;
+  supervisors: User[];
+  questions: Question[];
+  examplays: Maybe<ExamplayConnection>;
+  examsessions: Maybe<ExamsessionConnection>;
+}
+
+export interface Examtype {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  examplays: Maybe<ExamConnection>;
+}
+
+/** A paginated list of Exam edges. */
+export interface ExamConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Exam edges.*/
+  edges: ExamEdge[];
+}
+
+/** An edge that contains a node of type Exam and a cursor. */
+export interface ExamEdge {
+  /** The Exam node.*/
+  node: Exam;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface ExamMetadata {
+  description: Maybe<string>;
+  hint: Maybe<string>;
+  year_start: number;
+  year_end: number;
+  time_limit: number;
+  shuffle: boolean;
+  show_result: boolean;
+}
+
+/** A paginated list of Examplay edges. */
+export interface ExamplayConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Examplay edges.*/
+  edges: ExamplayEdge[];
+}
+
+/** An edge that contains a node of type Examplay and a cursor. */
+export interface ExamplayEdge {
+  /** The Examplay node.*/
+  node: Examplay;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Examplay {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  exam: Exam;
+  examsession: Examsession;
+  user: User;
+  last_activity: string;
+  minute_passed: number;
+  start_at: string;
+  finish_at: string;
+  grade: number;
+  graded: boolean;
+  answers_map: Maybe<AnswerMap[]>;
+}
+
+export interface Examsession {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  exam: Exam;
+  open_at: string;
+  close_at: string;
+  token: string;
+  examplays: Maybe<ExamplayConnection>;
+}
+
+/** A paginated list of Examsession edges. */
+export interface ExamsessionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Examsession edges.*/
+  edges: ExamsessionEdge[];
+}
+
+/** An edge that contains a node of type Examsession and a cursor. */
+export interface ExamsessionEdge {
+  /** The Examsession node.*/
+  node: Examsession;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface AgendaMetadata {
+  reason: Maybe<string>;
+  description: Maybe<string>;
+}
+
+/** A paginated list of Attendance edges. */
+export interface AttendanceConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Attendance edges.*/
+  edges: AttendanceEdge[];
+}
+
+/** An edge that contains a node of type Attendance and a cursor. */
+export interface AttendanceEdge {
+  /** The Attendance node.*/
+  node: Attendance;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Attendance {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  absent: Maybe<Absent>;
+  agenda: Agenda;
+  attended: boolean;
+  is_bimbel: boolean;
+  date: string;
+}
+
+export interface Absent {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  receiver: User;
+  metadata: AbsentMetadata;
+  start_at: string;
+  finish_at: string;
+}
+
+export interface AbsentMetadata {
+  reason: Maybe<string>;
+  description: Maybe<string>;
+}
+
+/** A paginated list of Chat edges. */
+export interface ChatConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Chat edges.*/
+  edges: ChatEdge[];
+}
+
+/** An edge that contains a node of type Chat and a cursor. */
+export interface ChatEdge {
+  /** The Chat node.*/
+  node: Chat;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Chat {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  chatroom: Chatroom;
+  metadata: ChatMetadata;
+}
+
+export interface ChatMetadata {
+  content: string;
+}
+
+export interface AudioMetadata {
+  original: number;
+  compressed: number;
+}
+
+/** A paginated list of Meeting edges. */
+export interface MeetingConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Meeting edges.*/
+  edges: MeetingEdge[];
+}
+
+/** An edge that contains a node of type Meeting and a cursor. */
+export interface MeetingEdge {
+  /** The Meeting node.*/
+  node: Meeting;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Packagequestion edges. */
+export interface PackagequestionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Packagequestion edges.*/
+  edges: PackagequestionEdge[];
+}
+
+/** An edge that contains a node of type Packagequestion and a cursor. */
+export interface PackagequestionEdge {
+  /** The Packagequestion node.*/
+  node: Packagequestion;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Packagequestion {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  subject: Subject;
+  classtype: Classtype;
+  metadata: PackagequestionMetadata;
+  visibility: Visibility;
+  questions: Question[];
+}
+
+export interface PackagequestionMetadata {
+  description: Maybe<string>;
+}
+
+export enum Visibility {
+  Publik = 'PUBLIK',
+  Select = 'SELECT',
+  Privat = 'PRIVAT',
+}
+/** A paginated list of Question edges. */
+export interface QuestionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Question edges.*/
+  edges: QuestionEdge[];
+}
+
+/** An edge that contains a node of type Question and a cursor. */
+export interface QuestionEdge {
+  /** The Question node.*/
+  node: Question;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface QuizMetadata {
+  time_limit: number;
+  description: number;
+}
+
+export enum QuizDifficulty {
+  Easy = 'EASY',
+  Medium = 'MEDIUM',
+  Hard = 'HARD',
+}
+export interface Transaction {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  uuid: string;
+  user: User;
+  to: Maybe<User>;
+  amount: number;
+  tax: number;
+  discount: number;
+  paid: boolean;
+  voucher: Maybe<Voucher>;
+  status: TransactionStatus;
+  payment_method: string;
+  transactionable: Maybe<Transactionable>;
+  transactionable_id: Maybe<string>;
+  transactionable_type: Maybe<string>;
+}
+
+export interface Voucher {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  code: string;
+  name: string;
+  percentage: number;
+  expired_at: string;
+  metadata: VoucherMetadata;
+  transactions: Maybe<TransactionConnection>;
+}
+
+export interface VoucherMetadata {
+  description: string;
+}
+
+/** A paginated list of Transaction edges. */
+export interface TransactionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Transaction edges.*/
+  edges: TransactionEdge[];
+}
+
+/** An edge that contains a node of type Transaction and a cursor. */
+export interface TransactionEdge {
+  /** The Transaction node.*/
+  node: Transaction;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export enum TransactionStatus {
+  Pending = 'PENDING',
+}
+export type Transactionable = Access | Quiz;
+export interface Access {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  ability: string[];
+  roles: Maybe<Roles>;
+  price: number;
+  users: User[];
+  transactions: Maybe<Transaction[]>;
+}
+
+export enum Roles {
+  Student = 'STUDENT',
+  Teacher = 'TEACHER',
+  Guardian = 'GUARDIAN',
+  Ppdb = 'PPDB',
+  School_admin = 'SCHOOL_ADMIN',
+  General = 'GENERAL',
+}
+export interface QuestionMetadata {
+  type: QuestionType;
+  uuid: string;
+  content: string;
+  answers: Answer[];
+  correctanswer: string;
+}
+
+export enum QuestionType {
+  Multi_choice = 'MULTI_CHOICE',
+  Essay = 'ESSAY',
+  Filler = 'FILLER',
+}
+export interface PictureMetadata {
+  original: number;
+  compressed: number;
+}
+
+export interface UserMetadata {
+  identity: Maybe<Identity>;
+  specialty: string;
+  degree: string;
+}
+
+export interface Identity {
+  national_card_number: Maybe<string>;
+  family_card_number: Maybe<string>;
+}
+
+/** A paginated list of Absent edges. */
+export interface AbsentConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Absent edges.*/
+  edges: AbsentEdge[];
+}
+
+/** An edge that contains a node of type Absent and a cursor. */
+export interface AbsentEdge {
+  /** The Absent node.*/
+  node: Absent;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Agenda edges. */
+export interface AgendaConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Agenda edges.*/
+  edges: AgendaEdge[];
+}
+
+/** An edge that contains a node of type Agenda and a cursor. */
+export interface AgendaEdge {
+  /** The Agenda node.*/
+  node: Agenda;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Audio edges. */
+export interface AudioConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Audio edges.*/
+  edges: AudioEdge[];
+}
+
+/** An edge that contains a node of type Audio and a cursor. */
+export interface AudioEdge {
+  /** The Audio node.*/
+  node: Audio;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Video edges. */
+export interface VideoConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Video edges.*/
+  edges: VideoEdge[];
+}
+
+/** An edge that contains a node of type Video and a cursor. */
+export interface VideoEdge {
+  /** The Video node.*/
+  node: Video;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Picture edges. */
+export interface PictureConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Picture edges.*/
+  edges: PictureEdge[];
+}
+
+/** An edge that contains a node of type Picture and a cursor. */
+export interface PictureEdge {
+  /** The Picture node.*/
+  node: Picture;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Chatroom edges. */
+export interface ChatroomConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Chatroom edges.*/
+  edges: ChatroomEdge[];
+}
+
+/** An edge that contains a node of type Chatroom and a cursor. */
+export interface ChatroomEdge {
+  /** The Chatroom node.*/
+  node: Chatroom;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Consultation edges. */
+export interface ConsultationConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Consultation edges.*/
+  edges: ConsultationEdge[];
+}
+
+/** An edge that contains a node of type Consultation and a cursor. */
+export interface ConsultationEdge {
+  /** The Consultation node.*/
+  node: Consultation;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Consultation {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  consultant: User;
+  name: string;
+  metadata: ConsultationMetadata;
+}
+
+export interface ConsultationMetadata {
+  note: Maybe<string>;
+  advice: Maybe<string>;
+  problem: Maybe<string>;
+}
+
+/** A paginated list of Course edges. */
+export interface CourseConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Course edges.*/
+  edges: CourseEdge[];
+}
+
+/** An edge that contains a node of type Course and a cursor. */
+export interface CourseEdge {
+  /** The Course node.*/
+  node: Course;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Formsubmission edges. */
+export interface FormsubmissionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Formsubmission edges.*/
+  edges: FormsubmissionEdge[];
+}
+
+/** An edge that contains a node of type Formsubmission and a cursor. */
+export interface FormsubmissionEdge {
+  /** The Formsubmission node.*/
+  node: Formsubmission;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Report edges. */
+export interface ReportConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Report edges.*/
+  edges: ReportEdge[];
+}
+
+/** An edge that contains a node of type Report and a cursor. */
+export interface ReportEdge {
+  /** The Report node.*/
+  node: Report;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Report {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  receiver: User;
+  name: string;
+  metadata: ReportMetadata;
+  type: ReportType;
+}
+
+export interface ReportMetadata {
+  content: string;
+}
+
+export enum ReportType {
+  Grade = 'GRADE',
+}
+/** A paginated list of Tutoring edges. */
+export interface TutoringConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Tutoring edges.*/
+  edges: TutoringEdge[];
+}
+
+/** An edge that contains a node of type Tutoring and a cursor. */
+export interface TutoringEdge {
+  /** The Tutoring node.*/
+  node: Tutoring;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Withdraw edges. */
+export interface WithdrawConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Withdraw edges.*/
+  edges: WithdrawEdge[];
+}
+
+/** An edge that contains a node of type Withdraw and a cursor. */
+export interface WithdrawEdge {
+  /** The Withdraw node.*/
+  node: Withdraw;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface Withdraw {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  uuid: string;
+  user: User;
+  amount: number;
+  tax: number;
+  paid: boolean;
+  status: WithdrawStatus;
+  metadata: Maybe<WithdrawMetadata>;
+}
+
+export enum WithdrawStatus {
+  Pending = 'PENDING',
+}
+export interface WithdrawMetadata {
+  content: Maybe<string>;
+}
+
+/** A paginated list of Province edges. */
+export interface ProvinceConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Province edges.*/
+  edges: ProvinceEdge[];
+}
+
+/** An edge that contains a node of type Province and a cursor. */
+export interface ProvinceEdge {
+  /** The Province node.*/
+  node: Province;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Subject edges. */
+export interface SubjectConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Subject edges.*/
+  edges: SubjectEdge[];
+}
+
+/** An edge that contains a node of type Subject and a cursor. */
+export interface SubjectEdge {
+  /** The Subject node.*/
+  node: Subject;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Classtype edges. */
+export interface ClasstypeConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Classtype edges.*/
+  edges: ClasstypeEdge[];
+}
+
+/** An edge that contains a node of type Classtype and a cursor. */
+export interface ClasstypeEdge {
+  /** The Classtype node.*/
+  node: Classtype;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Quizsession edges. */
+export interface QuizsessionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Quizsession edges.*/
+  edges: QuizsessionEdge[];
+}
+
+/** An edge that contains a node of type Quizsession and a cursor. */
+export interface QuizsessionEdge {
+  /** The Quizsession node.*/
+  node: Quizsession;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Voucher edges. */
+export interface VoucherConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Voucher edges.*/
+  edges: VoucherEdge[];
+}
+
+/** An edge that contains a node of type Voucher and a cursor. */
+export interface VoucherEdge {
+  /** The Voucher node.*/
+  node: Voucher;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Major edges. */
+export interface MajorConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Major edges.*/
+  edges: MajorEdge[];
+}
+
+/** An edge that contains a node of type Major and a cursor. */
+export interface MajorEdge {
+  /** The Major node.*/
+  node: Major;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Extracurricular edges. */
+export interface ExtracurricularConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Extracurricular edges.*/
+  edges: ExtracurricularEdge[];
+}
+
+/** An edge that contains a node of type Extracurricular and a cursor. */
+export interface ExtracurricularEdge {
+  /** The Extracurricular node.*/
+  node: Extracurricular;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Examtype edges. */
+export interface ExamtypeConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Examtype edges.*/
+  edges: ExamtypeEdge[];
+}
+
+/** An edge that contains a node of type Examtype and a cursor. */
+export interface ExamtypeEdge {
+  /** The Examtype node.*/
+  node: Examtype;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Access edges. */
+export interface AccessConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Access edges.*/
+  edges: AccessEdge[];
+}
+
+/** An edge that contains a node of type Access and a cursor. */
+export interface AccessEdge {
+  /** The Access node.*/
+  node: Access;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface AuthOutput {
+  user: Maybe<User>;
+  token: Maybe<string>;
+  message: Maybe<string>;
+}
+
+export interface RegisterInput {
+  email: string;
+  password: string;
+}
+
+export interface InviteQuizsession {
+  user_id: string;
+  quizsession_id: string;
+}
+
+export interface GenericOutput {
+  status: Maybe<boolean>;
+  message: Maybe<string>;
+}
+
+export type PictureRole = PictureRoleEnum;
+export enum PictureRoleEnum {
+  Cover = 'COVER',
+  Logo = 'LOGO',
+}
+export interface CreateProvince {
+  name: string;
+}
+
+export interface CreateCity {
+  name: string;
+  province_id: string;
+}
+
+export interface CreateDistrict {
+  name: string;
+  city_id: string;
+}
+
+export interface CreateClassroom {
+  name: string;
+  school_id: string;
+  classtype_id: string;
+}
+
+export interface CreateSubject {
+  name: string;
+  abbreviation?: string;
+  description?: string;
+  type?: SubjectType;
+}
+
+export interface CreateExam {
+  name: string;
+  classtype_id: string;
+  examtype_id: string;
+  metadata: ExamMetadata;
+  is_odd_semester: boolean;
+  examsessions: CreateExamsessionHasMany;
+  supervisors?: ConnectSupervisorBelongsToMany;
+  questions: ConnectQuestionBelongsToMany;
+}
+
+export interface CreateExamsessionHasMany {
+  create: CreateExamsession[];
+}
+
+export interface CreateExamsession {
+  name: string;
+  token?: string;
+  open_at?: string;
+  close_at?: string;
+}
+
+export interface ConnectSupervisorBelongsToMany {
+  connect?: string[];
+}
+
+export interface ConnectQuestionBelongsToMany {
+  connect: string[];
+}
+
+export interface CreateAssigment {
+  name: string;
+  classroom_id: string;
+  subject_id: string;
+  is_odd_semester: boolean;
+  metadata: AssigmentMetadata;
+  close_at: string;
+  pictures?: Picture[];
+  audios?: Audio[];
+  videos?: Video[];
+  documents?: Document[];
+}
+
+export interface CreateClasstype {
+  level: number;
+}
+
+export interface CreateMeeting {
+  name: string;
+  classroom_id: string;
+  metadata: MeetingMetadata;
+  finish_at: string;
+}
+
+export interface CreateReport {
+  name: string;
+  receiver_id: string;
+  metadata?: ReportMetadata;
+  type: ReportType;
+}
+
+export interface CreateAssigmentSubmission {
+  assigment_id: string;
+  metadata: AssigmentsubmissionMetadata;
+}
+
+export interface AssigmentsubmissionMetadata {
+  content?: string;
+  comment?: string;
+  external_url?: string;
+}
+
+export interface CreateQuiz {
+  subject_id: string;
+  metadata: QuizMetadata;
+  difficulty: QuizDifficulty;
+  visibility: Visibility;
+}
+
+export interface CreateQuizsession {
+  quiz_id: string;
+  password: string;
+}
+
+export interface JoinQuizsession {
+  password: string;
+}
+
+export interface CreateQuizPlay {
+  quiz_id: string;
+  quizsession_id: string;
+}
+
+export interface CreateConsultation {
+  consultant_id: string;
+  name: string;
+  metadata: ConsultationMetadata;
+}
+
+export interface CreateAbsent {
+  receiver_id: string;
+  name: string;
+  metadata: AbsentMetadata;
+  start_at: string;
+  finish_at: string;
+}
+
+export interface CreateAgenda {
+  agendaable_id?: string;
+  agendaable_type?: string;
+  uuid: string;
+  metadata: AgendaMetadata;
+  start_at: string;
+  finish_at: string;
+}
+
+export interface CreatePackagequestion {
+  subject_id: string;
+  classtype_id: string;
+  name: string;
+  metadata: PackagequestionMetadata;
+}
+
+export interface CreateChat {
+  chatrooms_id: string;
+  metadata: ChatMetadata;
+}
+
+export interface CreateVoucher {
+  name: string;
+  code: string;
+  percentage: number;
+  metadata?: VoucherMetadata;
+  expired_at: string;
+}
+
+export interface CreateFormsubmission {
+  metadata: FormsubmissionMetadata;
+  submission_id: string;
+}
+
+export interface CreateSubmission {
+  name: string;
+  school_id?: string;
+  max_submission: number;
+  is_paid?: boolean;
+  price?: number;
+  open_at: string;
+  close_at?: string;
+}
+
+export interface CreateCourse {
+  name: string;
+  access?: string[];
+  classtype_id: string;
+  subject_id: string;
+  metadata: CourseMetadata;
+  videos: CourseVideoMorphMany;
+}
+
+export interface CourseVideoMorphMany {
+  connect?: string[];
+}
+
+export interface CreateMajor {
+  name: string;
+  description?: string;
+  abbreviation?: string;
+  type?: string;
+}
+
+export interface CreateExtracurricular {
+  name: string;
+  description?: string;
+  abbreviation?: string;
+  type?: string;
+}
+
+export interface UpdateQuizplay {
+  grade: number;
+  answers_map?: string;
+  graded?: boolean;
+  start_at?: string;
+  finish_at?: string;
+}
+
+export interface UpdateUser {
+  name: string;
+  address?: string;
+  metadata?: UserMetadata;
+  province_id: string;
+  city_id: string;
+  district_id: string;
+  school_id?: string;
+}
+
+/** UPDATE */
+export interface UpdateProvince {
+  name: string;
+}
+
+export interface UpdateCity {
+  name: string;
+  province_id: string;
+}
+
+export interface UpdateDistrict {
+  name: string;
+  city_id: string;
+}
+
+export interface UpdateClassroom {
+  name: string;
+  classtype_id: string;
+}
+
+export interface UpdateSubject {
+  name: string;
+  abbreviation?: string;
+  description?: string;
+  type?: SubjectType;
+}
+
+export interface UpdateExam {
+  name: string;
+  classtype_id?: string;
+  examtype_id?: string;
+  metadata: ExamMetadata;
+  is_odd_semester: boolean;
+  examsessions?: UpdateExamsessionHasMany;
+  supervisors?: UpdateConnectSupervisorBelongsToMany;
+  questions?: UpdateConnectQuestionBelongsToMany;
+}
+
+export interface UpdateExamsessionHasMany {
+  create?: CreateExamsession[];
+}
+
+export interface UpdateConnectSupervisorBelongsToMany {
+  sync?: string[];
+}
+
+export interface UpdateConnectQuestionBelongsToMany {
+  sync: string[];
+}
+
+export interface UpdateAssigment {
+  name: string;
+  subject_id: string;
+  is_odd_semester: boolean;
+  metadata: AssigmentMetadata;
+  close_at: string;
+}
+
+export interface UpdateClasstype {
+  level: number;
+}
+
+export interface UpdateMeeting {
+  name: string;
+  metadata: MeetingMetadata;
+  finish_at: string;
+}
+
+export interface UpdateReport {
+  name: string;
+  metadata?: ReportMetadata;
+}
+
+export interface UpdateQuiz {
+  subject_id: string;
+  metadata: QuizMetadata;
+  difficulty: QuizDifficulty;
+  visibility: Visibility;
+}
+
+export interface UpdateQuizsession {
+  password?: string;
+  start_at?: string;
+  finish_at?: string;
+}
+
+export interface UpdateConsultation {
+  name: string;
+  metadata: ConsultationMetadata;
+}
+
+export interface UpdateAbsent {
+  name: string;
+  metadata: AbsentMetadata;
+}
+
+export interface UpdateAgenda {
+  metadata: AgendaMetadata;
+  start_at: string;
+  finish_at: string;
+}
+
+export interface UpdatePackagequestion {
+  subject_id: string;
+  classtype_id: string;
+  name: string;
+  metadata: PackagequestionMetadata;
+}
+
+export interface UpdateChat {
+  chatrooms_id: string;
+  metadata: ChatMetadata;
+}
+
+export interface UpdateVoucher {
+  name: string;
+  code: string;
+  percentage: number;
+  metadata?: VoucherMetadata;
+  expired_at: string;
+}
+
+export interface UpdateSubmission {
+  name: string;
+  school_id?: string;
+  max_submission: number;
+  is_paid?: boolean;
+  price?: number;
+  open_at: string;
+  close_at?: string;
+}
+
+export interface UpdateCourse {
+  name: string;
+  access?: string[];
+  classtype_id: string;
+  subject_id: string;
+  metadata: CourseMetadata;
+  videos: CourseVideoMorphMany;
+}
+
+export interface UpdateMajor {
+  name: string;
+  description?: string;
+  abbreviation?: string;
+  type?: string;
+}
+
+export interface UpdateExtracurricular {
+  name: string;
+  description?: string;
+  abbreviation?: string;
+  type?: string;
+}
+
+export interface Assigmentsubmissions {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  assigment: Assigment;
+  grade: number;
+  graded: boolean;
+  edited_times: number;
+  turned_at: string;
+  metadata: AssigmentsubmissionMetadata;
+  pictures: Maybe<Picture[]>;
+  audios: Maybe<Audio[]>;
+  videos: Maybe<Video[]>;
+  documents: Maybe<Document[]>;
+}
+
+export interface CreateQuestion {
+  subject_id: string;
+  classtype_id: string;
+  pictures?: Picture[];
+  audios?: Audio[];
+  videos?: Video[];
+  metadata: QuestionMetadata;
+  visibility: Visibility;
+}
+
+export interface CreatePackagequestionBelongsToMany {
+  connect?: string[];
+  create: CreateQuestion[];
+}
+
+export interface UpsertChatroomBelongsToMany {
+  connect?: string[];
+  sync?: string[];
+}
+
+export interface UpsertChatroom {
+  second_id: string;
+  privat: boolean;
+  metadata: ChatroomMetadata;
+  chatroomable_id?: string;
+  chatroomable_type?: string;
+  users?: UpsertChatroomBelongsToMany;
+}
+
+export interface UpdateAssigmentSubmission {
+  metadata: AssigmentsubmissionMetadata;
+}
+
+export interface UpdatePackagequestionBelongsToMany {
+  connect?: string[];
+  sync?: string[];
+  create?: CreateQuestion[];
+}
+
+export interface UpdateFormsubmission {
+  metadata: FormsubmissionMetadata;
+}
+
+/** The available directions for ordering a list of records. */
+export enum SortOrder {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
+/** Allows ordering a list of records. */
+export interface OrderByClause {
+  /** The column that is used for ordering.*/
+  column: string;
+  /** The direction that is used for ordering.*/
+  order: SortOrder;
+}
+
+/** Information about pagination using a fully featured paginator. */
+export interface PaginatorInfo {
+  /** Number of items in the current page.*/
+  count: number;
+  /** Index of the current page.*/
+  currentPage: number;
+  /** Index of the first item in the current page.*/
+  firstItem: Maybe<number>;
+  /** Are there more pages after this one?*/
+  hasMorePages: boolean;
+  /** Index of the last item in the current page.*/
+  lastItem: Maybe<number>;
+  /** Index of the last available page.*/
+  lastPage: number;
+  /** Number of items per page.*/
+  perPage: number;
+  /** Number of total available items.*/
+  total: number;
+}
+
+/** Information about pagination using a simple paginator. */
+export interface SimplePaginatorInfo {
+  /** Number of items in the current page.*/
+  count: number;
+  /** Index of the current page.*/
+  currentPage: number;
+  /** Index of the first item in the current page.*/
+  firstItem: Maybe<number>;
+  /** Index of the last item in the current page.*/
+  lastItem: Maybe<number>;
+  /** Number of items per page.*/
+  perPage: number;
+}
+
+/** Specify if you want to include or exclude trashed results from a query. */
+export enum Trashed {
+  Only = 'ONLY',
+  With = 'WITH',
+  Without = 'WITHOUT',
+}
+export interface userArgs {
+  id?: string;
+}
+
+export interface meArgs {}
+
+export interface usersArgs {
+  name?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface provincesArgs {
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface citiesArgs {
+  province_id?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface districtsArgs {
+  city_id?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface schoolsArgs {
+  district_id?: string;
+  city_id?: string;
+  province_id?: string;
+  name?: string;
+  npsn?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface subjectsArgs {
+  name?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface examsArgs {
+  name?: string;
+  is_odd_semester?: boolean;
+  classtype_id?: string;
+  subject_id?: string;
+  examtype_id?: string;
+  user_id?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface assigmentsArgs {
+  name?: string;
+  is_odd_semester?: boolean;
+  subject_id?: string;
+  classroom_id?: string;
+  user_id?: string;
+  close_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface assigmentsubmissionsArgs {
+  name?: string;
+  is_odd_semester?: boolean;
+  subject_id?: string;
+  assigment_id?: string;
+  user_id?: string;
+  edited_times?: number;
+  turned_at?: string;
+  graded?: boolean;
+  grade?: number;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface classtypesArgs {
+  level?: number;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface examsessionArgs {
+  name?: string;
+  token?: string;
+  exam_id?: string;
+  close_at?: string;
+  open_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface examplaysArgs {
+  name?: string;
+  token?: string;
+  exam_id?: string;
+  examsession_id?: string;
+  user_id?: string;
+  last_activity?: string;
+  start_at?: string;
+  finish_at?: string;
+  minute_passed?: number;
+  grade?: number;
+  graded?: boolean;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface meetingsArgs {
+  name?: string;
+  classroom_id?: string;
+  finish_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface reportsArgs {
+  name?: string;
+  user_id?: string;
+  receiver_id?: string;
+  type?: ReportType;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface quizzezArgs {
+  name?: string;
+  user_id?: string;
+  subject_id?: string;
+  classtype_id?: string;
+  type?: Visibility;
+  difficulty?: QuizDifficulty;
+  is_rewarded?: boolean;
+  played_count?: number;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface quizsessionsArgs {
+  name?: string;
+  user_id?: string;
+  quiz_id?: string;
+  password?: string;
+  start_at?: string;
+  finish_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface quizplaysArgs {
+  user_id?: string;
+  quizsession_id?: string;
+  start_at?: string;
+  finish_at?: string;
+  grade: number;
+  graded: boolean;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface consultationsArgs {
+  name?: string;
+  user_id?: string;
+  consultant_id?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface absentsArgs {
+  user_id?: string;
+  receiver_id?: string;
+  start_at?: string;
+  finish_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface attendancesArgs {
+  absent_id?: string;
+  agenda_id?: string;
+  attended?: boolean;
+  is_bimbel?: boolean;
+  date?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface agendasArgs {
+  user_id?: string;
+  uuid?: string;
+  agendaable_id?: string;
+  agendaable_type?: string;
+  start_at?: string;
+  finish_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface questionsArgs {
+  user_id?: string;
+  subject_id?: string;
+  classtype_id?: string;
+  visibility?: Visibility;
+  finish_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface PackagequestionsArgs {
+  user_id?: string;
+  subject_id?: string;
+  classtype_id?: string;
+  visibility?: Visibility;
+  finish_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface transactionsArgs {
+  user_id?: string;
+  to_id?: string;
+  voucher_id?: string;
+  uuid?: string;
+  status?: TransactionStatus;
+  paid?: boolean;
+  payment_method?: string;
+  transactionable_id?: string;
+  transactionable_type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface withdrawsArgs {
+  user_id?: string;
+  to_id?: string;
+  uuid?: string;
+  status?: WithdrawStatus;
+  paid?: boolean;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface chatroomsArgs {
+  user_id?: string;
+  second_id?: string;
+  uuid?: string;
+  chatroomable_id?: string;
+  chatroomable_type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface chatsArgs {
+  user_id?: string;
+  second_id?: string;
+  chatroom_id?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface vouchersArgs {
+  name?: string;
+  code?: string;
+  percentage?: string;
+  expired_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface submissionsArgs {
+  name?: string;
+  school_id?: string;
+  max_submission?: number;
+  is_paid?: boolean;
+  price?: number;
+  open_at?: string;
+  close_at?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface coursesArgs {
+  name?: string;
+  user_id?: string;
+  classtype_id?: string;
+  subject_id?: string;
+  access: string[];
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface videosArgs {
+  name?: string;
+  roles?: string;
+  videoable_id?: string;
+  videoable_type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface picturesArgs {
+  name?: string;
+  roles?: string;
+  pictureable_id?: string;
+  pictureable_type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface audiosArgs {
+  name?: string;
+  roles?: string;
+  pictureable_id?: string;
+  pictureable_type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface majorsArgs {
+  name?: string;
+  abbreviation?: string;
+  description?: string;
+  type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface extracurricularsArgs {
+  name?: string;
+  abbreviation?: string;
+  description?: string;
+  type?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface examtypesArgs {
+  name?: string;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface accesesArgs {
+  name?: string;
+  ability: string[];
+  roles?: Roles;
+  price?: number;
+  /** Limits number of fetched items.*/
+  first: number;
+  /** A cursor after which elements are returned.*/
+  after?: string;
+}
+
+export interface loginArgs {
+  input: LoginInput;
+}
+
+export interface registerArgs {
+  input: RegisterInput;
+}
+
+export interface inviteQuizsessionArgs {
+  input: InviteQuizsession;
+}
+
+export interface uploadPictureArgs {
+  file: File;
+  pictureable_id?: string;
+  pictureable_type?: string;
+  roles?: PictureRole;
+}
+
+export interface uploadVideoArgs {
+  file: File;
+  videoable_id?: string;
+  videoable_type?: string;
+  roles?: string;
+}
+
+export interface uploadDocumentArgs {
+  file: File;
+  documentable_id?: string;
+  documentable_type?: string;
+  roles?: string;
+}
+
+export interface uploadAudioArgs {
+  file: File;
+  audioable_id?: string;
+  audioable_type?: string;
+  roles?: string;
+}
+
+export interface createProvinceArgs {
+  input: CreateProvince;
+}
+
+export interface createCityArgs {
+  input: CreateCity;
+}
+
+export interface createDistrictArgs {
+  input: CreateDistrict;
+}
+
+export interface createClassroomArgs {
+  input: CreateClassroom;
+}
+
+export interface createSubjectArgs {
+  input: CreateSubject;
+}
+
+export interface createExamArgs {
+  input: CreateExam;
+}
+
+export interface createAssigmentArgs {
+  input: CreateAssigment;
+}
+
+export interface createClasstypeArgs {
+  input: CreateClasstype;
+}
+
+export interface createMeetingArgs {
+  input: CreateMeeting;
+}
+
+export interface createReportArgs {
+  input: CreateReport;
+}
+
+export interface createAssigmentSubmissionArgs {
+  input: CreateAssigmentSubmission;
+}
+
+export interface createQuizArgs {
+  input: CreateQuiz;
+}
+
+export interface createQuizsessionArgs {
+  input: CreateQuizsession;
+}
+
+export interface joinQuizsessionArgs {
+  input: JoinQuizsession;
+}
+
+export interface createQuizplayArgs {
+  input: CreateQuizPlay;
+}
+
+export interface createConsultationArgs {
+  input: CreateConsultation;
+}
+
+export interface createAbsentArgs {
+  input: CreateAbsent;
+}
+
+export interface createAgendaArgs {
+  input: CreateAgenda;
+}
+
+export interface createPackagequestionArgs {
+  input: CreatePackagequestion;
+}
+
+export interface createChatArgs {
+  input: CreateChat;
+}
+
+export interface createVoucherArgs {
+  input: CreateVoucher;
+}
+
+export interface createFormsubmissionArgs {
+  input: CreateFormsubmission;
+}
+
+export interface createSubmissionArgs {
+  input: CreateSubmission;
+}
+
+export interface createCourseArgs {
+  input: CreateCourse;
+}
+
+export interface createMajorArgs {
+  input: CreateMajor;
+}
+
+export interface createExtracurricularArgs {
+  input: CreateExtracurricular;
+}
+
+export interface updateQuizplayArgs {
+  id: string;
+  input: UpdateQuizplay;
+}
+
+export interface updateUserArgs {
+  id: string;
+  input?: UpdateUser;
+}
+
+export interface updateProvinceArgs {
+  input: UpdateProvince;
+}
+
+export interface updateCityArgs {
+  id: string;
+  input: UpdateCity;
+}
+
+export interface updateDistrictArgs {
+  id: string;
+  input: UpdateDistrict;
+}
+
+export interface updateClassroomArgs {
+  id: string;
+  input: UpdateClassroom;
+}
+
+export interface updateSubjectArgs {
+  id: string;
+  input: UpdateSubject;
+}
+
+export interface updateExamArgs {
+  id: string;
+  input: UpdateExam;
+}
+
+export interface updateAssigmentArgs {
+  id: string;
+  input: UpdateAssigment;
+}
+
+export interface updateClasstypeArgs {
+  id: string;
+  input: UpdateClasstype;
+}
+
+export interface updateMeetingArgs {
+  id: string;
+  input: UpdateMeeting;
+}
+
+export interface updateReportArgs {
+  id: string;
+  input: UpdateReport;
+}
+
+export interface updateQuizArgs {
+  id: string;
+  input: UpdateQuiz;
+}
+
+export interface updateQuizsessionArgs {
+  id: string;
+  input: UpdateQuizsession;
+}
+
+export interface updateConsultationArgs {
+  id: string;
+  input: UpdateConsultation;
+}
+
+export interface updateAbsentArgs {
+  id: string;
+  input: UpdateAbsent;
+}
+
+export interface updateAgendaArgs {
+  id: string;
+  input: UpdateAgenda;
+}
+
+export interface updatePackagequestionArgs {
+  id: string;
+  input: UpdatePackagequestion;
+}
+
+export interface updateChatArgs {
+  id: string;
+  input: UpdateChat;
+}
+
+export interface updateVoucherArgs {
+  id: string;
+  input: UpdateVoucher;
+}
+
+export interface updateSubmissionArgs {
+  id: string;
+  input: UpdateSubmission;
+}
+
+export interface updateCourseArgs {
+  id: string;
+  input: UpdateCourse;
+}
+
+export interface updateMajorArgs {
+  id: string;
+  input: UpdateMajor;
+}
+
+export interface updateExtracurricularArgs {
+  id: string;
+  input: UpdateExtracurricular;
+}
