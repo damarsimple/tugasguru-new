@@ -5,7 +5,10 @@ import Loader from "../../components/BoxLoader";
 import Button from "../../components/Button";
 import QuizCard, { QuizCardSkeleton } from "../../components/Card/QuizCard";
 import DashboardContainer from "../../components/Container/DashboardContainer";
-import { CorePageInfoField } from "../../fragments/fragments";
+import {
+  CorePageInfoField,
+  CoreQuizCardMinimalField,
+} from "../../fragments/fragments";
 import { Subject } from "../../types/type";
 
 export default function Index() {
@@ -14,6 +17,7 @@ export default function Index() {
       <Loader<Subject>
         query={gql`
           ${CorePageInfoField}
+          ${CoreQuizCardMinimalField}
           query GetSubjects($first: Int!, $after: String) {
             subjects(first: $first, after: $after) {
               edges {
@@ -23,24 +27,7 @@ export default function Index() {
                   quizzez(first: 4) {
                     edges {
                       node {
-                        id
-                        name
-                        played_count
-                        questions {
-                          metadata {
-                            content
-                          }
-                        }
-                        difficulty
-                        user {
-                          name
-                        }
-                        subject {
-                          name
-                        }
-                        classtype {
-                          level
-                        }
+                        ...CoreQuizCardMinimalField
                       }
                     }
                   }

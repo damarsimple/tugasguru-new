@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { AiOutlineLoading } from "react-icons/ai";
+import { BiPlus } from "react-icons/bi";
 
 type COLORS = "BLUE" | "YELLOW" | "RED" | "GRAY" | "GREEN";
 
@@ -49,7 +50,7 @@ export default function Button({
 
   return href ? (
     <Link href={href}>
-      <a>
+      <a className="w-full">
         <ButtonComponent />
       </a>
     </Link>

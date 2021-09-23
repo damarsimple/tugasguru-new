@@ -62,7 +62,7 @@ export default function QuizCard(node: Quiz) {
             <div className="col-span-2">Contoh Pertanyaan</div>
             <div className="col-span-2 mt-2 p-2 grid grid-cols-1 bg-gray-200">
               {take(node.questions, 4).map((e, i) => (
-                <div key={e.id}>
+                <div key={`${e.id}-${i}`}>
                   {i + 1}. {e.metadata.content}
                 </div>
               ))}

@@ -1,27 +1,29 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { User } from "../types/type";
-import ImageContainer from "./ImageContainer";
-import Button from "./Button";
+import { User } from "../../types/type";
+import Button from "../Button";
+import ImageContainer from "../Container/ImageContainer";
 
 export default function UserCard(e: User) {
   return (
     <div className="flex flex-col gap-2 text-center shadow rounded p-4">
-      <ImageContainer
-        fallback="profile"
-        className="rounded-full h-24 w-24"
-        src={e.profilepicture?.path}
-        alt="Picture of the author"
-        width={500}
-        height={500}
-      />
+      <div className="flex justify-center">
+        <ImageContainer
+          fallback="profile"
+          className="rounded-full h-24 w-24"
+          src={e.cover?.path}
+          alt="Picture of the author"
+          width={500}
+          height={500}
+        />
+      </div>
       <h1 className="text-md sm:text-lg font-semibold truncate">{e.name}</h1>
       <p className="text-sm sm:text-md truncate">@{e.username}</p>
-      <p className="text-sm truncate">{e.tag}</p>
+      <p className="text-sm truncate">{e.roles}</p>
       <Link href={"/" + e.username}>
         <a>
-          <Button color="GRAY">Donasi</Button>
+          <Button color="GRAY">BIMBEL</Button>
         </a>
       </Link>
     </div>

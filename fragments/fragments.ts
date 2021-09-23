@@ -10,7 +10,7 @@ export const CorePageInfoField = gql`
   }
 `;
 
-export const CORE_USER_INFO_MINIMAL_FIELD = gql`
+export const CoreUserInfoMinimalField = gql`
   fragment CoreUserInfoMinimalField on User {
     id
     name
@@ -19,15 +19,32 @@ export const CORE_USER_INFO_MINIMAL_FIELD = gql`
     school {
       name
     }
+    cover {
+      path
+    }
   }
 `;
 
-export const ALL_OVERLAY_DATA = gql`
-  fragment AllOverlayData on OverlayData {
-    theme
-    message
-    color
-    duration
+export const CoreQuizCardMinimalField = gql`
+  fragment CoreQuizCardMinimalField on Quiz {
+    id
+    name
+    played_count
+    questions {
+      metadata {
+        content
+      }
+    }
+    difficulty
+    user {
+      name
+    }
+    subject {
+      name
+    }
+    classtype {
+      level
+    }
   }
 `;
 

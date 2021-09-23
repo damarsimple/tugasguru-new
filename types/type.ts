@@ -32,6 +32,8 @@ export interface User {
   city: City;
   district: District;
   school: Maybe<School>;
+  is_bimbel: boolean;
+  is_bimbel_active: boolean;
   participantchatrooms: Chatroom[];
   classrooms: Classroom[];
   examsupervising: Exam[];
@@ -286,6 +288,7 @@ export interface City {
   created_at: string;
   updated_at: string;
   name: string;
+  type: Maybe<string>;
   province: Province;
   districts: Maybe<DistrictConnection>;
   users: Maybe<UserConnection>;
@@ -1083,8 +1086,9 @@ export interface PictureMetadata {
 
 export interface UserMetadata {
   identity: Maybe<Identity>;
-  specialty: string;
-  degree: string;
+  description_bimbel: Maybe<string>;
+  specialty: Maybe<string>;
+  degree: Maybe<string>;
 }
 
 export interface Identity {
@@ -1508,11 +1512,6 @@ export interface GenericOutput {
   message: Maybe<string>;
 }
 
-export type PictureRole = PictureRoleEnum;
-export enum PictureRoleEnum {
-  Cover = 'COVER',
-  Logo = 'LOGO',
-}
 export interface CreateProvince {
   name: string;
 }
@@ -1590,31 +1589,25 @@ export interface CreateClasstype {
 export interface CreateMeeting {
   name: string;
   classroom_id: string;
-  metadata: MeetingMetadata;
+  metadata?: string;
   finish_at: string;
 }
 
 export interface CreateReport {
   name: string;
   receiver_id: string;
-  metadata?: ReportMetadata;
+  metadata?: string;
   type: ReportType;
 }
 
 export interface CreateAssigmentSubmission {
   assigment_id: string;
-  metadata: AssigmentsubmissionMetadata;
-}
-
-export interface AssigmentsubmissionMetadata {
-  content?: string;
-  comment?: string;
-  external_url?: string;
+  metadata?: string;
 }
 
 export interface CreateQuiz {
   subject_id: string;
-  metadata: QuizMetadata;
+  metadata?: string;
   difficulty: QuizDifficulty;
   visibility: Visibility;
 }
@@ -1636,13 +1629,13 @@ export interface CreateQuizPlay {
 export interface CreateConsultation {
   consultant_id: string;
   name: string;
-  metadata: ConsultationMetadata;
+  metadata?: string;
 }
 
 export interface CreateAbsent {
   receiver_id: string;
   name: string;
-  metadata: AbsentMetadata;
+  metadata?: string;
   start_at: string;
   finish_at: string;
 }
@@ -1651,7 +1644,7 @@ export interface CreateAgenda {
   agendaable_id?: string;
   agendaable_type?: string;
   uuid: string;
-  metadata: AgendaMetadata;
+  metadata?: string;
   start_at: string;
   finish_at: string;
 }
@@ -1660,24 +1653,24 @@ export interface CreatePackagequestion {
   subject_id: string;
   classtype_id: string;
   name: string;
-  metadata: PackagequestionMetadata;
+  metadata?: string;
 }
 
 export interface CreateChat {
   chatrooms_id: string;
-  metadata: ChatMetadata;
+  metadata?: string;
 }
 
 export interface CreateVoucher {
   name: string;
   code: string;
   percentage: number;
-  metadata?: VoucherMetadata;
+  metadata?: string;
   expired_at: string;
 }
 
 export interface CreateFormsubmission {
-  metadata: FormsubmissionMetadata;
+  metadata?: string;
   submission_id: string;
 }
 
@@ -1696,7 +1689,7 @@ export interface CreateCourse {
   access?: string[];
   classtype_id: string;
   subject_id: string;
-  metadata: CourseMetadata;
+  metadata?: string;
   videos: CourseVideoMorphMany;
 }
 
@@ -1727,12 +1720,14 @@ export interface UpdateQuizplay {
 }
 
 export interface UpdateUser {
-  name: string;
+  name?: string;
   address?: string;
-  metadata?: UserMetadata;
-  province_id: string;
-  city_id: string;
-  district_id: string;
+  phone?: string;
+  username?: string;
+  metadata?: string;
+  province_id?: string;
+  city_id?: string;
+  district_id?: string;
   school_id?: string;
 }
 
@@ -1767,7 +1762,7 @@ export interface UpdateExam {
   name: string;
   classtype_id?: string;
   examtype_id?: string;
-  metadata: ExamMetadata;
+  metadata?: string;
   is_odd_semester: boolean;
   examsessions?: UpdateExamsessionHasMany;
   supervisors?: UpdateConnectSupervisorBelongsToMany;
@@ -1790,7 +1785,7 @@ export interface UpdateAssigment {
   name: string;
   subject_id: string;
   is_odd_semester: boolean;
-  metadata: AssigmentMetadata;
+  metadata?: string;
   close_at: string;
 }
 
@@ -1800,18 +1795,18 @@ export interface UpdateClasstype {
 
 export interface UpdateMeeting {
   name: string;
-  metadata: MeetingMetadata;
+  metadata?: string;
   finish_at: string;
 }
 
 export interface UpdateReport {
   name: string;
-  metadata?: ReportMetadata;
+  metadata?: string;
 }
 
 export interface UpdateQuiz {
   subject_id: string;
-  metadata: QuizMetadata;
+  metadata?: string;
   difficulty: QuizDifficulty;
   visibility: Visibility;
 }
@@ -1824,12 +1819,12 @@ export interface UpdateQuizsession {
 
 export interface UpdateConsultation {
   name: string;
-  metadata: ConsultationMetadata;
+  metadata?: string;
 }
 
 export interface UpdateAbsent {
   name: string;
-  metadata: AbsentMetadata;
+  metadata?: string;
 }
 
 export interface UpdateAgenda {
@@ -1842,19 +1837,19 @@ export interface UpdatePackagequestion {
   subject_id: string;
   classtype_id: string;
   name: string;
-  metadata: PackagequestionMetadata;
+  metadata?: string;
 }
 
 export interface UpdateChat {
   chatrooms_id: string;
-  metadata: ChatMetadata;
+  metadata?: string;
 }
 
 export interface UpdateVoucher {
   name: string;
   code: string;
   percentage: number;
-  metadata?: VoucherMetadata;
+  metadata?: string;
   expired_at: string;
 }
 
@@ -1873,7 +1868,7 @@ export interface UpdateCourse {
   access?: string[];
   classtype_id: string;
   subject_id: string;
-  metadata: CourseMetadata;
+  metadata?: string;
   videos: CourseVideoMorphMany;
 }
 
@@ -1908,13 +1903,19 @@ export interface Assigmentsubmissions {
   documents: Maybe<Document[]>;
 }
 
+export interface AssigmentsubmissionMetadata {
+  content?: string;
+  comment?: string;
+  external_url?: string;
+}
+
 export interface CreateQuestion {
   subject_id: string;
   classtype_id: string;
   pictures?: Picture[];
   audios?: Audio[];
   videos?: Video[];
-  metadata: QuestionMetadata;
+  metadata?: string;
   visibility: Visibility;
 }
 
@@ -1931,14 +1932,14 @@ export interface UpsertChatroomBelongsToMany {
 export interface UpsertChatroom {
   second_id: string;
   privat: boolean;
-  metadata: ChatroomMetadata;
+  metadata?: string;
   chatroomable_id?: string;
   chatroomable_type?: string;
   users?: UpsertChatroomBelongsToMany;
 }
 
 export interface UpdateAssigmentSubmission {
-  metadata: AssigmentsubmissionMetadata;
+  metadata?: string;
 }
 
 export interface UpdatePackagequestionBelongsToMany {
@@ -1948,7 +1949,7 @@ export interface UpdatePackagequestionBelongsToMany {
 }
 
 export interface UpdateFormsubmission {
-  metadata: FormsubmissionMetadata;
+  metadata?: string;
 }
 
 /** The available directions for ordering a list of records. */
@@ -2008,10 +2009,36 @@ export interface userArgs {
   id?: string;
 }
 
+export interface userFindArgs {
+  name?: string;
+  username?: string;
+  roles?: Roles;
+  gender?: string;
+  phone?: string;
+  is_bimbel?: boolean;
+  is_bimbel_active?: boolean;
+  province_id?: string;
+  city_id?: string;
+  district_id?: string;
+  school_id?: string;
+  parent_id?: string;
+}
+
 export interface meArgs {}
 
 export interface usersArgs {
   name?: string;
+  username?: string;
+  roles?: Roles;
+  gender?: string;
+  phone?: string;
+  is_bimbel?: boolean;
+  is_bimbel_active?: boolean;
+  province_id?: string;
+  city_id?: string;
+  district_id?: string;
+  school_id?: string;
+  parent_id?: string;
   /** Limits number of fetched items.*/
   first: number;
   /** A cursor after which elements are returned.*/
@@ -2019,6 +2046,7 @@ export interface usersArgs {
 }
 
 export interface provincesArgs {
+  name?: string;
   /** Limits number of fetched items.*/
   first: number;
   /** A cursor after which elements are returned.*/
@@ -2027,6 +2055,7 @@ export interface provincesArgs {
 
 export interface citiesArgs {
   province_id?: string;
+  name?: string;
   /** Limits number of fetched items.*/
   first: number;
   /** A cursor after which elements are returned.*/
@@ -2035,6 +2064,7 @@ export interface citiesArgs {
 
 export interface districtsArgs {
   city_id?: string;
+  name?: string;
   /** Limits number of fetched items.*/
   first: number;
   /** A cursor after which elements are returned.*/
@@ -2450,7 +2480,7 @@ export interface uploadPictureArgs {
   file: File;
   pictureable_id?: string;
   pictureable_type?: string;
-  roles?: PictureRole;
+  roles?: string;
 }
 
 export interface uploadVideoArgs {
@@ -2585,7 +2615,7 @@ export interface updateQuizplayArgs {
 
 export interface updateUserArgs {
   id: string;
-  input?: UpdateUser;
+  input: UpdateUser;
 }
 
 export interface updateProvinceArgs {

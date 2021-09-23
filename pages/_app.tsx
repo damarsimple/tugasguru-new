@@ -1,6 +1,7 @@
 import "react-tabs/style/react-tabs.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/globals.css";
+import "react-image-crop/dist/ReactCrop.css";
 import type { AppProps } from "next/app";
 import { useAuthStore } from "../store/auth";
 import { createUploadLink } from "apollo-upload-client";

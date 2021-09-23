@@ -79,7 +79,7 @@ export default function AppContainer({
   navTitle,
 }: {
   title?: string;
-  children?: JSX.Element;
+  children?: JSX.Element | JSX.Element[] | string;
   fullScreen?: boolean;
   without?: Except[];
   navTitle?: string;
@@ -103,8 +103,7 @@ export default function AppContainer({
               <Link href="/">
                 <a className="flex gap-1">
                   <ImageContainer
-                    width={45}
-                    height={45}
+                    className="h-10 w-10"
                     src="/android-chrome-192x192.png"
                   />
                   <h1 className="hidden md:block text-white text-xl font-bold">
@@ -124,7 +123,15 @@ export default function AppContainer({
               <Link href="/dashboard">
                 <a>
                   <button className="p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
-                    <AiOutlineUser size="1.5em" />
+                    {user?.cover ? (
+                      <ImageContainer
+                        width={20}
+                        height={20}
+                        src={user.cover.path}
+                      />
+                    ) : (
+                      <AiOutlineUser size="1.5em" />
+                    )}
                   </button>
                 </a>
               </Link>
@@ -161,7 +168,7 @@ export default function AppContainer({
           {without?.includes("navbar") ? (
             <div>{children}</div>
           ) : (
-            <div className={without?.includes("margin") ? "" : "mt-10"}>
+            <div className={without?.includes("margin") ? "" : "mt-16"}>
               {children}
             </div>
           )}

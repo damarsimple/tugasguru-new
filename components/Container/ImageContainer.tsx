@@ -30,17 +30,26 @@ export default function ImageContainer({
       />
     );
   } else {
-    switch (fallback) {
-      default:
-        return (
-          <img
-            alt={alt}
-            className={className}
-            width={width}
-            height={height}
-            src={`https://picsum.photos/seed/${alt}/${width}/${height}`}
-          />
-        );
+    if (fallback) {
+      return (
+        <img
+          alt={alt}
+          className={className}
+          width={width}
+          height={height}
+          src={`/${fallback}.jpg`}
+        />
+      );
+    } else {
+      return (
+        <img
+          alt={alt}
+          className={className}
+          width={width}
+          height={height}
+          src={`https://picsum.photos/seed/${alt}/${width}/${height}`}
+        />
+      );
     }
   }
 }

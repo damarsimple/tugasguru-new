@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { CORE_USER_INFO_MINIMAL_FIELD } from "../fragments/fragments";
+import { CoreUserInfoMinimalField } from "../fragments/fragments";
 import { client } from "../pages/_app";
 import { useUserStore } from "../store/user";
 
@@ -7,7 +7,7 @@ export const getMyCredentials = async () => {
   const { setState } = useUserStore;
   const { data } = await client.query({
     query: gql`
-      ${CORE_USER_INFO_MINIMAL_FIELD}
+      ${CoreUserInfoMinimalField}
       query Me {
         me {
           ...CoreUserInfoMinimalField

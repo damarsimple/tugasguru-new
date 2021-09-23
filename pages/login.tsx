@@ -4,14 +4,14 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { gql, useMutation } from "@apollo/client";
 import { User } from "../types/type";
 import { useAuthStore } from "../store/auth";
-import { CORE_USER_INFO_MINIMAL_FIELD } from "../fragments/fragments";
+import { CoreUserInfoMinimalField } from "../fragments/fragments";
 import { useUserStore } from "../store/user";
 import Button from "../components/Button";
 import AppContainer from "../components/Container/AppContainer";
 import ImageContainer from "../components/Container/ImageContainer";
 
 const LOGIN = gql`
-  ${CORE_USER_INFO_MINIMAL_FIELD}
+  ${CoreUserInfoMinimalField}
   mutation Login($password: String!, $email: String!) {
     login(input: { password: $password, email: $email }) {
       message

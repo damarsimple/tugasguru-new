@@ -6,7 +6,7 @@ import Button from "../Button";
 import Input from "./Input";
 
 interface InputMap<T> {
-  name: keyof T;
+  name: keyof T | string;
   type?: string;
   label: string;
   required?: boolean;
@@ -18,9 +18,11 @@ interface FormProp<T, N> {
   mutationQuery: DocumentNode;
   beforeSubmit?: () => void;
   afterSubmit?: (e: T) => void;
-  defaultValueMap?: T;
+  defaultValueMap?: Partial<T>;
   addedValueMap?: object;
+  successMessage?: string;
   fields: keyof N;
+  submitName?: string;
 }
 
 export default function Form<T, N>({
@@ -31,6 +33,8 @@ export default function Form<T, N>({
   beforeSubmit,
   afterSubmit,
   fields,
+  successMessage,
+  submitName,
 }: FormProp<T, N>) {
   const [
     mutateFunction,
@@ -38,6 +42,25 @@ export default function Form<T, N>({
   ] = useMutation<N>(mutationQuery, {});
 
   const [inputMap, setInputMap] = useState<T | object>(defaultValueMap ?? {});
+
+  const checkHasMetadataField = () => {
+    for (const attr of attributes) {
+      if (attr.name.toString().includes("metadata")) return true;
+    }
+    return false;
+  };
+
+  const getMetadata = () => {
+    const metadata = {};
+    for (const x in inputMap as object) {
+      if (x.includes("metadata.")) {
+        //@ts-ignore
+        metadata[x.replace("metadata.", "")] = inputMap[x];
+      }
+    }
+
+    return JSON.stringify(metadata);
+  };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -60,11 +83,22 @@ export default function Form<T, N>({
       }
     }
 
+    const submitMap = checkHasMetadataField()
+      ? {
+          ...inputMap,
+          metadata: getMetadata(),
+        }
+      : inputMap;
+
+    console.log(submitMap);
     mutateFunction({
-      variables: { ...addedValueMap, ...defaultValueMap, ...inputMap },
-    }).then((e) => {
-      afterSubmit && e.data && afterSubmit(e.data[fields] as any);
-    });
+      variables: { ...addedValueMap, ...defaultValueMap, ...submitMap },
+    })
+      .then((e) => {
+        afterSubmit && e.data && afterSubmit(e.data[fields] as any);
+        successMessage && toast.success(successMessage);
+      })
+      .catch((e) => toast.error(mutationError?.message));
   };
 
   return (
@@ -84,7 +118,7 @@ export default function Form<T, N>({
         />
       ))}
       <Button loading={mutationLoading} type="submit" color="BLUE">
-        SUBMIT
+        {submitName ?? "SIMPAN"}
       </Button>
     </form>
   );

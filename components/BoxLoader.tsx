@@ -11,6 +11,7 @@ import { useInView } from "react-intersection-observer";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Button from "./Button";
+import SkeletonGrid from "./SkeletonGrid";
 
 interface Id {
   id: string;
@@ -88,14 +89,6 @@ export default function Loader<T extends Id>({
   const datas: { node: T }[] = mainData?.edges ?? [];
   const pageInfo: PaginatorInfo = mainData?.pageInfo;
 
-  const SkeletonGrid = (e: { gridLength: number }) => (
-    <div className={className}>
-      {SkeletonComponent &&
-        [...Array(PerPage * e.gridLength)].map((e, i) => (
-          <SkeletonComponent key={i} />
-        ))}
-    </div>
-  );
   const MakeComponent = (e: T) => <Component {...e} />;
 
   const { ref, inView } = useInView();
@@ -123,24 +116,41 @@ export default function Loader<T extends Id>({
       });
   };
 
-  if (loading || mutationLoading) return <>{<SkeletonGrid gridLength={1} />}</>;
+  if (loading || mutationLoading)
+    return (
+      <>
+        {
+          <SkeletonGrid
+            className={className}
+            total={perPage ?? 20}
+            SkeletonComponent={SkeletonComponent}
+          />
+        }
+      </>
+    );
 
   if (error) return <p>Error :( {error.message}</p>;
 
   return raw ? (
     <>
       {datas.map((e, i) => (
-        <MakeComponent {...e.node} key={e.node.id} />
+        <MakeComponent {...e.node} key={`${e.node.id}-${i}`} />
       ))}
       <div ref={ref}>
-        {pageInfo?.hasNextPage && <SkeletonGrid gridLength={1} />}
+        {pageInfo?.hasNextPage && (
+          <SkeletonGrid
+            className={className}
+            total={perPage ?? 20}
+            SkeletonComponent={SkeletonComponent}
+          />
+        )}
       </div>
     </>
   ) : (
     <div>
       <div className={className}>
         {datas.map((e, i) => (
-          <div key={`${e.node.id}`}>
+          <div key={`${e.node.id}-${i}`}>
             {withEditDelete && (
               <div className="flex justify-between">
                 <Link href={editUrl + e.node.id}>
@@ -158,7 +168,9 @@ export default function Loader<T extends Id>({
         ))}
       </div>
       <div ref={ref}>
-        {pageInfo?.hasNextPage && <SkeletonGrid gridLength={1} />}
+        {pageInfo?.hasNextPage && (
+          <SkeletonGrid className={className} total={perPage ?? 20} />
+        )}
       </div>
     </div>
   );
