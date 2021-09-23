@@ -8,8 +8,6 @@ const httpClient = axios;
 
 // httpClient.defaults.withCredentials = true;
 
-httpClient.defaults.baseURL = "http://192.168.1.231/api";
-
 const { token } = useAuthStore.getState();
 
 axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
@@ -20,17 +18,17 @@ httpClient.interceptors.request.use(function (config) {
   console.log(token);
   return config;
 });
-const PusherClient = new Pusher("DKLK123", {
-  wsHost: "192.168.1.231",
+const PusherClient = new Pusher(process.env.NEXT_PUBLIC_ECHO_KEY as string, {
+  wsHost: process.env.NEXT_PUBLIC_ECHO_HOST as string,
   cluster: "mt1",
-  wsPort: 6001 as number,
+  wsPort: parseInt(process.env.NEXT_PUBLIC_ECHO_POST as string),
   forceTLS: false,
-  authEndpoint: "http://192.168.1.231/api" + "/broadcasting/auth",
+  authEndpoint: process.env.NEXT_PUBLIC_ECHO_AUTH,
   authorizer: (channel: { name: any }) => {
     return {
       authorize: (socketId: any, callback: (arg0: any, arg1: any) => void) => {
         httpClient
-          .post("/broadcasting/auth", {
+          .post(process.env.NEXT_PUBLIC_ECHO_AUTH as string, {
             socket_id: socketId,
             channel_name: channel.name,
           })
