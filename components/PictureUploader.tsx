@@ -18,15 +18,20 @@ const UPLOAD_IMAGE_MUTATION = gql`
     $roles: String
     $pictureable_id: ID
     $pictureable_type: String
+    $metadata: String
   ) {
     uploadPicture(
       file: $file
       roles: $roles
       pictureable_id: $pictureable_id
       pictureable_type: $pictureable_type
+      metadata: $metadata
     ) {
       id
       path
+      metadata {
+        original_name
+      }
     }
   }
 `;
@@ -63,6 +68,10 @@ export default function PictureUploader(e: {
       variables: {
         file: uploadFile,
         ...e,
+        metadata: JSON.stringify({
+          original_name: file?.name,
+          original: file?.size,
+        }),
       },
     }).then((x) => {
       setPicture(x.data?.uploadPicture);

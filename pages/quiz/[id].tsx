@@ -133,6 +133,7 @@ function Id({ router }: { router: NextRouter }) {
           const quizplayData: Quizplay = e.data?.createQuizplay;
           setMyquizplay(quizplayData);
           setQuizplays([...quizplays, quizplayData]);
+          if (!multiplayer) setStarted(true);
         }
       );
     });
@@ -182,9 +183,9 @@ function Id({ router }: { router: NextRouter }) {
         ) : (
           <>
             <div className="m-auto">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div
-                  style={{ width: 400 }}
+                  style={{ width: 350 }}
                   className="bg-gray-800 shadow rounded p-4 flex flex-col gap-2"
                 >
                   {quizsession && multiplayer ? (
@@ -196,7 +197,7 @@ function Id({ router }: { router: NextRouter }) {
                       MULAI PERMAINAN
                     </Button>
                   ) : (
-                    <Button onClick={handlePrepare} color="GREEN">
+                    <Button onClick={() => handlePrepare(false)} color="GREEN">
                       <MdPlayArrow size="1.5em" color="white" />
                       MULAI
                     </Button>
@@ -226,7 +227,7 @@ function Id({ router }: { router: NextRouter }) {
                 </div>
                 {multiplayer && (
                   <div
-                    style={{ width: 400 }}
+                    style={{ width: 350 }}
                     className="bg-gray-800 shadow rounded p-4 flex flex-col gap-2 max-h-96 overflow-y-auto"
                   >
                     <h1 className="font-semibold text-sm text-white">
@@ -256,7 +257,7 @@ function Id({ router }: { router: NextRouter }) {
 
                 {!multiplayer && (
                   <div
-                    style={{ width: 400 }}
+                    style={{ width: 350 }}
                     className="bg-gray-800 shadow rounded p-4 flex flex-col gap-2"
                   >
                     <div className="grid grid-cols-6 gap-2">
@@ -283,7 +284,7 @@ function Id({ router }: { router: NextRouter }) {
                   </div>
                 )}
                 <div
-                  style={{ width: 400 }}
+                  style={{ width: 350 }}
                   className="bg-gray-800 shadow rounded p-4 flex flex-col gap-2"
                 >
                   <h1 className="font-semibold text-sm text-white">

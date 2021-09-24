@@ -1,26 +1,9 @@
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 import React, { useState } from "react";
-import {
-  AiFillCrown,
-  AiFillHome,
-  AiFillVideoCamera,
-  AiOutlineBook,
-} from "react-icons/ai";
+import { AiFillCrown, AiFillHome, AiOutlineBook } from "react-icons/ai";
 import { FaHandsHelping, FaMedal, FaTasks } from "react-icons/fa";
-import {
-  MdAccountCircle,
-  MdSubscriptions,
-  MdShoppingCart,
-  MdReceipt,
-  MdAccountBalanceWallet,
-  MdGamepad,
-  MdSettings,
-  MdStore,
-  MdSearch,
-  MdDashboard,
-  MdSchool,
-} from "react-icons/md";
+import { MdStore, MdSearch, MdDashboard, MdSchool } from "react-icons/md";
 import AppContainer from "../../components/Container/AppContainer";
 import {
   RiUserSearchFill,
@@ -29,9 +12,6 @@ import {
   RiUserHeartLine,
   RiUserStarLine,
 } from "react-icons/ri";
-import create from "zustand";
-import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
-import Button from "../../components/Button";
 import { useUserStore } from "../../store/user";
 import { GiMegaphone } from "react-icons/gi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
@@ -47,9 +27,11 @@ interface Route {
 }
 
 export default function DashboardContainer({
+  title,
   children,
 }: {
   children: JSX.Element | JSX.Element[] | string;
+  title?: string;
 }) {
   const baseUserMenu: Route[] = [
     {
@@ -192,16 +174,14 @@ export default function DashboardContainer({
     <Link href={e.url}>
       <a
         className={
-          "flex justify-center text-lg text-white capitalize font-semibold rounded hover:bg-red-900 p-4 " +
+          "flex justify-between text-lg text-white capitalize font-semibold rounded hover:bg-red-900 p-4 " +
           (pathname == e.url ? "bg-red-400" : "")
         }
       >
-        <a className="grid grid-cols-12 w-full p-4">
-          <div className="col-span-12 lg:col-span-2"> {e.icon}</div>
-          <div className="col-span-10 hidden lg:block uppercase font-semibold text-center">
-            {e.name}
-          </div>
-        </a>
+        <div className="col-span-12 lg:col-span-2"> {e.icon}</div>
+        <div className="col-span-10 hidden lg:block uppercase font-semibold text-center">
+          {e.name}
+        </div>
       </a>
     </Link>
   );
@@ -209,49 +189,42 @@ export default function DashboardContainer({
   const [index, setIndex] = useState(0);
   const { user } = useUserStore();
   return (
-    <AppContainer without={["margin"]} title="Dashboard Utama">
+    <AppContainer without={["margin"]} title={title ?? "Dashboard Utama"}>
       <div className="min-h-screen grid grid-cols-12 overflow-x-hidden">
         <div className="col-span-3 md:col-span-2 flex flex-col gap-1 bg-gradient-to-b from-blue-400 to-green-500 md:p-2 max-h-screen overflow-x-auto pt-16">
-          <Tabs selectedIndex={index} onSelect={setIndex}>
-            <TabList className="grid grid-cols-1 md:grid-cols-2 gap-1">
-              <Tab>
-                <button
-                  className={
-                    (index != 0 ? "bg-blue-300" : "bg-red-300 ") +
-                    "uppercase flex justify-center w-full px-4 py-2 text-sm lg:text-lg font-semibold text-white transition-colors duration-300 "
-                  }
-                >
-                  Dashboard
-                </button>
-              </Tab>
-              <Tab>
-                <button
-                  className={
-                    (index != 1 ? "bg-blue-300" : "bg-red-300 ") +
-                    " uppercase flex justify-center w-full px-4 py-2 text-sm lg:text-lg font-semibold text-white transition-colors duration-300 "
-                  }
-                >
-                  {user?.roles}
-                </button>
-              </Tab>
-            </TabList>
-
-            <TabPanel>
-              <div className="pt-4">
-                {[...baseUserMenu].map((e, i) => (
-                  <RenderMenu {...e} key={i} />
-                ))}
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div className="pt-4">
-                {user &&
-                  Routes[user.roles].map((e, i) => (
-                    <RenderMenu {...e} key={i} />
-                  ))}
-              </div>
-            </TabPanel>
-          </Tabs>
+          <div className="mt-2 md:mt-16 flex flex-col lg:flex-row gap-2">
+            <button
+              onClick={() => setIndex(0)}
+              className={
+                (index != 0 ? "bg-blue-300" : "bg-red-300 ") +
+                " uppercase flex justify-center w-full px-4 py-2 text-sm lg:text-lg font-semibold text-white transition-colors duration-300 "
+              }
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setIndex(1)}
+              className={
+                (index != 1 ? "bg-blue-300" : "bg-red-300 ") +
+                " uppercase flex justify-center w-full px-4 py-2 text-sm lg:text-lg font-semibold text-white transition-colors duration-300 "
+              }
+            >
+              {user?.roles}
+            </button>
+          </div>
+          {index == 0 && (
+            <div className="pt-4">
+              {[...baseUserMenu].map((e, i) => (
+                <RenderMenu {...e} key={i} />
+              ))}
+            </div>
+          )}
+          {index == 1 && (
+            <div className="pt-4">
+              {user &&
+                Routes[user.roles].map((e, i) => <RenderMenu {...e} key={i} />)}
+            </div>
+          )}
         </div>
         <div className="col-span-9 md:col-span-10 p-2 md:p-10 overflow-x-scroll  max-h-screen">
           <div className="pt-16">{children}</div>

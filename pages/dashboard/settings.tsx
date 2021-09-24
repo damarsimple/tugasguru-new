@@ -13,7 +13,7 @@ export default function Settings() {
 
   return (
     <DashboardContainer>
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <PictureUploader
           roles="COVER"
           pictureable_id={user?.id}

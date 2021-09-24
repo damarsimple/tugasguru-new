@@ -59,7 +59,6 @@ export interface User {
   myclassrooms: Maybe<ClassroomConnection>;
   consultants: Maybe<ConsultationConnection>;
   courses: Maybe<CourseConnection>;
-  exams: Maybe<ExamConnection>;
   examplays: Maybe<ExamplayConnection>;
   formsubmissions: Maybe<FormsubmissionConnection>;
   questions: Maybe<QuestionConnection>;
@@ -81,12 +80,12 @@ export interface Picture {
   created_at: string;
   updated_at: string;
   name: string;
-  roles: string;
+  roles: Maybe<string>;
   path: string;
   pictureable: Maybe<Pictureable>;
   pictureable_id: string;
   pictureable_type: Maybe<string>;
-  metadata: PictureMetadata;
+  metadata: Maybe<PictureMetadata>;
 }
 
 export type Pictureable =
@@ -106,7 +105,7 @@ export interface Question {
   user: User;
   subject: Subject;
   classtype: Classtype;
-  metadata: QuestionMetadata;
+  metadata: Maybe<QuestionMetadata>;
   visibility: Visibility;
   pictures: Maybe<Picture[]>;
   audios: Maybe<Audio[]>;
@@ -181,7 +180,7 @@ export interface Quiz {
   user: User;
   classtype: Classtype;
   subject: Subject;
-  metadata: QuizMetadata;
+  metadata: Maybe<QuizMetadata>;
   played_count: number;
   is_rewarded: boolean;
   difficulty: QuizDifficulty;
@@ -431,30 +430,19 @@ export interface Assigment {
   user: User;
   classroom: Classroom;
   subject: Subject;
-  metadata: AssigmentMetadata;
+  metadata: Maybe<AssigmentMetadata>;
   close_at: string;
   is_odd_semester: boolean;
-  assigmentsubmissions: Maybe<AssigmentsubmissionConnection>;
+  assigmentsubmissions: Assigmentsubmission[];
+  myassigmentsubmission: Maybe<Assigmentsubmission>;
+  pictures: Maybe<Picture[]>;
+  audios: Maybe<Audio[]>;
+  videos: Maybe<Video[]>;
+  documents: Maybe<Document[]>;
 }
 
 export interface AssigmentMetadata {
   description: string;
-}
-
-/** A paginated list of Assigmentsubmission edges. */
-export interface AssigmentsubmissionConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Assigmentsubmission edges.*/
-  edges: AssigmentsubmissionEdge[];
-}
-
-/** An edge that contains a node of type Assigmentsubmission and a cursor. */
-export interface AssigmentsubmissionEdge {
-  /** The Assigmentsubmission node.*/
-  node: Assigmentsubmission;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
 }
 
 export interface Assigmentsubmission {
@@ -467,6 +455,7 @@ export interface Assigmentsubmission {
   graded: boolean;
   edited_times: number;
   turned_at: string;
+  turned: boolean;
   pictures: Maybe<Picture[]>;
   audios: Maybe<Audio[]>;
   videos: Maybe<Video[]>;
@@ -478,12 +467,12 @@ export interface Audio {
   created_at: string;
   updated_at: string;
   name: string;
-  roles: string;
+  roles: Maybe<string>;
   path: string;
   audioable: Maybe<Audioable>;
   audioable_id: string;
   audioable_type: Maybe<string>;
-  metadata: AudioMetadata;
+  metadata: Maybe<AudioMetadata>;
 }
 
 export type Audioable = Question | Meeting | Assigmentsubmission | Assigment | Formsubmission;
@@ -492,9 +481,10 @@ export interface Meeting {
   created_at: string;
   updated_at: string;
   name: string;
-  metadata: MeetingMetadata;
+  metadata: Maybe<MeetingMetadata>;
   classroom: Classroom;
   finish_at: string;
+  open_at: string;
   pictures: Maybe<Picture[]>;
   audios: Maybe<Audio[]>;
   videos: Maybe<Video[]>;
@@ -527,12 +517,12 @@ export interface Video {
   created_at: string;
   updated_at: string;
   name: string;
-  roles: string;
+  roles: Maybe<string>;
   path: string;
   videoable: Maybe<Videoable>;
   videoable_id: string;
   videoable_type: Maybe<string>;
-  metadata: VideoMetadata;
+  metadata: Maybe<VideoMetadata>;
   cover: Maybe<Picture>;
 }
 
@@ -551,7 +541,7 @@ export interface Course {
   views: number;
   access: string[];
   user: User;
-  metadata: CourseMetadata;
+  metadata: Maybe<CourseMetadata>;
   classtype: Classtype;
   subject: Subject;
 }
@@ -583,22 +573,24 @@ export interface Document {
   created_at: string;
   updated_at: string;
   name: string;
-  roles: string;
+  roles: Maybe<string>;
   path: string;
   documentable: Maybe<Documentable>;
   documentable_id: string;
   documentable_type: Maybe<string>;
-  metadata: DocumentMetadata;
+  metadata: Maybe<DocumentMetadata>;
 }
 
 export type Documentable = Question | Meeting | Assigmentsubmission | Assigment | Formsubmission;
 export interface DocumentMetadata {
+  original_name: string;
   duration: number;
   original: number;
   compressed: number;
 }
 
 export interface VideoMetadata {
+  original_name: string;
   course_name: Maybe<string>;
   duration: number;
   original: number;
@@ -611,7 +603,7 @@ export interface Chatroom {
   updated_at: string;
   user: User;
   second: User;
-  metadata: ChatroomMetadata;
+  metadata: Maybe<ChatroomMetadata>;
   chatroomable: Maybe<Chatroomable>;
   chatroomable_id: Maybe<string>;
   chatroomable_type: Maybe<string>;
@@ -710,7 +702,7 @@ export interface Agenda {
   agendaable: Maybe<Agendaable>;
   agendaable_id: Maybe<string>;
   agendaable_type: Maybe<string>;
-  metadata: AgendaMetadata;
+  metadata: Maybe<AgendaMetadata>;
   start_at: string;
   finish_at: string;
   attendances: Maybe<AttendanceConnection>;
@@ -723,10 +715,8 @@ export interface Exam {
   updated_at: string;
   name: string;
   subject: Subject;
-  user: User;
   examtype: Examtype;
   classroom: Classroom;
-  classtype: Classtype;
   metadata: Maybe<ExamMetadata>;
   is_odd_semester: boolean;
   agenda: Agenda;
@@ -868,7 +858,7 @@ export interface Absent {
   updated_at: string;
   user: User;
   receiver: User;
-  metadata: AbsentMetadata;
+  metadata: Maybe<AbsentMetadata>;
   start_at: string;
   finish_at: string;
 }
@@ -900,7 +890,7 @@ export interface Chat {
   updated_at: string;
   user: User;
   chatroom: Chatroom;
-  metadata: ChatMetadata;
+  metadata: Maybe<ChatMetadata>;
 }
 
 export interface ChatMetadata {
@@ -908,6 +898,7 @@ export interface ChatMetadata {
 }
 
 export interface AudioMetadata {
+  original_name: string;
   original: number;
   compressed: number;
 }
@@ -951,7 +942,7 @@ export interface Packagequestion {
   user: User;
   subject: Subject;
   classtype: Classtype;
-  metadata: PackagequestionMetadata;
+  metadata: Maybe<PackagequestionMetadata>;
   visibility: Visibility;
   questions: Question[];
 }
@@ -1018,7 +1009,7 @@ export interface Voucher {
   name: string;
   percentage: number;
   expired_at: string;
-  metadata: VoucherMetadata;
+  metadata: Maybe<VoucherMetadata>;
   transactions: Maybe<TransactionConnection>;
 }
 
@@ -1080,6 +1071,7 @@ export enum QuestionType {
   Filler = 'FILLER',
 }
 export interface PictureMetadata {
+  original_name: string;
   original: number;
   compressed: number;
 }
@@ -1124,6 +1116,22 @@ export interface AgendaConnection {
 export interface AgendaEdge {
   /** The Agenda node.*/
   node: Agenda;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Assigmentsubmission edges. */
+export interface AssigmentsubmissionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Assigmentsubmission edges.*/
+  edges: AssigmentsubmissionEdge[];
+}
+
+/** An edge that contains a node of type Assigmentsubmission and a cursor. */
+export interface AssigmentsubmissionEdge {
+  /** The Assigmentsubmission node.*/
+  node: Assigmentsubmission;
   /** A unique cursor that can be used for pagination.*/
   cursor: string;
 }
@@ -1215,7 +1223,7 @@ export interface Consultation {
   user: User;
   consultant: User;
   name: string;
-  metadata: ConsultationMetadata;
+  metadata: Maybe<ConsultationMetadata>;
 }
 
 export interface ConsultationMetadata {
@@ -1279,7 +1287,7 @@ export interface Report {
   user: User;
   receiver: User;
   name: string;
-  metadata: ReportMetadata;
+  metadata: Maybe<ReportMetadata>;
   type: ReportType;
 }
 
@@ -1340,6 +1348,28 @@ export enum WithdrawStatus {
 }
 export interface WithdrawMetadata {
   content: Maybe<string>;
+}
+
+export interface Notification {
+  type: Maybe<string>;
+  notifiable_type: Maybe<string>;
+  notifiable_id: string;
+  data: Maybe<BasicNotification>;
+  read_at: Maybe<string>;
+  id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BasicNotification {
+  id: Maybe<string>;
+  name: Maybe<string>;
+  type: Maybe<string>;
+  message: Maybe<string>;
+  definition: Maybe<string>;
+  picture: Maybe<Picture>;
+  start_at: Maybe<string>;
+  finish_at: Maybe<string>;
 }
 
 /** A paginated list of Province edges. */
@@ -1512,6 +1542,20 @@ export interface GenericOutput {
   message: Maybe<string>;
 }
 
+export interface TutoringRequest {
+  user_id: string;
+  finish_at: string;
+  start_at: string;
+  metadata: string;
+}
+
+export interface TutoringRequestOutput {
+  status: Maybe<boolean>;
+  message: Maybe<string>;
+  tutoring: Maybe<Tutoring>;
+  transaction: Maybe<Transaction>;
+}
+
 export interface CreateProvince {
   name: string;
 }
@@ -1541,9 +1585,8 @@ export interface CreateSubject {
 
 export interface CreateExam {
   name: string;
-  classtype_id: string;
   examtype_id: string;
-  metadata: ExamMetadata;
+  metadata?: string;
   is_odd_semester: boolean;
   examsessions: CreateExamsessionHasMany;
   supervisors?: ConnectSupervisorBelongsToMany;
@@ -1574,12 +1617,18 @@ export interface CreateAssigment {
   classroom_id: string;
   subject_id: string;
   is_odd_semester: boolean;
-  metadata: AssigmentMetadata;
+  metadata?: string;
   close_at: string;
-  pictures?: Picture[];
-  audios?: Audio[];
-  videos?: Video[];
-  documents?: Document[];
+  videos?: BasicOneToMany;
+  audios?: BasicOneToMany;
+  documents?: BasicOneToMany;
+  picture?: BasicOneToMany;
+}
+
+export interface BasicOneToMany {
+  delete?: string[];
+  connect?: string[];
+  disconnect?: string[];
 }
 
 export interface CreateClasstype {
@@ -1590,6 +1639,7 @@ export interface CreateMeeting {
   name: string;
   classroom_id: string;
   metadata?: string;
+  open_at: string;
   finish_at: string;
 }
 
@@ -1603,6 +1653,10 @@ export interface CreateReport {
 export interface CreateAssigmentSubmission {
   assigment_id: string;
   metadata?: string;
+  videos?: BasicOneToMany;
+  audios?: BasicOneToMany;
+  documents?: BasicOneToMany;
+  picture?: BasicOneToMany;
 }
 
 export interface CreateQuiz {
@@ -1760,7 +1814,6 @@ export interface UpdateSubject {
 
 export interface UpdateExam {
   name: string;
-  classtype_id?: string;
   examtype_id?: string;
   metadata?: string;
   is_odd_semester: boolean;
@@ -1787,6 +1840,10 @@ export interface UpdateAssigment {
   is_odd_semester: boolean;
   metadata?: string;
   close_at: string;
+  videos?: BasicOneToMany;
+  audios?: BasicOneToMany;
+  documents?: BasicOneToMany;
+  picture?: BasicOneToMany;
 }
 
 export interface UpdateClasstype {
@@ -1796,7 +1853,8 @@ export interface UpdateClasstype {
 export interface UpdateMeeting {
   name: string;
   metadata?: string;
-  finish_at: string;
+  open_at?: string;
+  finish_at?: string;
 }
 
 export interface UpdateReport {
@@ -1828,7 +1886,7 @@ export interface UpdateAbsent {
 }
 
 export interface UpdateAgenda {
-  metadata: AgendaMetadata;
+  metadata?: string;
   start_at: string;
   finish_at: string;
 }
@@ -1886,6 +1944,12 @@ export interface UpdateExtracurricular {
   type?: string;
 }
 
+export interface AssigmentsubmissionMetadata {
+  content: Maybe<string>;
+  comment: Maybe<string>;
+  external_url: Maybe<string>;
+}
+
 export interface Assigmentsubmissions {
   id: string;
   created_at: string;
@@ -1896,25 +1960,16 @@ export interface Assigmentsubmissions {
   graded: boolean;
   edited_times: number;
   turned_at: string;
-  metadata: AssigmentsubmissionMetadata;
+  metadata: Maybe<AssigmentsubmissionMetadata>;
   pictures: Maybe<Picture[]>;
   audios: Maybe<Audio[]>;
   videos: Maybe<Video[]>;
   documents: Maybe<Document[]>;
 }
 
-export interface AssigmentsubmissionMetadata {
-  content?: string;
-  comment?: string;
-  external_url?: string;
-}
-
 export interface CreateQuestion {
   subject_id: string;
   classtype_id: string;
-  pictures?: Picture[];
-  audios?: Audio[];
-  videos?: Video[];
   metadata?: string;
   visibility: Visibility;
 }
@@ -1940,6 +1995,14 @@ export interface UpsertChatroom {
 
 export interface UpdateAssigmentSubmission {
   metadata?: string;
+  turned?: boolean;
+  turned_at?: string;
+  graded?: boolean;
+  grade?: number;
+  videos?: BasicOneToMany;
+  audios?: BasicOneToMany;
+  documents?: BasicOneToMany;
+  picture?: BasicOneToMany;
 }
 
 export interface UpdatePackagequestionBelongsToMany {
@@ -2024,7 +2087,165 @@ export interface userFindArgs {
   parent_id?: string;
 }
 
+export interface questionArgs {
+  id?: string;
+}
+
+export interface agendaArgs {
+  id?: string;
+}
+
+export interface absentArgs {
+  id?: string;
+}
+
+export interface formsubmissionArgs {
+  id?: string;
+}
+
+export interface submissionArgs {
+  id?: string;
+}
+
+export interface attendanceArgs {
+  id?: string;
+}
+
+export interface tutoringArgs {
+  id?: string;
+}
+
+export interface extracurricularArgs {
+  id?: string;
+}
+
+export interface chatArgs {
+  id?: string;
+}
+
+export interface examplayArgs {
+  id?: string;
+}
+
+export interface chatroomArgs {
+  id?: string;
+}
+
+export interface quizplayArgs {
+  id?: string;
+}
+
+export interface quizsessionArgs {
+  id?: string;
+}
+
+export interface audioArgs {
+  id?: string;
+}
+
+export interface classroomArgs {
+  id?: string;
+}
+
+export interface pictureArgs {
+  id?: string;
+}
+
+export interface packagequestionArgs {
+  id?: string;
+}
+
+export interface examtypeArgs {
+  id?: string;
+}
+
+export interface meetingArgs {
+  id?: string;
+}
+
+export interface courseArgs {
+  id?: string;
+}
+
+export interface consultationArgs {
+  id?: string;
+}
+
+export interface assigmentArgs {
+  id?: string;
+}
+
+export interface cityArgs {
+  id?: string;
+}
+
+export interface reportArgs {
+  id?: string;
+}
+
+export interface schoolArgs {
+  id?: string;
+}
+
+export interface classtypeArgs {
+  id?: string;
+}
+
+export interface videoArgs {
+  id?: string;
+}
+
+export interface subjectArgs {
+  id?: string;
+}
+
+export interface districtArgs {
+  id?: string;
+}
+
+export interface voucherArgs {
+  id?: string;
+}
+
+export interface examArgs {
+  id?: string;
+}
+
+export interface provinceArgs {
+  id?: string;
+}
+
+export interface majorArgs {
+  id?: string;
+}
+
+export interface quizArgs {
+  id?: string;
+}
+
+export interface withdrawArgs {
+  id?: string;
+}
+
+export interface assigmentsubmissionArgs {
+  id?: string;
+}
+
+export interface transactionArgs {
+  id?: string;
+}
+
+export interface accessArgs {
+  id?: string;
+}
+
+export interface documentArgs {
+  id?: string;
+}
+
 export interface meArgs {}
+
+export interface notificationsArgs {}
 
 export interface usersArgs {
   name?: string;
@@ -2476,11 +2697,18 @@ export interface inviteQuizsessionArgs {
   input: InviteQuizsession;
 }
 
+export interface sendTutoringRequestArgs {
+  input: TutoringRequest;
+}
+
+export interface markReadAllArgs {}
+
 export interface uploadPictureArgs {
   file: File;
   pictureable_id?: string;
   pictureable_type?: string;
   roles?: string;
+  metadata?: string;
 }
 
 export interface uploadVideoArgs {
@@ -2725,4 +2953,168 @@ export interface updateMajorArgs {
 export interface updateExtracurricularArgs {
   id: string;
   input: UpdateExtracurricular;
+}
+
+export interface deleteQuestionArgs {
+  id: string;
+}
+
+export interface deleteAgendaArgs {
+  id: string;
+}
+
+export interface deleteAbsentArgs {
+  id: string;
+}
+
+export interface deleteFormsubmissionArgs {
+  id: string;
+}
+
+export interface deleteSubmissionArgs {
+  id: string;
+}
+
+export interface deleteAttendanceArgs {
+  id: string;
+}
+
+export interface deleteTutoringArgs {
+  id: string;
+}
+
+export interface deleteUserArgs {
+  id: string;
+}
+
+export interface deleteExtracurricularArgs {
+  id: string;
+}
+
+export interface deleteChatArgs {
+  id: string;
+}
+
+export interface deleteExamplayArgs {
+  id: string;
+}
+
+export interface deleteChatroomArgs {
+  id: string;
+}
+
+export interface deleteQuizplayArgs {
+  id: string;
+}
+
+export interface deleteQuizsessionArgs {
+  id: string;
+}
+
+export interface deleteAudioArgs {
+  id: string;
+}
+
+export interface deleteClassroomArgs {
+  id: string;
+}
+
+export interface deletePictureArgs {
+  id: string;
+}
+
+export interface deletePackagequestionArgs {
+  id: string;
+}
+
+export interface deleteExamtypeArgs {
+  id: string;
+}
+
+export interface deleteMeetingArgs {
+  id: string;
+}
+
+export interface deleteCourseArgs {
+  id: string;
+}
+
+export interface deleteConsultationArgs {
+  id: string;
+}
+
+export interface deleteExamsessionArgs {
+  id: string;
+}
+
+export interface deleteAssigmentArgs {
+  id: string;
+}
+
+export interface deleteCityArgs {
+  id: string;
+}
+
+export interface deleteReportArgs {
+  id: string;
+}
+
+export interface deleteSchoolArgs {
+  id: string;
+}
+
+export interface deleteClasstypeArgs {
+  id: string;
+}
+
+export interface deleteVideoArgs {
+  id: string;
+}
+
+export interface deleteSubjectArgs {
+  id: string;
+}
+
+export interface deleteDistrictArgs {
+  id: string;
+}
+
+export interface deleteVoucherArgs {
+  id: string;
+}
+
+export interface deleteExamArgs {
+  id: string;
+}
+
+export interface deleteProvinceArgs {
+  id: string;
+}
+
+export interface deleteMajorArgs {
+  id: string;
+}
+
+export interface deleteQuizArgs {
+  id: string;
+}
+
+export interface deleteWithdrawArgs {
+  id: string;
+}
+
+export interface deleteAssigmentsubmissionArgs {
+  id: string;
+}
+
+export interface deleteTransactionArgs {
+  id: string;
+}
+
+export interface deleteAccessArgs {
+  id: string;
+}
+
+export interface deleteDocumentArgs {
+  id: string;
 }

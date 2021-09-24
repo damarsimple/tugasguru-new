@@ -21,7 +21,7 @@ httpClient.interceptors.request.use(function (config) {
 const PusherClient = new Pusher(process.env.NEXT_PUBLIC_ECHO_KEY as string, {
   wsHost: process.env.NEXT_PUBLIC_ECHO_HOST as string,
   cluster: "mt1",
-  wsPort: parseInt(process.env.NEXT_PUBLIC_ECHO_POST as string),
+  wsPort: parseInt(process.env.NEXT_PUBLIC_ECHO_PORT as string),
   forceTLS: false,
   authEndpoint: process.env.NEXT_PUBLIC_ECHO_AUTH,
   authorizer: (channel: { name: any }) => {

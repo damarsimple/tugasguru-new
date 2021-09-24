@@ -113,3 +113,41 @@ export const CoreGenericOutput = gql`
     message
   }
 `;
+
+export const CoreAssigmentsubmissionField = gql`
+  fragment CoreAssigmentsubmissionField on Assigmentsubmission {
+    id
+    user {
+      name
+      cover {
+        path
+      }
+    }
+    grade
+    graded
+    edited_times
+    turned_at
+    updated_at
+    turned
+    pictures {
+      id
+      path
+      roles
+    }
+    audios {
+      id
+      path
+      roles
+    }
+    documents {
+      id
+      path
+      roles
+    }
+    videos {
+      id
+      path
+      roles
+    }
+  }
+`;

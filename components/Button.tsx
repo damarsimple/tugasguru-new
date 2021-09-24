@@ -24,6 +24,7 @@ interface ButtonProp {
   onClick?: () => void;
   color?: COLORS;
   href?: string;
+  className?: string;
 }
 
 export default function Button({
@@ -33,6 +34,7 @@ export default function Button({
   onClick,
   color,
   href,
+  className,
 }: ButtonProp) {
   const ButtonComponent = () => (
     <button
@@ -40,7 +42,8 @@ export default function Button({
       type={type ?? "button"}
       disabled={loading}
       className={
-        "uppercase flex justify-center w-full px-4 py-2 truncate text-sm lg:text-lg font-semibold text-white transition-colors duration-300 rounded-md shadow focus:outline-none focus:ring-4 " +
+        className +
+        " uppercase items-center flex justify-center w-full px-4 py-2 truncate text-sm lg:text-lg font-semibold text-white transition-colors duration-300 rounded-md shadow focus:outline-none focus:ring-4 " +
         (color && color in Colors ? Colors[color] : Colors.BLUE)
       }
     >

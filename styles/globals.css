@@ -44,7 +44,8 @@ input[type=number] {
     border: 3px solid white;
 }
 
-.react-tabs__tab {
+
+/* .react-tabs__tab {
     display: inline-block;
     border: 1px solid transparent;
     border-bottom: none;
@@ -57,4 +58,4 @@ input[type=number] {
 
 .react-tabs__tab--selected {
     background: none;
-}
+} */

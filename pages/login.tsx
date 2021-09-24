@@ -65,15 +65,15 @@ export default function Login() {
   return (
     <AppContainer title="Login" without={["navbar"]}>
       <div
-        className="flex h-screen"
+        className="flex min-h-screen"
         style={{ backgroundImage: "url('/login.jpeg')" }}
       >
         <div className="m-auto">
           <div className="flex flex-col overflow-hidden bg-white rounded-md shadow-lg max md:flex-row md:flex-1 lg:max-w-screen-md">
-            <div className="p-4 py-6 text-white md:w-80 md:flex-shrink-0 md:flex md:flex-col md:items-center md:justify-evenly">
+            <div className="p-4 py-6 text-white md:w-80 md:flex-shrink-0 md:flex md:flex-col md:items-center md:justify-evenly flex justify-center">
               <ImageContainer
                 fallback="profile"
-                className="rounded-full h-56 w-56 "
+                className="rounded-full h-56 w-56 self-center"
                 src={"/android-chrome-512x512.png"}
                 alt="Picture of the author"
                 height={300}

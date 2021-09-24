@@ -194,7 +194,7 @@ export default function Quizgameplay() {
       <div className="shadow rounded p-4 w-full flex flex-col gap-2 h-full px-56 pt-20">
         <div className="bg-gray-900 p-4 shadow rounded">
           <h1 className="font-bold text-lg text-white">
-            Akurasi {percentage.toFixed(0)}%{JSON.stringify(ranks[1].user)}
+            Akurasi {percentage.toFixed(0)}%
           </h1>
           <div className="relative pt-1">
             <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-pink-200">

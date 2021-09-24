@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Menu, Transition } from "@headlessui/react";
 import { without } from "lodash";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { AiOutlineUser, AiFillWallet } from "react-icons/ai";
 import {
   MdChevronLeft,
@@ -12,8 +13,11 @@ import {
   MdShoppingCart,
 } from "react-icons/md";
 import { formatCurrency } from "../../helpers/formatter";
+import echo from "../../services/echo";
 import { useAuthStore } from "../../store/auth";
+import { useNotificationStore } from "../../store/notifications";
 import { useUserStore } from "../../store/user";
+import { Notification } from "../../types/type";
 import ImageContainer from "./ImageContainer";
 
 type Except = "navbar" | "margin";
@@ -85,6 +89,18 @@ export default function AppContainer({
   navTitle?: string;
 }) {
   const { user } = useUserStore();
+
+  const { notifications, setNotifications } = useNotificationStore();
+
+  useEffect(() => {
+    if (!user) return;
+
+    echo
+      .private("App.Models.User." + user.id)
+      .notification((e: Notification) => {
+        setNotifications([...notifications, e]);
+      });
+  }, [user]);
 
   return (
     <div>
@@ -193,38 +209,42 @@ export default function AppContainer({
               >
                 <MdSearch size="1.5em" />
               </button>
-              <Link href="/dashboard">
-                <a>
-                  <button className="p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
-                    {user?.cover ? (
-                      <ImageContainer
-                        width={20}
-                        height={20}
-                        src={user.cover.path}
-                      />
-                    ) : (
-                      <AiOutlineUser size="1.5em" />
-                    )}
-                  </button>
-                </a>
-              </Link>
-              <Link href="/dashboard">
-                <a>
-                  <button className="hidden md:flex gap-2  p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
-                    <AiFillWallet size="1.5em" />{" "}
-                    {formatCurrency(user?.balance)}
-                  </button>
-                </a>
-              </Link>
-              <Link href="/dashboard/notifications">
-                <a>
-                  <button className="flex p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
-                    <MdNotifications size="1.5em" /> 10
-                  </button>
-                </a>
-              </Link>
+
               {user ? (
-                <UserButton />
+                <>
+                  <Link href="/dashboard">
+                    <a>
+                      <button className="p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
+                        {user?.cover ? (
+                          <ImageContainer
+                            width={20}
+                            height={20}
+                            src={user.cover.path}
+                          />
+                        ) : (
+                          <AiOutlineUser size="1.5em" />
+                        )}
+                      </button>
+                    </a>
+                  </Link>
+
+                  <Link href="/dashboard/notifications">
+                    <a>
+                      <button className="flex p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
+                        <MdNotifications size="1.5em" /> {notifications?.length}
+                      </button>
+                    </a>
+                  </Link>
+                  <Link href="/dashboard/transactions">
+                    <a>
+                      <button className="hidden md:flex gap-2  p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
+                        <AiFillWallet size="1.5em" />{" "}
+                        {formatCurrency(user?.balance)}
+                      </button>
+                    </a>
+                  </Link>
+                  <UserButton />
+                </>
               ) : (
                 <Link href="/login">
                   <a>

@@ -15,8 +15,10 @@ export const checkAnswer = (e: Answer, q: Question) => {
   } else {
     const correctAnswer = q.metadata.answers[0];
 
-    const clean = htmlStripper(e.content ?? "");
-    const cleanCorrect = htmlStripper(correctAnswer.content ?? "");
+    const clean = htmlStripper(e.content?.toLowerCase() ?? "");
+    const cleanCorrect = htmlStripper(
+      correctAnswer.content?.toLowerCase() ?? ""
+    );
 
     return similarity.compareTwoStrings(clean, cleanCorrect) * 100;
   }
