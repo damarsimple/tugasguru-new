@@ -8,19 +8,19 @@ import { BsPlay } from "react-icons/bs";
 import { FaEllipsisH, FaGraduationCap, FaHome } from "react-icons/fa";
 import { MdClose, MdPlace, MdShare } from "react-icons/md";
 import { RiChatFollowUpFill } from "react-icons/ri";
-import Loader from "../components/BoxLoader";
-import Button from "../components/Button";
-import QuizCard, { QuizCardSkeleton } from "../components/Card/QuizCard";
-import AppContainer from "../components/Container/AppContainer";
-import ImageContainer from "../components/Container/ImageContainer";
-import Form from "../components/Forms/Form";
-import Modal from "../components/Modal";
-import SkeletonGrid from "../components/SkeletonGrid";
+import Loader from "../../components/BoxLoader";
+import Button from "../../components/Button";
+import QuizCard, { QuizCardSkeleton } from "../../components/Card/QuizCard";
+import AppContainer from "../../components/Container/AppContainer";
+import ImageContainer from "../../components/Container/ImageContainer";
+import Form from "../../components/Forms/Form";
+import Modal from "../../components/Modal";
+import SkeletonGrid from "../../components/SkeletonGrid";
 import {
   CorePageInfoField,
   CoreQuizCardMinimalField,
-} from "../fragments/fragments";
-import { User, Quiz, Tutoring } from "../types/type";
+} from "../../fragments/fragments";
+import { User, Quiz, Tutoring } from "../../types/type";
 
 function Username({ router }: { router: NextRouter }) {
   const { username } = router.query;

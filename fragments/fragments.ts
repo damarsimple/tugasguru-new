@@ -69,25 +69,14 @@ export const CoreQuestionPlayField = gql`
         ...CoreAnswerPlayField
       }
     }
-    pictures {
-      id
-      path
-      roles
-    }
-    audios {
-      id
-      path
-      roles
-    }
     documents {
       id
       path
       roles
-    }
-    videos {
-      id
-      path
-      roles
+      metadata {
+        original_name
+        type
+      }
     }
   }
 `;
@@ -129,25 +118,16 @@ export const CoreAssigmentsubmissionField = gql`
     turned_at
     updated_at
     turned
-    pictures {
-      id
-      path
-      roles
-    }
-    audios {
-      id
-      path
-      roles
-    }
+
     documents {
       id
       path
+      type
       roles
-    }
-    videos {
-      id
-      path
-      roles
+      metadata {
+        original_name
+        type
+      }
     }
   }
 `;

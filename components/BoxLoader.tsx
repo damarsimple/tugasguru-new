@@ -5,13 +5,20 @@ import {
   useQuery,
   WatchQueryFetchPolicy,
 } from "@apollo/client";
-import React, { useEffect } from "react";
-import { get } from "lodash";
+import React, { useEffect, useState } from "react";
+import { flip, get } from "lodash";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Button from "./Button";
 import SkeletonGrid from "./SkeletonGrid";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { BiUser } from "react-icons/bi";
+import { BsPlay } from "react-icons/bs";
+import { FaLevelUpAlt } from "react-icons/fa";
+import { MdShare, MdClose, MdClass, MdSubject } from "react-icons/md";
+import Modal from "./Modal";
+import Form, { InputMap } from "./Forms/Form";
 
 interface Id {
   id: string;
@@ -20,6 +27,7 @@ interface Id {
 interface BoxProps<T extends Id> {
   query: DocumentNode;
   deleteQuery?: DocumentNode;
+  editQuery?: DocumentNode;
   fields: string;
   Component: (e: T) => JSX.Element;
   SkeletonComponent?: () => JSX.Element;
@@ -28,8 +36,11 @@ interface BoxProps<T extends Id> {
   variables?: object;
   fetchPolicy?: WatchQueryFetchPolicy;
   withEditDelete?: boolean;
-  editUrl?: string;
   raw?: boolean;
+  editAttributes?: InputMap<T>[];
+  editFields: string;
+  withSearchbar?: boolean;
+  EditChildren?: () => JSX.Element;
 }
 
 interface PaginatorInfo {
@@ -52,10 +63,14 @@ export default function Loader<T extends Id>({
   variables,
   fetchPolicy,
   deleteQuery,
-  editUrl,
+  editQuery,
   withEditDelete,
-  raw,
-}: BoxProps<T>) {
+  editAttributes,
+  editFields,
+  EditChildren,
+  withSearchbar,
+}: // raw,
+BoxProps<T>) {
   const [
     mutateFunction,
     {
@@ -116,6 +131,9 @@ export default function Loader<T extends Id>({
       });
   };
 
+  const [selectedEdit, setSelectedEdit] = useState<T | undefined>(undefined);
+  const [openEdit, setOpenEdit] = useState(false);
+  const flip = () => setOpenEdit(!openEdit);
   if (loading || mutationLoading)
     return (
       <>
@@ -131,33 +149,52 @@ export default function Loader<T extends Id>({
 
   if (error) return <p>Error :( {error.message}</p>;
 
-  return raw ? (
-    <>
-      {datas.map((e, i) => (
-        <MakeComponent {...e.node} key={`${e.node.id}-${i}`} />
-      ))}
-      <div ref={ref}>
-        {pageInfo?.hasNextPage && (
-          <SkeletonGrid
-            className={className}
-            total={perPage ?? 20}
-            SkeletonComponent={SkeletonComponent}
-          />
-        )}
-      </div>
-    </>
-  ) : (
+  return (
     <div>
+      <Modal open={openEdit} flip={flip}>
+        <div className="flex flex-col gap-3">
+          <div>
+            <div className="top-0 right-0 flex m-6 gap-2 ">
+              <Button color="RED" onClick={flip}>
+                <MdClose color="white" size="1.5em" />
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-2 p-4">
+            {editQuery && editAttributes && selectedEdit && editFields && (
+              <Form
+                attributes={editAttributes}
+                fields=""
+                mutationQuery={editQuery}
+                addedValueMap={{
+                  id: selectedEdit.id,
+                }}
+                afterSubmit={() => {
+                  toast.success("Berhasil mengubah");
+                  flip();
+                  refetch();
+                }}
+                defaultValueMap={selectedEdit}
+              />
+            )}
+            {EditChildren && <EditChildren />}
+          </div>
+        </div>
+      </Modal>
       <div className={className}>
         {datas.map((e, i) => (
           <div key={`${e.node.id}-${i}`}>
             {withEditDelete && (
               <div className="flex justify-between">
-                <Link href={editUrl + e.node.id}>
-                  <a className="w-full">
-                    <Button color="YELLOW">EDIT</Button>
-                  </a>
-                </Link>
+                <Button
+                  color="YELLOW"
+                  onClick={() => {
+                    setSelectedEdit(e.node);
+                    setOpenEdit(true);
+                  }}
+                >
+                  EDIT
+                </Button>
                 <Button onClick={() => handleDelete(e.node)} color="RED">
                   DELETE
                 </Button>
@@ -174,4 +211,23 @@ export default function Loader<T extends Id>({
       </div>
     </div>
   );
+
+  // return raw ? (
+  //   <>
+  //     {datas.map((e, i) => (
+  //       <MakeComponent {...e.node} key={`${e.node.id}-${i}`} />
+  //     ))}
+  //     <div ref={ref}>
+  //       {pageInfo?.hasNextPage && (
+  //         <SkeletonGrid
+  //           className={className}
+  //           total={perPage ?? 20}
+  //           SkeletonComponent={SkeletonComponent}
+  //         />
+  //       )}
+  //     </div>
+  //   </>
+  // ) : (
+
+  // );
 }

@@ -10,14 +10,14 @@ export const checkAnswer = (e: Answer, q: Question) => {
   //     {}
   //   );
 
-  if (q.metadata.type == QuestionType.Multi_choice) {
+  if (q.metadata?.type == QuestionType.Multi_choice) {
     return q.metadata.correctanswer == e.uuid ? 100 : 0;
   } else {
-    const correctAnswer = q.metadata.answers[0];
+    const correctAnswer = q.metadata?.answers[0];
 
     const clean = htmlStripper(e.content?.toLowerCase() ?? "");
     const cleanCorrect = htmlStripper(
-      correctAnswer.content?.toLowerCase() ?? ""
+      correctAnswer?.content?.toLowerCase() ?? ""
     );
 
     return similarity.compareTwoStrings(clean, cleanCorrect) * 100;

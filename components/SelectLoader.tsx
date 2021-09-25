@@ -74,9 +74,11 @@ export default function SelectLoader<T extends BasicModel>({
 
   return (
     <Select
-      attributes={datas.map(({ node }) => {
-        return { label: node.name, value: node.id };
-      })}
+      attributes={
+        datas?.map(({ node }) => {
+          return { label: node.name, value: node.id };
+        }) ?? []
+      }
       label={label}
       lastRef={ref}
       loading={loading}

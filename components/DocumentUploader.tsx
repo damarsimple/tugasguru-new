@@ -1,13 +1,11 @@
 import { gql, useMutation } from "@apollo/client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { MdInfo } from "react-icons/md";
 import ReactCrop, { Crop } from "react-image-crop";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { toast } from "react-toastify";
 import { getCroppedImg } from "../helpers/formatter";
 import { makeId } from "../helpers/generator";
-import { Picture } from "../types/type";
+import { Document } from "../types/type";
 import Button from "./Button";
 import ImageContainer from "./Container/ImageContainer";
 import Paper from "./Paper";
@@ -15,20 +13,25 @@ import Paper from "./Paper";
 const UPLOAD_IMAGE_MUTATION = gql`
   mutation (
     $file: Upload!
+    $type: String!
     $roles: String
-    $pictureable_id: ID
-    $pictureable_type: String
+    $compressed: Boolean
+    $documentable_id: ID
+    $documentable_type: String
     $metadata: String
   ) {
-    uploadPicture(
+    uploadDocument(
       file: $file
       roles: $roles
-      pictureable_id: $pictureable_id
-      pictureable_type: $pictureable_type
+      type: $type
+      compressed: $compressed
+      documentable_id: $documentable_id
+      documentable_type: $documentable_type
       metadata: $metadata
     ) {
       id
       path
+      type
       metadata {
         original_name
       }
@@ -36,21 +39,23 @@ const UPLOAD_IMAGE_MUTATION = gql`
   }
 `;
 
-export default function PictureUploader(e: {
+export default function DocumentUploader(e: {
   name: string;
+  type: "picture" | "document" | "audio" | "video";
   auto?: boolean;
   crop?: Partial<Crop>;
   roles?: string;
-  pictureable_id?: string;
-  pictureable_type?: string;
-  onUploadFinish?: (e: Picture) => void;
+  documentable_id?: string;
+  documentable_type?: string;
+  onUploadFinish?: (e: Document) => void;
 }) {
+  const { type } = e;
   const [file, setFile] = useState<null | File>(null);
-  const [picture, setPicture] = useState<null | undefined | Picture>(null);
+  const [document, setDocument] = useState<null | undefined | Document>(null);
   const [crop, setCrop] = useState<Partial<Crop>>({ ...e.crop });
   const [cropped, setCropped] = useState(false);
   const [mutateFunction, { loading: mutationLoading, error: mutationError }] =
-    useMutation<{ uploadPicture: Picture }>(UPLOAD_IMAGE_MUTATION);
+    useMutation<{ uploadDocument: Document }>(UPLOAD_IMAGE_MUTATION);
 
   const handleUpload = async (x?: File) => {
     if (!imgRef.current) return;
@@ -68,15 +73,18 @@ export default function PictureUploader(e: {
       variables: {
         file: uploadFile,
         ...e,
+        type,
+        compressed: false,
         metadata: JSON.stringify({
           original_name: file?.name,
           original: file?.size,
+          mime: file?.type,
         }),
       },
     }).then((x) => {
-      setPicture(x.data?.uploadPicture);
-      if (e.onUploadFinish && x.data?.uploadPicture) {
-        e.onUploadFinish(x.data?.uploadPicture);
+      setDocument(x.data?.uploadDocument);
+      if (e.onUploadFinish && x.data?.uploadDocument) {
+        e.onUploadFinish(x.data?.uploadDocument);
       }
     });
   };
@@ -92,32 +100,35 @@ export default function PictureUploader(e: {
   return (
     <Paper name={e.name}>
       <div>
-        {mutationError && <div>Error : {mutationError.message}</div>}
-        <div className="flex justify-center">
-          {file && (
-            <div>
-              {picture ? (
-                <ImageContainer src={picture.path} />
-              ) : (
-                <>
-                  <ReactCrop
-                    onImageLoaded={onLoad}
-                    src={upImg as any}
-                    crop={crop}
-                    onChange={(newCrop) => {
-                      setCrop(newCrop);
-                      setCropped(true);
-                    }}
-                  />
-                  <MdInfo size="1.5em" /> anda bisa memotong gambar ini ..
-                </>
-              )}
-            </div>
-          )}
-        </div>
-        {picture && <p className="text-center">Berhasil Di Upload</p>}
+        {type == "picture" && (
+          <div className="flex justify-center">
+            {file && (
+              <div>
+                {document ? (
+                  <ImageContainer src={document.path} />
+                ) : (
+                  <>
+                    <ReactCrop
+                      onImageLoaded={onLoad}
+                      src={upImg as any}
+                      crop={crop}
+                      onChange={(newCrop) => {
+                        setCrop(newCrop);
+                        setCropped(true);
+                      }}
+                    />
+                    <MdInfo size="1.5em" /> anda bisa memotong gambar ini ..
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
-        {!picture && (
+        {mutationError && <div>Error : {mutationError.message}</div>}
+        {document && <p className="text-center">Berhasil Di Upload</p>}
+
+        {!document && (
           <>
             {!mutationLoading && (
               <input

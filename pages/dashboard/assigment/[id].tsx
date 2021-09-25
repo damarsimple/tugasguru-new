@@ -13,7 +13,7 @@ import ImageContainer from "../../../components/Container/ImageContainer";
 import Form from "../../../components/Forms/Form";
 import Input from "../../../components/Forms/Input";
 import Modal from "../../../components/Modal";
-import PictureUploader from "../../../components/PictureUploader";
+import PictureUploader from "../../../components/DocumentUploader";
 import { CoreAssigmentsubmissionField } from "../../../fragments/fragments";
 import { useUserStore } from "../../../store/user";
 import { Assigment, Assigmentsubmission } from "../../../types/type";
@@ -46,26 +46,13 @@ function Id({ router }: { router: NextRouter }) {
               name
             }
           }
-          pictures {
-            id
-            path
-            roles
-          }
-          audios {
-            id
-            path
-            roles
-          }
+
           documents {
             id
             path
             roles
           }
-          videos {
-            id
-            path
-            roles
-          }
+
           myassigmentsubmission {
             ...CoreAssigmentsubmissionField
           }
@@ -90,9 +77,6 @@ function Id({ router }: { router: NextRouter }) {
         $turned: Boolean
         $turned_at: String
         $metadata: String
-        $videos: BasicOneToMany
-        $pictures: BasicOneToMany
-        $audios: BasicOneToMany
         $documents: BasicOneToMany
       ) {
         updateAssigmentsubmission(
@@ -103,9 +87,6 @@ function Id({ router }: { router: NextRouter }) {
             turned: $turned
             turned_at: $turned_at
             metadata: $metadata
-            videos: $videos
-            pictures: $pictures
-            audios: $audios
             documents: $documents
           }
         ) {
@@ -160,12 +141,7 @@ function Id({ router }: { router: NextRouter }) {
       <hr />
       <div className="p-2">{assigment?.metadata?.description}</div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-        <AttachmensViewer
-          audios={assigment?.audios}
-          videos={assigment?.videos}
-          documents={assigment?.documents}
-          pictures={assigment?.pictures}
-        />
+        <AttachmensViewer documents={assigment?.documents} />
       </div>
     </div>
   );
@@ -190,11 +166,12 @@ function Id({ router }: { router: NextRouter }) {
           <Input label="Jawaban" /> */}
           <PictureUploader
             name="Upload Gambar"
+            type="picture"
             onUploadFinish={(e) => {
               updateSubmission({
                 variables: {
                   id: assigment?.myassigmentsubmission?.id,
-                  pictures: { connect: [e.id] },
+                  documents: { connect: [e.id] },
                 },
               });
             }}
@@ -209,12 +186,7 @@ function Id({ router }: { router: NextRouter }) {
             type="number"
             onTextChange={(e) => setGrade(parseInt(e.toString()))}
           />
-          <AttachmensViewer
-            audios={submission?.audios}
-            videos={submission?.videos}
-            documents={submission?.documents}
-            pictures={submission?.pictures}
-          />
+          <AttachmensViewer documents={submission?.documents} />
           <Button
             onClick={() =>
               updateSubmission({
@@ -290,10 +262,7 @@ function Id({ router }: { router: NextRouter }) {
             <AttachmensViewer
               withDelete
               onDelete={refetch}
-              audios={assigment?.myassigmentsubmission?.audios}
-              videos={assigment?.myassigmentsubmission?.videos}
               documents={assigment?.myassigmentsubmission?.documents}
-              pictures={assigment?.myassigmentsubmission?.pictures}
             />
           </div>
           <div className="flex flex-col gap-2 shadow rounded p-2">

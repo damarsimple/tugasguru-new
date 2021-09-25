@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Button from "../Button";
 import Input from "./Input";
 
-interface InputMap<T> {
+export interface InputMap<T> {
   name: keyof T | string;
   type?: string;
   label: string;
@@ -13,10 +13,11 @@ interface InputMap<T> {
   information?: string;
 }
 
+type StringMap = { [e: string]: string };
 interface FormProp<T, N> {
   attributes: InputMap<T>[];
   mutationQuery: DocumentNode;
-  beforeSubmit?: () => void;
+  beforeSubmit?: (e: StringMap) => void;
   afterSubmit?: (e: T) => void;
   defaultValueMap?: Partial<T>;
   addedValueMap?: object;
@@ -64,14 +65,6 @@ export default function Form<T, N>({
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    if (beforeSubmit) {
-      try {
-        beforeSubmit();
-      } catch (error) {
-        toast.error("Error: " + error);
-        return;
-      }
-    }
 
     const requireds = attributes.filter((e) => e.required).map((e) => e.name);
 
@@ -90,7 +83,14 @@ export default function Form<T, N>({
         }
       : inputMap;
 
-    console.log(submitMap);
+    if (beforeSubmit) {
+      try {
+        beforeSubmit(submitMap as StringMap);
+      } catch (error) {
+        toast.error(`${error}`);
+        return;
+      }
+    }
     mutateFunction({
       variables: { ...addedValueMap, ...defaultValueMap, ...submitMap },
     })

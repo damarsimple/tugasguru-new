@@ -47,7 +47,9 @@ export default function ImageContainer({
           className={className}
           width={width}
           height={height}
-          src={`https://picsum.photos/seed/${alt}/${width}/${height}`}
+          src={`https://picsum.photos/seed/${
+            alt ?? fallback
+          }/${width}/${height}`}
         />
       );
     }

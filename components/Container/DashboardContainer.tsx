@@ -1,9 +1,23 @@
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
-import React, { useState } from "react";
-import { AiFillCrown, AiFillHome, AiOutlineBook } from "react-icons/ai";
-import { FaHandsHelping, FaMedal, FaTasks } from "react-icons/fa";
-import { MdStore, MdSearch, MdDashboard, MdSchool } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import {
+  AiFillCrown,
+  AiFillHome,
+  AiOutlineBook,
+  AiOutlineTransaction,
+} from "react-icons/ai";
+import { FaGamepad, FaHandsHelping, FaMedal, FaTasks } from "react-icons/fa";
+import {
+  MdStore,
+  MdSearch,
+  MdDashboard,
+  MdSchool,
+  MdSupervisorAccount,
+  MdBook,
+  MdPlace,
+  MdReport,
+} from "react-icons/md";
 import AppContainer from "../../components/Container/AppContainer";
 import {
   RiUserSearchFill,
@@ -14,12 +28,13 @@ import {
 } from "react-icons/ri";
 import { useUserStore } from "../../store/user";
 import { GiMegaphone } from "react-icons/gi";
-import { HiOutlineDocumentReport } from "react-icons/hi";
+import { HiOutlineDocumentReport, HiTicket } from "react-icons/hi";
 import { BsNewspaper } from "react-icons/bs";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiUpgrade, GiShadowFollower } from "react-icons/gi";
-import { GrUserAdmin } from "react-icons/gr";
-
+import { GrFormSchedule, GrTransaction, GrUserAdmin } from "react-icons/gr";
+import { IoMdPaper } from "react-icons/io";
+import { toast } from "react-toastify";
 interface Route {
   name: string;
   url: string;
@@ -27,12 +42,87 @@ interface Route {
 }
 
 export default function DashboardContainer({
+  admin,
   title,
   children,
 }: {
+  admin?: boolean;
   children: JSX.Element | JSX.Element[] | string;
   title?: string;
 }) {
+  const adminMenu: Route[] = [
+    {
+      name: "Dashboard",
+      url: "/admin",
+      icon: <AiFillHome size="1.5em" />,
+    },
+    {
+      name: "Pengguna",
+      url: "/admin/users",
+      icon: <MdSupervisorAccount size="1.5em" />,
+    },
+    {
+      name: "Mata Pelajaran",
+      url: "/admin/subjects",
+      icon: <IoMdPaper size="1.5em" />,
+    },
+    {
+      name: "Form Pengajuan",
+      url: "/admin/forms",
+      icon: <MdBook size="1.5em" />,
+    },
+    {
+      name: "Laporan",
+      url: "/admin/reports",
+      icon: <MdReport size="1.5em" />,
+    },
+    {
+      name: "Pengumuman",
+      url: "/admin/announcements",
+      icon: <GiMegaphone size="1.5em" />,
+    },
+    {
+      name: "Provinsi",
+      url: "/admin/provinces",
+      icon: <MdPlace size="1.5em" />,
+    },
+    {
+      name: "Kota / Kabupaten",
+      url: "/admin/cities",
+      icon: <MdPlace size="1.5em" />,
+    },
+    {
+      name: "Kecamatan / Kelurahan",
+      url: "/admin/districts",
+      icon: <MdPlace size="1.5em" />,
+    },
+
+    {
+      name: "Sekolah",
+      url: "/admin/schools",
+      icon: <MdSchool size="1.5em" />,
+    },
+    {
+      name: "Voucher",
+      url: "/admin/vouchers",
+      icon: <HiTicket size="1.5em" />,
+    },
+    {
+      name: "Transaksi",
+      url: "/admin/transactions",
+      icon: <GrTransaction size="1.5em" />,
+    },
+    {
+      name: "Withdraw",
+      url: "/admin/withdraws",
+      icon: <AiOutlineTransaction size="1.5em" />,
+    },
+    {
+      name: "Quiz",
+      url: "/admin/quizzez",
+      icon: <FaGamepad size="1.5em" />,
+    },
+  ];
   const baseUserMenu: Route[] = [
     {
       name: "Dashboard",
@@ -168,7 +258,7 @@ export default function DashboardContainer({
     ],
   };
 
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
 
   const RenderMenu = (e: Route) => (
     <Link href={e.url}>
@@ -178,16 +268,24 @@ export default function DashboardContainer({
           (pathname == e.url ? "bg-red-400" : "")
         }
       >
-        <div className="col-span-12 lg:col-span-2"> {e.icon}</div>
         <div className="col-span-10 hidden lg:block uppercase font-semibold text-center">
           {e.name}
         </div>
+        <div className="col-span-12 lg:col-span-2"> {e.icon}</div>
       </a>
     </Link>
   );
 
   const [index, setIndex] = useState(0);
   const { user } = useUserStore();
+
+  useEffect(() => {
+    if (admin && !user?.is_admin) {
+      // push("/");
+      // toast.error("Anda tidak memiliki akses ke tempat ini \\:<");
+    }
+  }, [user, admin, push]);
+
   return (
     <AppContainer without={["margin"]} title={title ?? "Dashboard Utama"}>
       <div className="min-h-screen grid grid-cols-12 overflow-x-hidden">
@@ -202,19 +300,21 @@ export default function DashboardContainer({
             >
               Dashboard
             </button>
-            <button
-              onClick={() => setIndex(1)}
-              className={
-                (index != 1 ? "bg-blue-300" : "bg-red-300 ") +
-                " uppercase flex justify-center w-full px-4 py-2 text-sm lg:text-lg font-semibold text-white transition-colors duration-300 "
-              }
-            >
-              {user?.roles}
-            </button>
+            {!admin && (
+              <button
+                onClick={() => setIndex(1)}
+                className={
+                  (index != 1 ? "bg-blue-300" : "bg-red-300 ") +
+                  " uppercase flex justify-center w-full px-4 py-2 text-sm lg:text-lg font-semibold text-white transition-colors duration-300 "
+                }
+              >
+                {user?.roles}
+              </button>
+            )}
           </div>
           {index == 0 && (
             <div className="pt-4">
-              {[...baseUserMenu].map((e, i) => (
+              {(admin ? adminMenu : baseUserMenu).map((e, i) => (
                 <RenderMenu {...e} key={i} />
               ))}
             </div>

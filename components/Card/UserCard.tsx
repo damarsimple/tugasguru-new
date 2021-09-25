@@ -21,7 +21,7 @@ export default function UserCard(e: User) {
       <h1 className="text-md sm:text-lg font-semibold truncate">{e.name}</h1>
       <p className="text-sm sm:text-md truncate">@{e.username}</p>
       <p className="text-sm truncate">{e.roles}</p>
-      <Link href={"/" + e.username}>
+      <Link href={"/users/" + e.username}>
         <a>
           <Button color="GRAY">BIMBEL</Button>
         </a>
@@ -40,7 +40,7 @@ export function UserCardSkeleton() {
       <p className="h-6 bg-gray-100 rounded animate-pulse"></p>
       <p className="h-6 bg-gray-100 rounded animate-pulse"></p>
       <Button color="GRAY" loading>
-        Donasi
+        ...
       </Button>
     </div>
   );

@@ -28,12 +28,12 @@ export default function QuizCard(node: Quiz) {
               height={150}
             />
             <div className="absolute top-0 right-0 flex m-6 gap-2 ">
-              <div className="shadow rounded bg-blue-400 text-white p-2 font-semibold">
+              <Button color="GRAY" onClick={flip}>
                 <MdShare color="white" size="1.5em" />
-              </div>
-              <div className="shadow rounded bg-red-400 text-white p-2 font-semibold">
+              </Button>
+              <Button color="RED" onClick={flip}>
                 <MdClose color="white" size="1.5em" />
-              </div>
+              </Button>
             </div>
             <div className="absolute bottom-0 flex flex-col m-6 ">
               <div className="flex gap-2 shadow rounded bg-gray-400 text-white p-2 font-semibold">
@@ -63,7 +63,7 @@ export default function QuizCard(node: Quiz) {
             <div className="col-span-2 mt-2 p-2 grid grid-cols-1 bg-gray-200">
               {take(node.questions, 4).map((e, i) => (
                 <div key={`${e.id}-${i}`}>
-                  {i + 1}. {e.metadata.content}
+                  {i + 1}. {e.metadata?.content}
                 </div>
               ))}
             </div>

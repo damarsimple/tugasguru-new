@@ -22,11 +22,11 @@ export default function QuestionCard({
       )}
       <div className="bg-white w-full p-4">
         <div>
-          {index}. {metadata.content}
+          {index}. {metadata?.content}
         </div>
         <hr className="my-4" />
         <div className="flex flex-col gap-2">
-          {metadata.answers.map((e) =>
+          {metadata?.answers.map((e) =>
             myanswer == e.uuid ? (
               <div key={e.uuid} className="flex gap-2">
                 <div className="h-6 w-6 rounded-full bg-green-200" />

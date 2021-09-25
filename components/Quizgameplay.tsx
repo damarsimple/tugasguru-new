@@ -154,11 +154,11 @@ export default function Quizgameplay() {
       grade: myquizplay.grade + grade,
       answers_map: [
         ...(myquizplay.answers_map ?? []),
-        { answer: myanswer, grade, question: currentQuestion.metadata.uuid },
+        { answer: myanswer, grade, question: currentQuestion?.metadata?.uuid },
       ],
     };
 
-    setMyquizplay(cp);
+    setMyquizplay(cp as any);
 
     updateQuizplay({
       variables: { ...cp, answers_map: JSON.stringify(cp.answers_map) },
@@ -239,17 +239,21 @@ export default function Quizgameplay() {
         </div>
         <div className="grid grid-cols-1 gap-3 bg-gray-900 p-4 shadow rounded overflow-y-auto overflow-x-hidden">
           <h1 className="font-bold text-lg text-white">Hasil</h1>
-          {questions.map((e, i) => (
-            <QuestionCard
-              index={i + 1}
-              {...e}
-              key={e.id}
-              correct={
-                answerMap[e.metadata.uuid]?.uuid == e.metadata.correctanswer
-              }
-              myanswer={answerMap[e.metadata.uuid]?.uuid}
-            />
-          ))}
+          {questions.map((e, i) =>
+            e.metadata ? (
+              <QuestionCard
+                index={i + 1}
+                {...e}
+                key={e.id}
+                correct={
+                  answerMap[e.metadata.uuid]?.uuid == e.metadata?.correctanswer
+                }
+                myanswer={answerMap[e.metadata.uuid]?.uuid}
+              />
+            ) : (
+              <></>
+            )
+          )}
         </div>
       </div>
     );
@@ -366,13 +370,13 @@ export default function Quizgameplay() {
         <Transition className="flex flex-col h-full">
           <div className="h-1/2 flex m-auto text-center min-w-full">
             <div className="m-auto">
-              {index + 1}. {questions[index].metadata.content}
+              {index + 1}. {questions[index]?.metadata?.content}
             </div>
           </div>
           <div className="h-1/2 min-w-full">
-            {questions[index].metadata.type == QuestionType.Multi_choice ? (
+            {questions[index]?.metadata?.type == QuestionType.Multi_choice ? (
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 p-4 h-full">
-                {questions[index].metadata.answers.map((e, i) => (
+                {questions[index]?.metadata?.answers.map((e, i) => (
                   <button
                     className="shadow rounded p-4 text-center min-h-full"
                     key={e.uuid}

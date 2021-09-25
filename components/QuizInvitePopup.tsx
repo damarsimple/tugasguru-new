@@ -137,7 +137,7 @@ export function QuizInvitePopup() {
           <div className="col-span-2 mt-2 p-2 grid grid-cols-1 bg-gray-200">
             {take(quiz?.questions, 4).map((e, i) => (
               <div key={e.id}>
-                {i + 1}. {e.metadata.content}
+                {i + 1}. {e.metadata?.content}
               </div>
             ))}
           </div>
