@@ -6,17 +6,12 @@ import {
   WatchQueryFetchPolicy,
 } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { flip, get } from "lodash";
+import { get } from "lodash";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import Button from "./Button";
 import SkeletonGrid from "./SkeletonGrid";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { BiUser } from "react-icons/bi";
-import { BsPlay } from "react-icons/bs";
-import { FaLevelUpAlt } from "react-icons/fa";
-import { MdShare, MdClose, MdClass, MdSubject } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import Modal from "./Modal";
 import Form, { InputMap } from "./Forms/Form";
 
@@ -38,7 +33,7 @@ interface BoxProps<T extends Id> {
   withEditDelete?: boolean;
   raw?: boolean;
   editAttributes?: InputMap<T>[];
-  editFields: string;
+  editFields?: string;
   withSearchbar?: boolean;
   EditChildren?: () => JSX.Element;
 }

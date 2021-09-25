@@ -18,8 +18,8 @@ export default function Settings() {
         <DocumentUploader
           roles="COVER"
           type="picture"
-          pictureable_id={user?.id}
-          pictureable_type={"App\\Models\\User"}
+          documentable_id={user?.id}
+          documentable_type={"App\\Models\\User"}
           name="Upload Foto Profil"
           crop={{ aspect: 5 / 5 }}
           onUploadFinish={(x) => {
