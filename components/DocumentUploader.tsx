@@ -60,17 +60,16 @@ export default function DocumentUploader(e: {
   const handleUpload = async () => {
     if (!imgRef.current || !file) return;
 
-    const uploadFile = cropped
-      ? new File(
-          //@ts-ignore
-          [await getCroppedImg(imgRef.current, crop as Crop, makeId(10))],
-          "fileName.jpg",
-          { type: "image/jpeg" }
-        )
-      : file;
     mutateFunction({
       variables: {
-        file: uploadFile ?? file,
+        file: cropped
+          ? new File(
+              //@ts-ignore
+              [await getCroppedImg(imgRef.current, crop as Crop, makeId(10))],
+              "fileName.jpg",
+              { type: "image/jpeg" }
+            )
+          : file,
         ...e,
         type,
         compressed: false,
@@ -111,9 +110,9 @@ export default function DocumentUploader(e: {
                       onImageLoaded={onLoad}
                       src={upImg as any}
                       crop={crop}
+                      onDragStart={() => setCropped(true)}
                       onChange={(newCrop) => {
                         setCrop(newCrop);
-                        setCropped(true);
                       }}
                     />
                     <MdInfo size="1.5em" /> anda bisa memotong gambar ini ..
