@@ -57,18 +57,17 @@ export default function DocumentUploader(e: {
   const [mutateFunction, { loading: mutationLoading, error: mutationError }] =
     useMutation<{ uploadDocument: Document }>(UPLOAD_IMAGE_MUTATION);
 
-  const handleUpload = async (x?: File) => {
-    if (!imgRef.current) return;
+  const handleUpload = async () => {
+    if (!imgRef.current || !file) return;
 
-    const uploadFile =
-      x ?? cropped
-        ? new File(
-            //@ts-ignore
-            [await getCroppedImg(imgRef.current, crop as Crop, makeId(10))],
-            "fileName.jpg",
-            { type: "image/jpeg" }
-          )
-        : file;
+    const uploadFile = cropped
+      ? new File(
+          //@ts-ignore
+          [await getCroppedImg(imgRef.current, crop as Crop, makeId(10))],
+          "fileName.jpg",
+          { type: "image/jpeg" }
+        )
+      : file;
     mutateFunction({
       variables: {
         file: uploadFile ?? file,
@@ -148,8 +147,6 @@ export default function DocumentUploader(e: {
                     );
 
                     reader.readAsDataURL(x.target.files[0]);
-
-                    e.auto && handleUpload(x.target?.files[0]);
                   }
                 }}
               />
