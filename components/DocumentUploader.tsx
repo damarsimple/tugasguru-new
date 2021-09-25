@@ -71,7 +71,7 @@ export default function DocumentUploader(e: {
         : file;
     mutateFunction({
       variables: {
-        file: uploadFile,
+        file: uploadFile ?? file,
         ...e,
         type,
         compressed: false,
