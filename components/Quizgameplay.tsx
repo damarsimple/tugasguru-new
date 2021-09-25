@@ -49,8 +49,8 @@ const UPDATE_QUIZPLAY = gql`
     $grade: Float!
     $answers_map: String
     $graded: Boolean
-    $start_at: DateTime
-    $finish_at: DateTime
+    $start_at: String
+    $finish_at: String
   ) {
     updateQuizplay(
       id: $id
