@@ -25,6 +25,7 @@ import {
   RiBankCardFill,
   RiUserHeartLine,
   RiUserStarLine,
+  RiAdminFill,
 } from "react-icons/ri";
 import { useUserStore } from "../../store/user";
 import { GiMegaphone } from "react-icons/gi";
@@ -318,6 +319,13 @@ export default function DashboardContainer({
               </button>
             )}
           </div>
+          {user?.is_admin && (
+            <RenderMenu
+              icon={<RiAdminFill size="1.5em" color="white" />}
+              name={"Menu Admin"}
+              url={"/admin"}
+            />
+          )}
           {index == 0 && (
             <div className="pt-4">
               {(admin ? adminMenu : baseUserMenu).map((e, i) => (

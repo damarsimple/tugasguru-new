@@ -120,6 +120,7 @@ export default function Form<T, N>({
         afterSubmit && e.data && afterSubmit(e.data[fields] as any);
         successMessage && toast.success(successMessage);
         setDefaultStore({ ...defaultStore, [fields as string]: {} });
+        //@ts-ignore
         formRef.current?.reset();
       })
       .catch((e) => toast.error(mutationError?.message));

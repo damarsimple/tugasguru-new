@@ -164,6 +164,7 @@ const QuestionEditorView = ({
           onChange={(e) => {
             onChange({
               ...question,
+              //@ts-ignore
               metadata: { ...question.metadata, content: e },
             });
           }}
@@ -185,6 +186,7 @@ const QuestionEditorView = ({
                     onClick={() =>
                       onChange({
                         ...question,
+                        //@ts-ignore
                         metadata: {
                           ...question.metadata,
                           correctanswer: e.uuid,
@@ -209,6 +211,7 @@ const QuestionEditorView = ({
                       answers[i] = { ...answers[i], content: e };
                       onChange({
                         ...question,
+                        //@ts-ignore
                         metadata: { ...question.metadata, answers: answers },
                       });
                     }}
@@ -226,6 +229,7 @@ const QuestionEditorView = ({
               answers[0] = { ...answers[0], content: e };
               onChange({
                 ...question,
+                //@ts-ignore
                 metadata: { ...question.metadata, answers: answers },
               });
             }}

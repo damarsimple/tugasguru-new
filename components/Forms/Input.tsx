@@ -104,6 +104,7 @@ export default function Input({
                     required={required}
                     onChange={(x) => {
                       onFileChange &&
+                        x.target?.files &&
                         x.target?.files[0] &&
                         onFileChange(x.target.files[0]);
                     }}
