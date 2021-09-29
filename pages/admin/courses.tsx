@@ -61,10 +61,7 @@ export default function Courses() {
         `}
         editQuery={gql`
           mutation UpdateCourse($id: ID!, $name: String, $views: Int) {
-            updateCourse(
-              id: $id
-              input: { id: $id, name: $name, views: $views }
-            ) {
+            updateCourse(id: $id, input: { name: $name, views: $views }) {
               id
             }
           }

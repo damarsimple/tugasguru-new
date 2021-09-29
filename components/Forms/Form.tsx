@@ -1,17 +1,34 @@
 import { DocumentNode, useMutation } from "@apollo/client";
 import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import create from "zustand";
 import Button from "../Button";
 import Input from "./Input";
 
+export interface SelectValue {
+  name: string;
+  value: string;
+}
 export interface InputMap<T> {
   name: keyof T | string;
   type?: string;
   label: string;
   required?: boolean;
   information?: string;
+  values?: SelectValue[];
 }
+
+type FormMap = Record<string, object>;
+interface FormDefaultStore {
+  defaultStore: FormMap;
+  setDefaultStore: (e: FormMap) => void;
+}
+
+export const useDefaultMap = create<FormDefaultStore>((set) => ({
+  defaultStore: {},
+  setDefaultStore: (defaultStore: FormMap) => set({ defaultStore }),
+}));
 
 type StringMap = { [e: string]: string };
 interface FormProp<T, N> {
@@ -24,6 +41,7 @@ interface FormProp<T, N> {
   successMessage?: string;
   fields: keyof N;
   submitName?: string;
+  onValueChange?: (name: string, value: string | number | boolean) => void;
 }
 
 export default function Form<T, N>({
@@ -36,6 +54,7 @@ export default function Form<T, N>({
   fields,
   successMessage,
   submitName,
+  onValueChange,
 }: FormProp<T, N>) {
   const [
     mutateFunction,
@@ -43,6 +62,8 @@ export default function Form<T, N>({
   ] = useMutation<N>(mutationQuery, {});
 
   const [inputMap, setInputMap] = useState<T | object>(defaultValueMap ?? {});
+
+  const formRef = useRef(null);
 
   const checkHasMetadataField = () => {
     for (const attr of attributes) {
@@ -70,7 +91,7 @@ export default function Form<T, N>({
 
     for (const x of requireds) {
       //@ts-ignore
-      if (!inputMap[x]) {
+      if (!inputMap[x] && !getDefault(x)) {
         toast.error("Anda belum mengisi " + x);
         return;
       }
@@ -78,10 +99,11 @@ export default function Form<T, N>({
 
     const submitMap = checkHasMetadataField()
       ? {
+          ...defaultStore[fields as string],
           ...inputMap,
           metadata: getMetadata(),
         }
-      : inputMap;
+      : { ...defaultStore[fields as string], ...inputMap };
 
     if (beforeSubmit) {
       try {
@@ -97,24 +119,44 @@ export default function Form<T, N>({
       .then((e) => {
         afterSubmit && e.data && afterSubmit(e.data[fields] as any);
         successMessage && toast.success(successMessage);
+        setDefaultStore({ ...defaultStore, [fields as string]: {} });
+        formRef.current?.reset();
       })
       .catch((e) => toast.error(mutationError?.message));
   };
 
+  const { defaultStore, setDefaultStore } = useDefaultMap();
+
+  const handleValueChange = (e: string, x: boolean | string | number) => {
+    setInputMap({ ...inputMap, [e]: x });
+    setDefaultStore({
+      ...defaultStore,
+      [fields as string]: {
+        ...defaultStore[fields as string],
+        [e]: x,
+      },
+    });
+    onValueChange && onValueChange(e, x);
+  };
+
+  const getDefault = (name: any) =>
+    (defaultValueMap && get(defaultValueMap, name)) ??
+    get(defaultStore[fields as string], name);
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} ref={formRef}>
       {attributes.map((e) => (
         <Input
           key={e.name as string}
-          defaultValue={defaultValueMap && get(defaultValueMap, e.name)}
-          defaultChecked={defaultValueMap && get(defaultValueMap, e.name)}
+          defaultValue={getDefault(e.name)}
+          defaultChecked={getDefault(e.name)}
           label={e.label ?? e.name}
           name={e.name as string}
           type={e.type}
-          onTextChange={(x) => setInputMap({ ...inputMap, [e.name]: x })}
-          onCheckChange={(x) => setInputMap({ ...inputMap, [e.name]: x })}
+          onTextChange={(x) => handleValueChange(e.name as string, x)}
+          onCheckChange={(x) => handleValueChange(e.name as string, x)}
           required={e.required}
           information={e.information}
+          values={e.values}
         />
       ))}
       <Button loading={mutationLoading} type="submit" color="BLUE">

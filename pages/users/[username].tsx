@@ -1,13 +1,19 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { NextRouter } from "next/dist/client/router";
 import withRouter from "next/dist/client/with-router";
 import React, { useEffect, useState } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { BiCart, BiPlus } from "react-icons/bi";
 import { BsPlay } from "react-icons/bs";
-import { FaEllipsisH, FaGraduationCap, FaHome } from "react-icons/fa";
-import { MdClose, MdPlace, MdShare } from "react-icons/md";
+import {
+  FaChalkboardTeacher,
+  FaEllipsisH,
+  FaGraduationCap,
+  FaHome,
+} from "react-icons/fa";
+import { MdClose, MdPlace, MdShare, MdVerifiedUser } from "react-icons/md";
 import { RiChatFollowUpFill } from "react-icons/ri";
+import { toast } from "react-toastify";
 import Loader from "../../components/BoxLoader";
 import Button from "../../components/Button";
 import QuizCard, { QuizCardSkeleton } from "../../components/Card/QuizCard";
@@ -20,7 +26,8 @@ import {
   CorePageInfoField,
   CoreQuizCardMinimalField,
 } from "../../fragments/fragments";
-import { User, Quiz, Tutoring } from "../../types/type";
+import { useUserStore } from "../../store/user";
+import { User, Quiz, Tutoring, Roles, GenericOutput } from "../../types/type";
 
 function Username({ router }: { router: NextRouter }) {
   const { username } = router.query;
@@ -85,6 +92,41 @@ function Username({ router }: { router: NextRouter }) {
   useEffect(() => {
     console.log(geolocation);
   }, [geolocation]);
+
+  const { user } = useUserStore();
+
+  const [mutationFollow] = useMutation<GenericOutput>(gql`
+    mutation HandleFollow($user_id: ID!) {
+      handleFollow(user_id: $user_id) {
+        status
+        message
+      }
+    }
+  `);
+
+  const handleFollow = () => {
+    if (!user) {
+      toast.warning("Anda belum login");
+      return;
+    }
+
+    if (userFind?.roles == Roles.Student && user?.roles == Roles.Teacher) {
+      toast.warning("Anda tidak bisa mengikuti siswa !");
+      return;
+    }
+
+    mutationFollow({
+      variables: {
+        user_id: userFind?.id,
+      },
+    }).then((e) => {
+      if (e.data?.status) {
+        toast.success(e.data.message);
+      } else {
+        toast.error(e.data?.message);
+      }
+    });
+  };
 
   return (
     <AppContainer title={username as string}>
@@ -202,7 +244,7 @@ function Username({ router }: { router: NextRouter }) {
                 )}
               </div>
               <div className="flex flex-col gap-2 pb-4 mt-4 items-center border-b">
-                <Button>
+                <Button onClick={handleFollow}>
                   <BiPlus size="1.5em" /> Ikuti
                 </Button>
                 {userFind?.is_bimbel && userFind.is_bimbel_active && (
@@ -229,20 +271,20 @@ function Username({ router }: { router: NextRouter }) {
 
               <div className="flex mt-2 items-center">
                 <div className="text-gray-400">
-                  <FaHome size="1.5em" />
+                  <MdPlace size="1.5em" />
                 </div>
                 <div className="text-lg ml-3">
                   <p>
                     Tinggal di{" "}
                     <span className="font-bold">
-                      {userFind?.name}, {userFind?.province?.name}
+                      {userFind?.city?.name}, {userFind?.province?.name}
                     </span>
                   </p>
                 </div>
               </div>
               <div className="flex mt-2 items-center">
                 <div className="text-gray-400">
-                  <MdPlace size="1.5em" />
+                  <MdVerifiedUser size="1.5em" />
                 </div>
                 <div className="text-lg ml-3">
                   <p>
@@ -252,6 +294,14 @@ function Username({ router }: { router: NextRouter }) {
                     </span>{" "}
                     orang
                   </p>
+                </div>
+              </div>
+              <div className="flex mt-2 items-center">
+                <div className="text-gray-400">
+                  <FaChalkboardTeacher size="1.5em" />
+                </div>
+                <div className="text-lg ml-3">
+                  <p>{userFind?.roles}</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 md:grid-cols-2 gap-2 p-2">

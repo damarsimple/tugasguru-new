@@ -5,9 +5,23 @@ export const formatCurrency = (e: number | undefined | null) =>
 
 export const wildCardFormatter = (e: string) => "%" + e + "%";
 
+export const selectExtractor = (e: {
+  id: string;
+  name: string;
+}): SelectValue => {
+  return { name: e.name, value: e.id };
+};
+
+export const selectObjectExtractor = (e: object) =>
+  Object.keys(e).map((x) => {
+    //@ts-ignore
+    return { name: e[x] as string, value: e[x] as string };
+  });
+
 export const htmlStripper = (e: string) => e.replace(/(<([^>]+)>)/gi, "");
 
 import ReactCrop, { Crop } from "react-image-crop";
+import { SelectValue } from "../components/Forms/Form";
 
 /**
  * @param {HTMLImageElement} image - Image File Object

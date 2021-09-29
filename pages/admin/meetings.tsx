@@ -62,7 +62,7 @@ export default function Meetings() {
         `}
         editQuery={gql`
           mutation UpdateMeeting($id: ID!, $name: String) {
-            updateMeeting(id: $id, input: { id: $id, name: $name }) {
+            updateMeeting(id: $id, input: { name: $name }) {
               id
             }
           }

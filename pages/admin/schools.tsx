@@ -78,10 +78,7 @@ export default function Schools() {
         `}
         editQuery={gql`
           mutation UpdateSchool($id: ID!, $name: String, $npsn: String) {
-            updateSchool(
-              id: $id
-              input: { id: $id, name: $name, npsn: $npsn }
-            ) {
+            updateSchool(id: $id, input: { name: $name, npsn: $npsn }) {
               id
             }
           }

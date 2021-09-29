@@ -50,7 +50,7 @@ export default function Examtypes() {
         `}
         editQuery={gql`
           mutation UpdateExamtype($id: ID!, $name: String) {
-            updateExamtype(id: $id, input: { id: $id, name: $name }) {
+            updateExamtype(id: $id, input: { name: $name }) {
               id
             }
           }

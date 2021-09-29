@@ -7,10 +7,13 @@ import { getCroppedImg } from "../helpers/formatter";
 import { makeId } from "../helpers/generator";
 import { Document } from "../types/type";
 import Button from "./Button";
+import AudioContainer from "./Container/AudioContainer";
+import DocumentContainer from "./Container/DocumentContainer";
 import ImageContainer from "./Container/ImageContainer";
+import VideoContainer from "./Container/VideoContainer";
 import Paper from "./Paper";
 
-const UPLOAD_IMAGE_MUTATION = gql`
+export const UPLOAD_IMAGE_MUTATION = gql`
   mutation (
     $file: Upload!
     $type: String!
@@ -118,6 +121,36 @@ export default function DocumentUploader(e: {
                     <MdInfo size="1.5em" /> anda bisa memotong gambar ini ..
                   </>
                 )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {type == "video" && (
+          <div className="flex justify-center">
+            {file && (
+              <div>
+                <VideoContainer src={document?.path} className="w-full" />
+              </div>
+            )}
+          </div>
+        )}
+
+        {type == "audio" && (
+          <div className="flex justify-center">
+            {file && (
+              <div>
+                <AudioContainer src={document?.path} className="w-full" />
+              </div>
+            )}
+          </div>
+        )}
+
+        {type == "document" && (
+          <div className="flex justify-center">
+            {file && (
+              <div>
+                <DocumentContainer src={document?.path} />
               </div>
             )}
           </div>

@@ -50,7 +50,7 @@ export default function Classtypes() {
         `}
         editQuery={gql`
           mutation UpdateClasstype($id: ID!, $level: Int) {
-            updateClasstype(id: $id, input: { id: $id, level: $level }) {
+            updateClasstype(id: $id, input: { level: $level }) {
               id
             }
           }

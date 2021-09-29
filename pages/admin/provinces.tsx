@@ -50,7 +50,7 @@ export default function Provinces() {
         `}
         editQuery={gql`
           mutation UpdateProvince($id: ID!, $name: String) {
-            updateProvince(id: $id, input: { id: $id, name: $name }) {
+            updateProvince(id: $id, input: { name: $name }) {
               id
             }
           }

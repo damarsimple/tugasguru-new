@@ -4,7 +4,8 @@ import Loader from "../../components/BoxLoader";
 import BaseCard, { BaseCardSkeleton } from "../../components/Card/BaseCard";
 import DashboardContainer from "../../components/Container/DashboardContainer";
 import { CorePageInfoField } from "../../fragments/fragments";
-import { Subject } from "../../types/type";
+import { selectObjectExtractor } from "../../helpers/formatter";
+import { Subject, SubjectType } from "../../types/type";
 
 export default function Subjects() {
   return (
@@ -57,6 +58,12 @@ export default function Subjects() {
             name: "description",
             type: "text",
           },
+          {
+            label: "Tipe",
+            name: "type",
+            type: "select",
+            values: selectObjectExtractor(SubjectType),
+          },
         ]}
         deleteQuery={gql`
           mutation DeleteSubject($id: ID!) {
@@ -71,14 +78,15 @@ export default function Subjects() {
             $name: String
             $abbreviation: String
             $description: String
+            $type: SubjectType
           ) {
             updateSubject(
               id: $id
               input: {
-                id: $id
                 name: $name
                 abbreviation: $abbreviation
                 description: $description
+                type: $type
               }
             ) {
               id

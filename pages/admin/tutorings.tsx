@@ -76,7 +76,7 @@ export default function Tutorings() {
           ) {
             updateTutoring(
               id: $id
-              input: { id: $id, rate: $rate, is_approved: $is_approved }
+              input: { rate: $rate, is_approved: $is_approved }
             ) {
               id
             }

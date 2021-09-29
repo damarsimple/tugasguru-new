@@ -50,7 +50,7 @@ export default function Districts() {
         `}
         editQuery={gql`
           mutation UpdateDistrict($id: ID!, $name: String) {
-            updateDistrict(id: $id, input: { id: $id, name: $name }) {
+            updateDistrict(id: $id, input: { name: $name }) {
               id
             }
           }

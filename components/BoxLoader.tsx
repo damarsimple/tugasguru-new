@@ -14,6 +14,8 @@ import SkeletonGrid from "./SkeletonGrid";
 import { MdClose } from "react-icons/md";
 import Modal from "./Modal";
 import Form, { InputMap } from "./Forms/Form";
+import SearchBox from "./SearchBox";
+import { wildCardFormatter } from "../helpers/formatter";
 
 interface Id {
   id: string;
@@ -86,12 +88,15 @@ BoxProps<T>) {
 
   const PerPage = perPage ?? PER_PAGE_DEFAULT;
 
+  const [search, setSearch] = useState("");
+
   const { loading, error, data, fetchMore, refetch } = useQuery(query, {
     fetchPolicy,
     variables: {
       first: PerPage,
       after: "",
       ...variables,
+      name: wildCardFormatter(search),
     },
   });
 
@@ -129,20 +134,8 @@ BoxProps<T>) {
   const [selectedEdit, setSelectedEdit] = useState<T | undefined>(undefined);
   const [openEdit, setOpenEdit] = useState(false);
   const flip = () => setOpenEdit(!openEdit);
-  if (loading || mutationLoading)
-    return (
-      <>
-        {
-          <SkeletonGrid
-            className={className}
-            total={perPage ?? 20}
-            SkeletonComponent={SkeletonComponent}
-          />
-        }
-      </>
-    );
 
-  if (error) return <p>Error :( {error.message}</p>;
+  const stillLoading = loading || mutationLoading;
 
   return (
     <div>
@@ -176,28 +169,47 @@ BoxProps<T>) {
           </div>
         </div>
       </Modal>
+      {withSearchbar && (
+        <div className="my-6">
+          <SearchBox onChange={setSearch} />
+        </div>
+      )}
       <div className={className}>
-        {datas.map((e, i) => (
-          <div key={`${e.node.id}-${i}`}>
-            {withEditDelete && (
-              <div className="flex justify-between">
-                <Button
-                  color="YELLOW"
-                  onClick={() => {
-                    setSelectedEdit(e.node);
-                    setOpenEdit(true);
-                  }}
-                >
-                  EDIT
-                </Button>
-                <Button onClick={() => handleDelete(e.node)} color="RED">
-                  DELETE
-                </Button>
-              </div>
-            )}
-            <MakeComponent {...e.node} />
-          </div>
-        ))}
+        {stillLoading ? (
+          <>
+            {
+              <SkeletonGrid
+                className={className}
+                total={perPage ?? 20}
+                SkeletonComponent={SkeletonComponent}
+              />
+            }
+          </>
+        ) : error ? (
+          <p>Error :( {error.message}</p>
+        ) : (
+          datas.map((e, i) => (
+            <div key={`${e.node.id}-${i}`}>
+              {withEditDelete && (
+                <div className="flex justify-between">
+                  <Button
+                    color="YELLOW"
+                    onClick={() => {
+                      setSelectedEdit(e.node);
+                      setOpenEdit(true);
+                    }}
+                  >
+                    EDIT
+                  </Button>
+                  <Button onClick={() => handleDelete(e.node)} color="RED">
+                    DELETE
+                  </Button>
+                </div>
+              )}
+              <MakeComponent {...e.node} />
+            </div>
+          ))
+        )}
       </div>
       <div ref={ref}>
         {pageInfo?.hasNextPage && (

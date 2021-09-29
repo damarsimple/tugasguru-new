@@ -6,7 +6,11 @@ import type { AppProps } from "next/app";
 import { useAuthStore } from "../store/auth";
 import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "@apollo/client/link/context";
-import React, { useEffect } from "react";
+import React from "react";
+import "katex/dist/katex.min.css";
+import "mathquill/build/mathquill.css";
+import "mathquill4quill/mathquill4quill.css";
+import "react-quill/dist/quill.snow.css";
 
 import { ToastContainer } from "react-toastify";
 import {
@@ -16,9 +20,6 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 import { relayStylePagination } from "@apollo/client/utilities";
-import { useUserStore } from "../store/user";
-import echo from "../services/echo";
-import { Quizsession, User } from "../types/type";
 import { QuizInvitePopup } from "../components/QuizInvitePopup";
 
 const uploadLink = createUploadLink({
@@ -49,46 +50,6 @@ export const client = new ApolloClient({
             (o, key) => ({ ...o, [key]: relayStylePagination() }),
             {}
           ),
-          // userByUsername: {
-          //   merge(existing, incoming) {
-          //     if (!existing) return incoming;
-
-          //     const newData = {};
-
-          //     for (const x in incoming) {
-          //       if (typeof incoming[x] == "object") {
-          //         if (
-          //           (incoming[x]?.__typename as string)?.includes("Connection")
-          //         ) {
-          //           const typeName = incoming[x].__typename;
-          //           for (const y in existing ?? {}) {
-          //             if (typeof existing[y] == "object") {
-          //               if (typeName == existing[y]?.__typename) {
-          //                 const remove = x.indexOf("(");
-          //                 Object.defineProperty(newData, x.substr(0, remove), {
-          //                   value: {
-          //                     ...existing[y],
-          //                     ...incoming[x],
-          //                     edges: [
-          //                       ...(existing[y]?.edges ?? []),
-          //                       ...(incoming[x].edges ?? []),
-          //                     ],
-          //                   },
-          //                 });
-          //               }
-          //             }
-          //           }
-          //         }
-          //       }
-          //     }
-
-          //     console.log(newData);
-
-          //     return incoming;
-
-          //     return { ...existing, ...incoming, ...newData };
-          //   },
-          // },
         },
       },
     },

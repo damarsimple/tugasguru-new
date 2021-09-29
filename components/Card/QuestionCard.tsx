@@ -14,7 +14,7 @@ export default function QuestionCard({
   metadata,
 }: CardProp) {
   return (
-    <div className="shadow rounded bg-gray-800 flex">
+    <div className="h-full shadow rounded bg-gray-800 flex">
       {correct ? (
         <div className="bg-green-300 h-full w-2" />
       ) : (
@@ -22,8 +22,9 @@ export default function QuestionCard({
       )}
       <div className="bg-white w-full p-4">
         <div>
-          {index}. {metadata?.content}
+          {`${index ?? ""}.`} {metadata?.content}
         </div>
+        <div>{metadata?.type}</div>
         <hr className="my-4" />
         <div className="flex flex-col gap-2">
           {metadata?.answers.map((e) =>

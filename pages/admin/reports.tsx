@@ -62,7 +62,7 @@ export default function Reports() {
         `}
         editQuery={gql`
           mutation UpdateReport($id: ID!, $name: String) {
-            updateReport(id: $id, input: { id: $id, name: $name }) {
+            updateReport(id: $id, input: { name: $name }) {
               id
             }
           }

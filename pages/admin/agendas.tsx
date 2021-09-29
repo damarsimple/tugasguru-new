@@ -61,7 +61,7 @@ export default function Agendas() {
         `}
         editQuery={gql`
           mutation UpdateAgenda($id: ID!, $uuid: String) {
-            updateAgenda(id: $id, input: { id: $id, uuid: $uuid }) {
+            updateAgenda(id: $id, input: {  uuid: $uuid }) {
               id
             }
           }

@@ -81,7 +81,7 @@ export default function Announcements() {
           ) {
             updateAnnouncement(
               id: $id
-              input: { id: $id, name: $name, type: $type, roles: $roles }
+              input: { name: $name, type: $type, roles: $roles }
             ) {
               id
             }

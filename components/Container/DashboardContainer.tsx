@@ -35,6 +35,7 @@ import { GiUpgrade, GiShadowFollower } from "react-icons/gi";
 import { GrFormSchedule, GrTransaction, GrUserAdmin } from "react-icons/gr";
 import { IoMdPaper } from "react-icons/io";
 import { toast } from "react-toastify";
+import { BiLeftArrow } from "react-icons/bi";
 interface Route {
   name: string;
   url: string;
@@ -184,18 +185,23 @@ export default function DashboardContainer({
         icon: <FaMedal size="1.5em" color="white" />,
       },
       {
-        name: "Bank Soal",
+        name: "Buat Soal dan Bank Soal",
         url: "/dashboard/teachers/questions/",
         icon: <RiBankCardFill size="1.5em" color="white" />,
       },
       {
-        name: "Buat Ujian",
-        url: "/dashboard/teachers/exams/create",
+        name: "Ujian",
+        url: "/dashboard/teachers/exams",
+        icon: <BsNewspaper size="1.5em" color="white" />,
+      },
+      {
+        name: "Tugas",
+        url: "/dashboard/teachers/assigments",
         icon: <BsNewspaper size="1.5em" color="white" />,
       },
       {
         name: "Atur Ruang Kelas dan Mata Pelajaran",
-        url: "/dashboard/teachers/classrooms/settings",
+        url: "/dashboard/teachers/classrooms",
         icon: <MdSchool size="1.5em" color="white" />,
       },
       {
@@ -205,17 +211,17 @@ export default function DashboardContainer({
       },
       {
         name: "Izin dan Konsultasi",
-        url: "/dashboard/teachers/classrooms/",
+        url: "/dashboard/teachers/consultations/",
         icon: <FaHandsHelping size="1.5em" color="white" />,
       },
       {
         name: "Kehadiran dan Nilai",
-        url: "/dashboard/teachers/classrooms/",
+        url: "/dashboard/teachers/grades/",
         icon: <FaTasks size="1.5em" color="white" />,
       },
       {
         name: "Buat Laporan dan Panggilan",
-        url: "/dashboard/teachers/classrooms/",
+        url: "/dashboard/teachers/reports/",
         icon: <HiOutlineDocumentReport size="1.5em" color="white" />,
       },
       {
@@ -281,15 +287,15 @@ export default function DashboardContainer({
 
   useEffect(() => {
     if (admin && !user?.is_admin) {
-      // push("/");
-      // toast.error("Anda tidak memiliki akses ke tempat ini \\:<");
+      push("/");
+      toast.error("Anda tidak memiliki akses ke tempat ini \\:<");
     }
   }, [user, admin, push]);
 
   return (
     <AppContainer without={["margin"]} title={title ?? "Dashboard Utama"}>
       <div className="min-h-screen grid grid-cols-12 overflow-x-hidden">
-        <div className="col-span-3 md:col-span-2 flex flex-col gap-1 bg-gradient-to-b from-blue-400 to-green-500 md:p-2 max-h-screen overflow-x-auto pt-16">
+        <div className="col-span-3 md:col-span-2 flex flex-col gap-1 bg-gradient-to-b from-blue-500 to-yellow-500 md:p-2 max-h-screen overflow-x-auto pt-16">
           <div className="mt-2 md:mt-16 flex flex-col lg:flex-row gap-2">
             <button
               onClick={() => setIndex(0)}

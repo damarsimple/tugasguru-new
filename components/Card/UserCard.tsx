@@ -5,7 +5,12 @@ import { User } from "../../types/type";
 import Button from "../Button";
 import ImageContainer from "../Container/ImageContainer";
 
-export default function UserCard(e: User) {
+interface UserProp extends User {
+  clickAction?: () => void;
+  actionLabel?: string;
+}
+
+export default function UserCard(e: UserProp) {
   return (
     <div className="flex flex-col gap-2 text-center shadow rounded p-4">
       <div className="flex justify-center">
@@ -21,11 +26,17 @@ export default function UserCard(e: User) {
       <h1 className="text-md sm:text-lg font-semibold truncate">{e.name}</h1>
       <p className="text-sm sm:text-md truncate">@{e.username}</p>
       <p className="text-sm truncate">{e.roles}</p>
-      <Link href={"/users/" + e.username}>
-        <a>
-          <Button color="GRAY">BIMBEL</Button>
-        </a>
-      </Link>
+      {e.clickAction ? (
+        <Button color="GRAY" onClick={e.clickAction}>
+          {e.actionLabel ?? "..."}
+        </Button>
+      ) : (
+        <Link href={"/users/" + e.username}>
+          <a>
+            <Button color="GRAY">BIMBEL</Button>
+          </a>
+        </Link>
+      )}
     </div>
   );
 }
