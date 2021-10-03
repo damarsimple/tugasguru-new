@@ -32,22 +32,25 @@ export default function QuestionCard({
         </div>
         <hr className="my-4" />
         <div className="flex flex-col gap-2">
-          {metadata?.answers.map((e) =>
+          <div>Jawaban Anda : {myanswer?.content}</div>
+          {metadata?.answers.map((e, i) =>
             myanswer?.uuid == e.uuid ? (
               <div className="grid grid-cols-2 gap-2">
                 <div key={e.uuid} className="flex gap-2">
                   <div className="h-6 w-6 rounded-full bg-green-200" />
-                  <div>Jawaban Soal : {e.content}</div>
+                  <div>
+                    Jawaban Soal {String.fromCharCode(i + 65)} : {e.content}
+                  </div>
                 </div>
-                <div>Jawaban Anda : {myanswer?.content}</div>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-2">
                 <div key={e.uuid} className="flex gap-2">
                   <div className="h-6 w-6 rounded-full bg-red-200" />
-                  <div>Jawaban Soal : {e.content}</div>
+                  <div>
+                    Jawaban Soal {String.fromCharCode(i + 65)} : {e.content}
+                  </div>
                 </div>
-                <div>Jawaban Anda : {myanswer?.content}</div>
               </div>
             )
           )}

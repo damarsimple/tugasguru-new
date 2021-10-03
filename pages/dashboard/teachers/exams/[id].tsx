@@ -84,6 +84,10 @@ function ID({ router }: { router: NextRouter }) {
             id
             graded
             grade
+            examsession {
+              id
+              name
+            }
             user {
               id
               name
@@ -99,20 +103,19 @@ function ID({ router }: { router: NextRouter }) {
             open_at
             close_at
           }
-          metadata {
-            hint
-            description
-            year_start
-            year_end
-            time_limit
-            shuffle
-            show_result
-          }
+          hint
+          description
+          year_start
+          year_end
+          time_limit
+          shuffle
+          show_result
         }
       }
     `,
     {
       variables: { id },
+      fetchPolicy: "network-only",
       onCompleted: (e) => {
         setSchoolId(e.exam.classroom.id);
       },
@@ -144,8 +147,8 @@ function ID({ router }: { router: NextRouter }) {
                 <ImageContainer
                   src={e.user.cover?.path}
                   fallback="profile"
-                  width={75}
-                  height={75}
+                  width={100}
+                  height={100}
                 />
               </div>
               <div className="col-span-8 flex flex-col gap-1">
@@ -161,6 +164,7 @@ function ID({ router }: { router: NextRouter }) {
                   {e.graded ? "Sudah dinilai " : "Belom dinilai"}
                   {e.grade != 0 && e.grade}
                 </p>
+                <p>Sesi {e.examsession.name}</p>
               </div>
               <Button
                 color="BLUE"

@@ -15,9 +15,11 @@ export default function ExamCard(e: ExamCardProp) {
         <p className="mt-2 text-gray-600 text-sm">{e.metadata?.description}</p>
 
         <div className="flex flex-col gap-2 mt-3">
-          <h2 className="text-gray-700 font-bold text-md">
-            {e.examplaysCount} Pengumpul
-          </h2>
+          {e.examplaysCount && (
+            <h2 className="text-gray-700 font-bold text-md">
+              {e.examplaysCount} Pengumpul
+            </h2>
+          )}
           <Button
             href={(e.route ? e.route : "/dashboard/teachers/exams/") + e.id}
           >

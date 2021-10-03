@@ -1,8 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { groupBy, shuffle, uniq } from "lodash";
 import moment from "moment";
 import withRouter, { WithRouterProps } from "next/dist/client/with-router";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 import { MdNotifications } from "react-icons/md";
 import QRCode from "react-qr-code";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -10,7 +13,9 @@ import { toast } from "react-toastify";
 import Button from "../../components/Button";
 import BaseCard from "../../components/Card/BaseCard";
 import ImageContainer from "../../components/Container/ImageContainer";
+import { Editor } from "../../components/Editor";
 import Input from "../../components/Forms/Input";
+import HTMLRenderer from "../../components/HTMLRenderer";
 import ErrorView from "../../components/View/ErrorView";
 import LoadingView from "../../components/View/LoadingView";
 import {
@@ -19,21 +24,35 @@ import {
   CoreQuestionPlayField,
   CoreUserInfoMinimalField,
 } from "../../fragments/fragments";
+import { makeId, makeUUID } from "../../helpers/generator";
+import useDebounces from "../../hooks/useDebounces";
 import { useExamStore } from "../../store/exam";
 import { useUserStore } from "../../store/user";
-import { Exam, ExamplayGenericOutput } from "../../types/type";
+import {
+  Answer,
+  AnswerMap,
+  Exam,
+  Examplay,
+  ExamplayGenericOutput,
+  Question,
+  QuestionType,
+} from "../../types/type";
 
 function Id({ router }: WithRouterProps) {
   const { id } = router.query;
   const {
     exam,
     examsession,
+    isBegin,
+    examplay,
+    questionsMaps,
+    answersMaps,
+    setAnswersMaps,
+    setQuestionsMaps,
     setExam,
     setExamplay,
     setExamsession,
     setIsBegin,
-    isBegin,
-    examplay,
   } = useExamStore();
   const { loading, error } = useQuery<{ exam: Exam }>(
     gql`
@@ -68,9 +87,30 @@ function Id({ router }: WithRouterProps) {
       }
     `,
     {
+      fetchPolicy: "network-only",
       variables: { id },
       onCompleted: (e) => {
         setExam(e.exam);
+
+        type QMap = Record<string, Partial<Question>>;
+
+        const qmaps: QMap = {};
+        const questions = exam?.shuffle
+          ? shuffle(e.exam.questions)
+          : e.exam.questions;
+        for (const x of questions) {
+          if (!x.metadata?.uuid) return;
+
+          qmaps[x.metadata.uuid] = {
+            ...x,
+          };
+        }
+
+        setQuestionsMaps(qmaps);
+
+        setCurrentid(Object.keys(qmaps)[0]);
+
+        handleDebounce();
       },
     }
   );
@@ -116,7 +156,15 @@ function Id({ router }: WithRouterProps) {
       .then((e) => {
         toast.warn(e.data?.submitExamToken?.message);
         if (e.data?.submitExamToken.status) {
+          if (
+            e.data?.submitExamToken?.examplay?.finish_at ||
+            e.data?.submitExamToken?.examplay?.graded
+          ) {
+            toast.error("Anda sudah mengerjakan ujian ini!");
+            return;
+          }
           setPrepareStage("PREPARATION");
+          setExamplay(e?.data?.submitExamToken?.examplay as Examplay);
         }
       })
       .catch((e) => {
@@ -124,6 +172,123 @@ function Id({ router }: WithRouterProps) {
       });
   };
 
+  const grouped = groupBy(
+    Object.keys(questionsMaps).map((id) => {
+      return {
+        id,
+        ...questionsMaps[id],
+      };
+    }),
+    "metadata.type"
+  );
+
+  const qKeys = Object.keys(questionsMaps);
+
+  const indexMaps = Object.values(grouped)
+    .flat()
+    .map((e) => e.metadata?.uuid);
+
+  const handleMove = (direction: "NEXT" | "PREV") => {
+    if (direction == "NEXT") {
+      const value = indexMaps.at(currentindex + 1);
+      if (value) {
+        setCurrentid(value);
+        setCurrentindex(currentindex + 1);
+      }
+    } else {
+      if (currentindex == 0) return;
+      const value = indexMaps.at(currentindex - 1);
+      if (value) {
+        setCurrentid(value);
+        setCurrentindex(currentindex - 1);
+      }
+    }
+  };
+
+  const [currentid, setCurrentid] = useState<undefined | string>(undefined);
+  const [currentindex, setCurrentindex] = useState<number>(0);
+  const { ready, handleDebounce } = useDebounces();
+
+  const currentQuestion = currentid && questionsMaps[currentid];
+
+  const checkAnswered = (e: string) => !!answersMaps[e]?.content;
+
+  const [updateExamplay] = useMutation<{
+    handleExamplay: ExamplayGenericOutput;
+  }>(gql`
+    mutation HandleExamplay(
+      $type: ExamplayReportType!
+      $id: ID!
+      $answers_maps: String!
+      $last_activity: String!
+    ) {
+      handleExamplay(
+        type: $type
+        id: $id
+        answers_maps: $answers_maps
+        last_activity: $last_activity
+      ) {
+        status
+        message
+      }
+    }
+  `);
+
+  const getAnswerMaps = () => {
+    const maps: AnswerMap[] = [];
+
+    for (const x in questionsMaps) {
+      const amap: AnswerMap = {
+        answer: answersMaps[x] as Answer,
+        question: questionsMaps[x] as Question,
+        grade: 0,
+        comment: null,
+      };
+
+      maps.push(amap);
+    }
+    return maps;
+  };
+
+  const handleSaveAnswer = () => {
+    updateExamplay({
+      variables: {
+        id: examplay?.id,
+        type: "SAVE",
+        answers_maps: JSON.stringify(getAnswerMaps()),
+        last_activity: moment().format(),
+      },
+    });
+
+    handleMove("NEXT");
+  };
+
+  const handleHeartBeat = () => {
+    updateExamplay({
+      variables: {
+        id: examplay?.id,
+        type: "BEAT",
+        answers_maps: JSON.stringify(getAnswerMaps()),
+        last_activity: moment().format(),
+      },
+    });
+  };
+
+  const handleFinish = () => {
+    updateExamplay({
+      variables: {
+        id: examplay?.id,
+        type: "FINISH",
+        answers_maps: JSON.stringify(getAnswerMaps()),
+        last_activity: moment().format(),
+      },
+    }).then((e) => {
+      if (e.data?.handleExamplay.status) {
+        if (exam?.show_result) router.push("/exams/1/results");
+        else router.push("/dashboard");
+      }
+    });
+  };
   if (loading) return <LoadingView />;
 
   if (error) return <ErrorView error={error.message} />;
@@ -169,7 +334,39 @@ function Id({ router }: WithRouterProps) {
               </TabPanel>
             )}
             {isBegin && (
-              <TabPanel className="flex items-center justify-center"></TabPanel>
+              <TabPanel className="flex flex-col gap-3 items-center justify-center">
+                <div className="flex flex-col gap-2">
+                  {Object.keys(QuestionType).map((e, i) => (
+                    <div key={i} className="flex flex-col gap-2">
+                      <div className="grid grid-cols-2">
+                        <h1>{(QuestionType as any)[e]}</h1>
+                      </div>
+                      <div className="p-4 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        {grouped[(QuestionType as any)[e]]?.map((e, x) => (
+                          <Button
+                            onClick={() => {
+                              setCurrentid(e.metadata?.uuid);
+                              handleDebounce();
+                              setCurrentindex(i + x);
+                            }}
+                            key={x}
+                            color={
+                              currentid == e.metadata?.uuid
+                                ? "BLUE"
+                                : checkAnswered(e.metadata?.uuid ?? "")
+                                ? "GREEN"
+                                : "YELLOW"
+                            }
+                          >
+                            {x + 1}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Button onClick={handleFinish}>Selesai</Button>
+              </TabPanel>
             )}
 
             <TabPanel className="flex flex-col gap-2">
@@ -181,7 +378,78 @@ function Id({ router }: WithRouterProps) {
         </div>
         <div className="col-span-12 sm:col-span-8 md:col-span-9 shadow rounded ">
           {isBegin ? (
-            <div></div>
+            currentQuestion && (
+              <div className="min-h-full flex flex-col items-center gap-4 p-20">
+                {!ready ? (
+                  <div className="flex items-center justify-center h-full w-full">
+                    <AiOutlineLoading className="animate-spin" size="5em" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="h-1/2">
+                      <HTMLRenderer
+                        className="text-xl"
+                        html={currentQuestion?.metadata?.content}
+                      />
+                    </div>
+                    <div className="h-1/2 w-full flex flex-col gap-3">
+                      {currentQuestion?.metadata?.type ==
+                      QuestionType.Multi_choice ? (
+                        <div className="grid grid-cols-1 gap-2 w-full">
+                          {currentQuestion.metadata.answers?.map((e) => (
+                            <Button
+                              onClick={() => {
+                                if (!currentQuestion.metadata?.uuid) return;
+                                setAnswersMaps({
+                                  ...answersMaps,
+                                  [currentQuestion.metadata?.uuid]: e,
+                                });
+
+                                handleSaveAnswer();
+                              }}
+                              key={e.uuid}
+                              color={true ? "BLUE" : "GREEN"}
+                            >
+                              <HTMLRenderer html={e.content ?? ""} />
+                            </Button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div>
+                          <Editor
+                            defaultValue={
+                              (currentQuestion.metadata?.uuid &&
+                                answersMaps[currentQuestion.metadata?.uuid]
+                                  ?.content) ??
+                              ""
+                            }
+                            onChange={(e) => {
+                              if (!currentQuestion.metadata?.uuid) return;
+                              setAnswersMaps({
+                                ...answersMaps,
+                                [currentQuestion.metadata?.uuid]: {
+                                  uuid: makeUUID(),
+                                  content: e,
+                                },
+                              });
+                            }}
+                          />
+                        </div>
+                      )}
+                      <Button onClick={handleSaveAnswer}>SIMPAN</Button>
+                      <div className="flex gap-3">
+                        <Button onClick={() => handleMove("PREV")}>
+                          SEBELUMNYA
+                        </Button>
+                        <Button onClick={() => handleMove("NEXT")}>
+                          SELANJUTNYA
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            )
           ) : (
             <>
               {prepareStage == "INITIAL" && (

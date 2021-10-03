@@ -104,7 +104,6 @@ export default function Index() {
                     node {
                       id
                       name
-                      examplaysCount
                     }
                   }
                   pageInfo {

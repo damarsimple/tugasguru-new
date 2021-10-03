@@ -1,5 +1,5 @@
 import create from "zustand";
-import { Exam, Examplay, Examsession } from "../types/type";
+import { Answer, Exam, Examplay, Examsession, Question } from "../types/type";
 
 interface ExamState {
   exam?: Exam;
@@ -10,7 +10,14 @@ interface ExamState {
   setExamsession: (e: Examsession | undefined) => void;
   setExamplay: (e: Examplay) => void;
   setIsBegin: (e: boolean) => void;
+  questionsMaps: QMap;
+  answersMaps: AMap;
+  setQuestionsMaps: (e: QMap) => void;
+  setAnswersMaps: (e: AMap) => void;
 }
+
+type QMap = Record<string, Partial<Question>>;
+type AMap = Record<string, Partial<Answer>>;
 
 export const useExamStore = create<ExamState>((set) => ({
   exam: undefined,
@@ -21,4 +28,8 @@ export const useExamStore = create<ExamState>((set) => ({
   setIsBegin: (isBegin) => set((state) => ({ isBegin })),
   setExamsession: (examsession) => set((state) => ({ examsession })),
   setExamplay: (examplay) => set((state) => ({ examplay })),
+  questionsMaps: {},
+  setQuestionsMaps: (questionsMaps: QMap) => set({ questionsMaps }),
+  answersMaps: {},
+  setAnswersMaps: (answersMaps: AMap) => set({ answersMaps }),
 }));

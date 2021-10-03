@@ -86,6 +86,7 @@ export const CoreQuestionCopyField = gql`
 export const CoreQuestionPlayField = gql`
   ${CoreAnswerPlayField}
   fragment CoreQuestionPlayField on Question {
+    id
     metadata {
       uuid
       type

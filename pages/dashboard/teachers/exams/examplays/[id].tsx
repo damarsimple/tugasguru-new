@@ -53,6 +53,7 @@ function ID({ router }: { router: NextRouter }) {
               ...CoreQuestionCopyField
             }
             grade
+            comment
           }
           exam {
             id
@@ -78,13 +79,17 @@ function ID({ router }: { router: NextRouter }) {
         setGraded(e.examplay.graded);
         if (e.examplay.answers_map) {
           const cp: { [e: string]: number } = {};
+          const comment: { [e: string]: string } = {};
 
           for (const x of e.examplay.answers_map) {
-            if (x.question.metadata?.uuid)
+            if (x.question.metadata?.uuid) {
               cp[x.question.metadata?.uuid] = x.grade;
+              comment[x.question.metadata?.uuid] = x.comment ?? "";
+            }
           }
 
           setGradeMap(cp);
+          setGradeComment(comment);
         }
       },
     }
@@ -252,6 +257,7 @@ function ID({ router }: { router: NextRouter }) {
                   key={i}
                   index={i + 1}
                   grade={gradeMap[e.question.metadata?.uuid ?? ""]}
+                  correct={gradeMap[e.question.metadata?.uuid ?? ""] > 75}
                 />
               </div>
               <div className="col-span-2">
