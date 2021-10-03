@@ -36,7 +36,9 @@ import { GiUpgrade, GiShadowFollower } from "react-icons/gi";
 import { GrFormSchedule, GrTransaction, GrUserAdmin } from "react-icons/gr";
 import { IoMdPaper } from "react-icons/io";
 import { toast } from "react-toastify";
-import { BiLeftArrow } from "react-icons/bi";
+import { BiLeftArrow, BiTask } from "react-icons/bi";
+import { SiGoogleclassroom } from "react-icons/si";
+
 interface Route {
   name: string;
   url: string;
@@ -158,7 +160,7 @@ export default function DashboardContainer({
     },
     {
       name: "Cari Teman",
-      url: "/dashboard/friends",
+      url: "/dashboard/searchfriends",
       icon: <MdSearch size="1.5em" />,
     },
     {
@@ -198,17 +200,12 @@ export default function DashboardContainer({
       {
         name: "Tugas",
         url: "/dashboard/teachers/assigments",
-        icon: <BsNewspaper size="1.5em" color="white" />,
+        icon: <BiTask size="1.5em" color="white" />,
       },
       {
         name: "Atur Ruang Kelas dan Mata Pelajaran",
         url: "/dashboard/teachers/classrooms",
         icon: <MdSchool size="1.5em" color="white" />,
-      },
-      {
-        name: "Tugas dan Ujian",
-        url: "/dashboard/teachers/exams",
-        icon: <AiOutlineBook size="1.5em" color="white" />,
       },
       {
         name: "Izin dan Konsultasi",
@@ -253,14 +250,24 @@ export default function DashboardContainer({
     ],
     STUDENT: [
       {
-        name: "Atur Ruang Kelas dan Mata Pelajaran",
-        url: "/dashboard/classrooms/settings",
-        icon: <MdSchool size="1.5em" color="white" />,
+        name: "Ruang Kelas",
+        url: "/dashboard/students/classrooms/",
+        icon: <SiGoogleclassroom size="1.5em" color="white" />,
       },
       {
         name: "Sekolah",
         url: "/dashboard/students/school",
         icon: <MdSchool size="1.5em" color="white" />,
+      },
+      {
+        name: "Ujian",
+        url: "/dashboard/students/exams",
+        icon: <BsNewspaper size="1.5em" color="white" />,
+      },
+      {
+        name: "Tugas",
+        url: "/dashboard/students/assigments",
+        icon: <BiTask size="1.5em" color="white" />,
       },
     ],
   };

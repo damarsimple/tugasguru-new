@@ -44,7 +44,8 @@ export default function Select({
         <div className="rounded shadow-md my-2 relative pin-t pin-l">
           <div className="p-2">
             <input
-              className="border-2 rounded w-full"
+              autoFocus
+              className="border-2 rounded w-full p-4"
               onChange={(e) => setSearch(e.target.value)}
             />
             <br />

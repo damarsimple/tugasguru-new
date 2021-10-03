@@ -69,3 +69,7 @@ input[type=number] {
     white-space: nowrap;
     z-index: 1000;
 }
+
+a {
+    @apply hover:text-gray-300
+}

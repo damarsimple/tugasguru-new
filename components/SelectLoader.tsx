@@ -45,7 +45,7 @@ export default function SelectLoader<T extends BasicModel>({
   const { data, loading, error, fetchMore } = useQuery(query, {
     fetchPolicy,
     variables: {
-      first: perPage ?? 10,
+      first: perPage ?? 5,
       after: "",
       name: wildCardFormatter(search),
       ...variables,
@@ -62,7 +62,7 @@ export default function SelectLoader<T extends BasicModel>({
     if (inView && pageInfo?.hasNextPage) {
       fetchMore({
         variables: {
-          first: perPage ?? 10,
+          first: perPage ?? 5,
           after: pageInfo.endCursor,
           name: wildCardFormatter(search),
           ...variables,

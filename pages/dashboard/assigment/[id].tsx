@@ -10,7 +10,6 @@ import AttachmensViewer from "../../../components/AttachmensViewer";
 import Button from "../../../components/Button";
 import DashboardContainer from "../../../components/Container/DashboardContainer";
 import ImageContainer from "../../../components/Container/ImageContainer";
-import Form from "../../../components/Forms/Form";
 import Input from "../../../components/Forms/Input";
 import Modal from "../../../components/Modal";
 import PictureUploader from "../../../components/DocumentUploader";
@@ -42,7 +41,7 @@ function Id({ router }: { router: NextRouter }) {
             user {
               name
             }
-            students {
+            users {
               name
             }
           }
@@ -71,7 +70,8 @@ function Id({ router }: { router: NextRouter }) {
   const [updateSubmission] = useMutation(
     gql`
       mutation UpdateSubmission(
-        $id: ID!
+        $id: ID
+        $assigment_id: ID
         $grade: Float
         $graded: Boolean
         $turned: Boolean
@@ -82,6 +82,7 @@ function Id({ router }: { router: NextRouter }) {
         updateAssigmentsubmission(
           id: $id
           input: {
+            assigment_id: $assigment_id
             grade: $grade
             graded: $graded
             turned: $turned
@@ -235,6 +236,7 @@ function Id({ router }: { router: NextRouter }) {
                     : updateSubmission({
                         variables: {
                           id: assigment?.myassigmentsubmission?.id,
+                          assigment_id: assigment?.id,
                           turned: false,
                           turned_at: null,
                         },
@@ -250,6 +252,7 @@ function Id({ router }: { router: NextRouter }) {
                   updateSubmission({
                     variables: {
                       id: assigment?.myassigmentsubmission?.id,
+                      assigment_id: assigment?.id,
                       turned: true,
                       turned_at: moment().format(),
                     },
@@ -299,7 +302,7 @@ function Id({ router }: { router: NextRouter }) {
           <div className="flex flex-col gap-4 shadow rounded p-2">
             <h1 className="font-semibold">
               Terkumpul {assigment?.assigmentsubmissions?.length}/
-              {assigment?.classroom?.students.length}
+              {assigment?.classroom?.users.length}
             </h1>
             {assigment?.assigmentsubmissions?.map((e) => (
               <div
@@ -336,6 +339,7 @@ function Id({ router }: { router: NextRouter }) {
                     onClick={() =>
                       updateSubmission({
                         variables: {
+                          assigment_id: assigment?.id,
                           id: e?.id,
                           grade: 0,
                           graded: false,

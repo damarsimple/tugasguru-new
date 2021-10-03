@@ -1,23 +1,21 @@
+import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useState } from "react";
 import { BiPlus } from "react-icons/bi";
-import Loader from "../../../../components/BoxLoader";
-import Button from "../../../../components/Button";
-import BaseCard, {
-  BaseCardSkeleton,
-} from "../../../../components/Card/BaseCard";
-import ExamCard from "../../../../components/Card/ExamCard";
-import DashboardContainer from "../../../../components/Container/DashboardContainer";
-import Input from "../../../../components/Forms/Input";
-import Paper from "../../../../components/Paper";
-import { CorePageInfoField } from "../../../../fragments/fragments";
-import {
-  selectExtractor,
-  wildCardFormatter,
-} from "../../../../helpers/formatter";
-import useTeacherData from "../../../../hooks/useTeacherData";
-import { useUserStore } from "../../../../store/user";
-import { Exam, User } from "../../../../types/type";
+import Loader from "../../../components/BoxLoader";
+import Button from "../../../components/Button";
+import { BaseCardSkeleton } from "../../../components/Card/BaseCard";
+import ExamCard from "../../../components/Card/ExamCard";
+import DashboardContainer from "../../../components/Container/DashboardContainer";
+import Input from "../../../components/Forms/Input";
+import Paper from "../../../components/Paper";
+import { CorePageInfoField } from "../../../fragments/fragments";
+import { selectExtractor } from "../../../helpers/formatter";
+import useTeacherData from "../../../hooks/useTeacherData";
+import { useUserStore } from "../../../store/user";
+import { Exam, Examtype, Subject, User } from "../../../types/type";
+import examtypes from "../../admin/examtypes";
+import subjects from "../../admin/subjects";
 
 export default function Index() {
   const [classroom, setClassroom] = useState<undefined | string>(undefined);
@@ -25,7 +23,28 @@ export default function Index() {
   const [examtype, setExamtype] = useState<undefined | string>(undefined);
   const [odd, setOdd] = useState(false);
   const { user } = useUserStore();
-  const { subjects, myclassrooms, examtypes } = useTeacherData();
+  const { data: { subjectsAll, me, examtypesAll } = {} } = useQuery<{
+    me: User;
+    subjectsAll: Subject[];
+    examtypesAll: Examtype[];
+  }>(gql`
+    query GetMeData {
+      examtypesAll {
+        id
+        name
+      }
+      subjectsAll {
+        id
+        name
+      }
+      me {
+        classrooms {
+          id
+          name
+        }
+      }
+    }
+  `);
   return (
     <DashboardContainer>
       <div className="flex flex-col gap-2">
@@ -37,15 +56,9 @@ export default function Index() {
           <Input
             type="select"
             label="Ruang Kelas"
-            values={myclassrooms?.map(selectExtractor)}
+            values={me?.classrooms?.map(selectExtractor)}
             onTextChange={setClassroom}
             required
-          />
-          <Input
-            type="select"
-            label="Tipe Ujian"
-            values={examtypes?.map(selectExtractor)}
-            onTextChange={setExamtype}
           />
           <Input
             type="checkbox"
@@ -55,8 +68,14 @@ export default function Index() {
           <Input
             type="select"
             label="Mata Pelajaran"
-            values={subjects?.map(selectExtractor)}
+            values={subjectsAll?.map(selectExtractor)}
             onTextChange={setSubject}
+          />
+          <Input
+            type="select"
+            label="Tipe Ujian"
+            values={examtypesAll?.map(selectExtractor)}
+            onTextChange={setExamtype}
           />
         </Paper>
         {classroom ? (
@@ -107,7 +126,7 @@ export default function Index() {
             }}
             Component={(e) => (
               <div>
-                <ExamCard {...e} />
+                <ExamCard {...e} buttonLabel="Buka Ujian" route="/exams/" />
               </div>
             )}
             SkeletonComponent={BaseCardSkeleton}

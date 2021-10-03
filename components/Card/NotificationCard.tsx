@@ -6,10 +6,13 @@ import { Notification } from "../../types/type";
 import Button from "../Button";
 import ImageContainer from "../Container/ImageContainer";
 
-const TranslationMap: { [e: string]: string } = {
+export const NotificationTranslationMap: { [e: string]: string } = {
   assigment: "Tugas",
   exam: "Ujian",
 };
+
+export const getNotificationFormat = (DataType?: string | null) =>
+  DataType?.replace("App\\Models\\", "").toLowerCase();
 
 export default function NotificationCard({
   data,
@@ -27,7 +30,8 @@ export default function NotificationCard({
     definition,
   } = data || {};
 
-  const typeFormatted = DataType?.replace("App\\Models\\", "").toLowerCase();
+  const typeFormatted = getNotificationFormat(DataType);
+
   return (
     <div className="flex flex-col lg:flex-row w-full bg-white hover:bg-gray-100 shadow-lg rounded-lg overflow-hidden">
       <div
@@ -48,7 +52,9 @@ export default function NotificationCard({
           <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
           <p className="text-gray-600">{message}</p>
           <p className="text-gray-600">
-            {typeFormatted ? TranslationMap[typeFormatted] : typeFormatted}
+            {typeFormatted
+              ? NotificationTranslationMap[typeFormatted]
+              : typeFormatted}
           </p>
           <p className="text-gray-600">
             {moment(start_at).format("HH:MM D/M")} sampai{" "}

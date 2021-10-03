@@ -95,16 +95,18 @@ function Username({ router }: { router: NextRouter }) {
 
   const { user } = useUserStore();
 
-  const [mutationFollow] = useMutation<GenericOutput>(gql`
-    mutation HandleFollow($user_id: ID!) {
-      handleFollow(user_id: $user_id) {
+  const [mutationFollow] = useMutation<{
+    handleFollowRequest: GenericOutput;
+  }>(gql`
+    mutation HandleFollowRequest($user_id: ID!) {
+      handleFollowRequest(user_id: $user_id) {
         status
         message
       }
     }
   `);
 
-  const handleFollow = () => {
+  const handleFollowRequest = () => {
     if (!user) {
       toast.warning("Anda belum login");
       return;
@@ -120,10 +122,10 @@ function Username({ router }: { router: NextRouter }) {
         user_id: userFind?.id,
       },
     }).then((e) => {
-      if (e.data?.status) {
-        toast.success(e.data.message);
+      if (e.data?.handleFollowRequest?.status) {
+        toast.success(e.data?.handleFollowRequest.message);
       } else {
-        toast.error(e.data?.message);
+        toast.error(e.data?.handleFollowRequest?.message);
       }
     });
   };
@@ -244,7 +246,7 @@ function Username({ router }: { router: NextRouter }) {
                 )}
               </div>
               <div className="flex flex-col gap-2 pb-4 mt-4 items-center border-b">
-                <Button onClick={handleFollow}>
+                <Button onClick={handleFollowRequest}>
                   <BiPlus size="1.5em" /> Ikuti
                 </Button>
                 {userFind?.is_bimbel && userFind.is_bimbel_active && (

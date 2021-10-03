@@ -24,6 +24,7 @@ interface ButtonProp {
   onClick?: () => void;
   color?: COLORS;
   href?: string;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -34,26 +35,35 @@ export default function Button({
   onClick,
   color,
   href,
+  disabled,
   className,
 }: ButtonProp) {
   const ButtonComponent = () => (
     <button
-      onClick={onClick}
+      onClick={() => !disabled && onClick && onClick()}
       type={type ?? "button"}
-      disabled={loading}
+      disabled={loading || disabled}
       className={
         className +
         " uppercase items-center flex justify-center w-full px-4 py-2 truncate text-sm lg:text-lg font-semibold text-white transition-colors duration-300 rounded-md shadow focus:outline-none focus:ring-4 " +
-        (color && color in Colors ? Colors[color] : Colors.BLUE)
+        (disabled
+          ? Colors["GRAY"]
+          : color && color in Colors
+          ? Colors[color]
+          : Colors.BLUE)
       }
     >
-      {loading ? <AiOutlineLoading className="animate-spin" /> : children}
+      {loading && !disabled ? (
+        <AiOutlineLoading className="animate-spin" />
+      ) : (
+        children
+      )}
     </button>
   );
 
   return href ? (
     <Link href={href}>
-      <a className="w-full">
+      <a className={className + " w-full"}>
         <ButtonComponent />
       </a>
     </Link>

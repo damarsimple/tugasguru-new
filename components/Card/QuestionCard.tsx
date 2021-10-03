@@ -1,10 +1,11 @@
 import React from "react";
-import { Question } from "../../types/type";
+import { Answer, Question, QuestionCopy } from "../../types/type";
 
 interface CardProp extends Question {
-  myanswer?: string;
+  myanswer?: Answer;
   correct?: boolean;
   index?: number;
+  grade?: number;
 }
 
 export default function QuestionCard({
@@ -12,6 +13,7 @@ export default function QuestionCard({
   myanswer,
   correct,
   metadata,
+  grade,
 }: CardProp) {
   return (
     <div className="h-full shadow rounded bg-gray-800 flex">
@@ -24,19 +26,28 @@ export default function QuestionCard({
         <div>
           {`${index ?? ""}.`} {metadata?.content}
         </div>
-        <div>{metadata?.type}</div>
+        <div className="flex flex-col gap-2">
+          <div>Tipe Soal : {metadata?.type}</div>
+          <div>Nilai: {grade}</div>
+        </div>
         <hr className="my-4" />
         <div className="flex flex-col gap-2">
           {metadata?.answers.map((e) =>
-            myanswer == e.uuid ? (
-              <div key={e.uuid} className="flex gap-2">
-                <div className="h-6 w-6 rounded-full bg-green-200" />
-                <div>{e.content}</div>
+            myanswer?.uuid == e.uuid ? (
+              <div className="grid grid-cols-2 gap-2">
+                <div key={e.uuid} className="flex gap-2">
+                  <div className="h-6 w-6 rounded-full bg-green-200" />
+                  <div>Jawaban Soal : {e.content}</div>
+                </div>
+                <div>Jawaban Anda : {myanswer?.content}</div>
               </div>
             ) : (
-              <div key={e.uuid} className="flex gap-2">
-                <div className="h-6 w-6 rounded-full bg-gray-200" />
-                <div>{e.content}</div>
+              <div className="grid grid-cols-2 gap-2">
+                <div key={e.uuid} className="flex gap-2">
+                  <div className="h-6 w-6 rounded-full bg-red-200" />
+                  <div>Jawaban Soal : {e.content}</div>
+                </div>
+                <div>Jawaban Anda : {myanswer?.content}</div>
               </div>
             )
           )}

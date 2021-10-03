@@ -68,7 +68,7 @@ export interface Classroom {
   user: User;
   classtype: Classtype;
   school: School;
-  students: User[];
+  users: User[];
   notifications: Maybe<Notification[]>;
   assigments: Maybe<AssigmentConnection>;
   meetings: Maybe<MeetingConnection>;
@@ -97,8 +97,34 @@ export interface User {
   school: Maybe<School>;
   is_bimbel: boolean;
   is_bimbel_active: boolean;
+  absents: Absent[];
+  absentreceivers: Absent[];
+  agendas: Agenda[];
+  assigments: Assigment[];
+  assigmentsubmissions: Assigmentsubmission[];
+  attendances: Attendance[];
+  documents: Document[];
+  chats: Chat[];
+  chatrooms: Chatroom[];
+  mychatrooms: Chatroom[];
   participantchatrooms: Chatroom[];
   myclassrooms: Classroom[];
+  consultants: Consultation[];
+  courses: Course[];
+  examplays: Examplay[];
+  formsubmissions: Formsubmission[];
+  questions: Question[];
+  Packagequestions: Packagequestion[];
+  quizzez: Quiz[];
+  quizplays: Quizplay[];
+  myreports: Report[];
+  reports: Report[];
+  mytransactions: Transaction[];
+  transactions: Transaction[];
+  mytutorings: Tutoring[];
+  tutorings: Tutoring[];
+  childrens: User[];
+  withdraws: Withdraw[];
   classrooms: Classroom[];
   examsupervising: Exam[];
   subjects: Subject[];
@@ -108,32 +134,6 @@ export interface User {
   reqfollowers: User[];
   followings: User[];
   reqfollowings: User[];
-  absents: Maybe<AbsentConnection>;
-  absentreceivers: Maybe<AbsentConnection>;
-  agendas: Maybe<AgendaConnection>;
-  assigments: Maybe<AssigmentConnection>;
-  assigmentsubmissions: Maybe<AssigmentsubmissionConnection>;
-  attendances: Maybe<AttendanceConnection>;
-  documents: Maybe<DocumentConnection>;
-  chats: Maybe<ChatConnection>;
-  chatrooms: Maybe<ChatroomConnection>;
-  mychatrooms: Maybe<ChatroomConnection>;
-  consultants: Maybe<ConsultationConnection>;
-  courses: Maybe<CourseConnection>;
-  examplays: Maybe<ExamplayConnection>;
-  formsubmissions: Maybe<FormsubmissionConnection>;
-  questions: Maybe<QuestionConnection>;
-  Packagequestions: Maybe<PackagequestionConnection>;
-  quizzez: Maybe<QuizConnection>;
-  quizplays: Maybe<QuizplayConnection>;
-  myreports: Maybe<ReportConnection>;
-  reports: Maybe<ReportConnection>;
-  mytransactions: Maybe<TransactionConnection>;
-  transactions: Maybe<TransactionConnection>;
-  mytutorings: Maybe<TutoringConnection>;
-  tutorings: Maybe<TutoringConnection>;
-  childrens: Maybe<UserConnection>;
-  withdraws: Maybe<WithdrawConnection>;
 }
 
 export interface Document {
@@ -445,7 +445,20 @@ export interface Agenda {
   attendances: Maybe<AttendanceConnection>;
 }
 
-export type Agendaable = Meeting | Exam | Tutoring;
+export type Agendaable = Meeting | Examsession | Tutoring;
+export interface Examsession {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  exam: Exam;
+  open_at: string;
+  close_at: string;
+  agenda: Agenda;
+  token: string;
+  examplays: Maybe<ExamplayConnection>;
+}
+
 export interface Exam {
   id: string;
   created_at: string;
@@ -456,11 +469,18 @@ export interface Exam {
   classroom: Classroom;
   metadata: Maybe<ExamMetadata>;
   is_odd_semester: boolean;
-  agenda: Agenda;
+  examplaysCount: number;
+  hint: string;
+  description: string;
+  time_limit: number;
+  year_start: number;
+  year_end: number;
+  shuffle: boolean;
+  show_result: boolean;
+  examplays: Examplay[];
+  examsessions: Examsession[];
   supervisors: User[];
   questions: Question[];
-  examplays: Maybe<ExamplayConnection>;
-  examsessions: Maybe<ExamsessionConnection>;
 }
 
 export interface Examtype {
@@ -489,28 +509,6 @@ export interface ExamEdge {
 
 export interface ExamMetadata {
   description: Maybe<string>;
-  hint: Maybe<string>;
-  year_start: number;
-  year_end: number;
-  time_limit: number;
-  shuffle: boolean;
-  show_result: boolean;
-}
-
-/** A paginated list of Examplay edges. */
-export interface ExamplayConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Examplay edges.*/
-  edges: ExamplayEdge[];
-}
-
-/** An edge that contains a node of type Examplay and a cursor. */
-export interface ExamplayEdge {
-  /** The Examplay node.*/
-  node: Examplay;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
 }
 
 export interface Examplay {
@@ -529,24 +527,36 @@ export interface Examplay {
   answers_map: Maybe<AnswerMap[]>;
 }
 
-export interface Examsession {
+export interface AnswerMap {
+  comment: Maybe<string>;
+  grade: number;
+  question: QuestionCopy;
+  answer: Answer;
+}
+
+export interface QuestionCopy {
   id: string;
   created_at: string;
   updated_at: string;
-  name: string;
-  exam: Exam;
-  open_at: string;
-  close_at: string;
-  token: string;
-  examplays: Maybe<ExamplayConnection>;
+  subject: Maybe<Subject>;
+  classtype: Maybe<Classtype>;
+  metadata: Maybe<QuestionMetadata>;
+  documents: Maybe<Document[]>;
 }
 
-export interface AnswerMap {
-  grade: Maybe<number>;
-  question: Maybe<string>;
-  answer: Maybe<Answer>;
+export interface QuestionMetadata {
+  type: QuestionType;
+  uuid: string;
+  content: string;
+  answers: Answer[];
+  correctanswer: string;
 }
 
+export enum QuestionType {
+  Multi_choice = 'MULTI_CHOICE',
+  Essay = 'ESSAY',
+  Filler = 'FILLER',
+}
 export interface Answer {
   uuid: string;
   content: Maybe<string>;
@@ -554,18 +564,18 @@ export interface Answer {
   attachment_type: Maybe<string>;
 }
 
-/** A paginated list of Examsession edges. */
-export interface ExamsessionConnection {
+/** A paginated list of Examplay edges. */
+export interface ExamplayConnection {
   /** Pagination information about the list of edges.*/
   pageInfo: PageInfo;
-  /** A list of Examsession edges.*/
-  edges: ExamsessionEdge[];
+  /** A list of Examplay edges.*/
+  edges: ExamplayEdge[];
 }
 
-/** An edge that contains a node of type Examsession and a cursor. */
-export interface ExamsessionEdge {
-  /** The Examsession node.*/
-  node: Examsession;
+/** An edge that contains a node of type Examplay and a cursor. */
+export interface ExamplayEdge {
+  /** The Examplay node.*/
+  node: Examplay;
   /** A unique cursor that can be used for pagination.*/
   cursor: string;
 }
@@ -597,6 +607,7 @@ export interface Attendance {
   updated_at: string;
   absent: Maybe<Absent>;
   agenda: Agenda;
+  user: User;
   attended: boolean;
   is_bimbel: boolean;
   date: string;
@@ -748,19 +759,6 @@ export interface Assigmentsubmission {
   documents: Maybe<Document[]>;
 }
 
-export interface QuestionMetadata {
-  type: QuestionType;
-  uuid: string;
-  content: string;
-  answers: Answer[];
-  correctanswer: string;
-}
-
-export enum QuestionType {
-  Multi_choice = 'MULTI_CHOICE',
-  Essay = 'ESSAY',
-  Filler = 'FILLER',
-}
 export interface Formsubmission {
   id: string;
   created_at: string;
@@ -795,6 +793,9 @@ export interface School {
   city: City;
   district: District;
   metadata: Maybe<SchoolMetadata>;
+  classrooms: Classroom[];
+  submissions: Submission[];
+  students: User[];
   majors: Major[];
   extracurriculars: Extracurricular[];
   teachers: User[];
@@ -802,9 +803,6 @@ export interface School {
   administrators: User[];
   counselors: User[];
   headmaster: Maybe<User>;
-  classrooms: Maybe<ClassroomConnection>;
-  submissions: Maybe<SubmissionConnection>;
-  students: Maybe<UserConnection>;
 }
 
 export interface Province {
@@ -928,22 +926,6 @@ export interface Extracurricular {
   schools: School[];
 }
 
-/** A paginated list of Submission edges. */
-export interface SubmissionConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Submission edges.*/
-  edges: SubmissionEdge[];
-}
-
-/** An edge that contains a node of type Submission and a cursor. */
-export interface SubmissionEdge {
-  /** The Submission node.*/
-  node: Submission;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
 export interface FormsubmissionMetadata {
   content: string;
   type: string;
@@ -969,102 +951,6 @@ export interface Identity {
   family_card_number: Maybe<string>;
 }
 
-/** A paginated list of Absent edges. */
-export interface AbsentConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Absent edges.*/
-  edges: AbsentEdge[];
-}
-
-/** An edge that contains a node of type Absent and a cursor. */
-export interface AbsentEdge {
-  /** The Absent node.*/
-  node: Absent;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Agenda edges. */
-export interface AgendaConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Agenda edges.*/
-  edges: AgendaEdge[];
-}
-
-/** An edge that contains a node of type Agenda and a cursor. */
-export interface AgendaEdge {
-  /** The Agenda node.*/
-  node: Agenda;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Assigmentsubmission edges. */
-export interface AssigmentsubmissionConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Assigmentsubmission edges.*/
-  edges: AssigmentsubmissionEdge[];
-}
-
-/** An edge that contains a node of type Assigmentsubmission and a cursor. */
-export interface AssigmentsubmissionEdge {
-  /** The Assigmentsubmission node.*/
-  node: Assigmentsubmission;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Document edges. */
-export interface DocumentConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Document edges.*/
-  edges: DocumentEdge[];
-}
-
-/** An edge that contains a node of type Document and a cursor. */
-export interface DocumentEdge {
-  /** The Document node.*/
-  node: Document;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Chatroom edges. */
-export interface ChatroomConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Chatroom edges.*/
-  edges: ChatroomEdge[];
-}
-
-/** An edge that contains a node of type Chatroom and a cursor. */
-export interface ChatroomEdge {
-  /** The Chatroom node.*/
-  node: Chatroom;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Consultation edges. */
-export interface ConsultationConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Consultation edges.*/
-  edges: ConsultationEdge[];
-}
-
-/** An edge that contains a node of type Consultation and a cursor. */
-export interface ConsultationEdge {
-  /** The Consultation node.*/
-  node: Consultation;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
 export interface Consultation {
   id: string;
   created_at: string;
@@ -1079,22 +965,6 @@ export interface ConsultationMetadata {
   note: Maybe<string>;
   advice: Maybe<string>;
   problem: Maybe<string>;
-}
-
-/** A paginated list of Course edges. */
-export interface CourseConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Course edges.*/
-  edges: CourseEdge[];
-}
-
-/** An edge that contains a node of type Course and a cursor. */
-export interface CourseEdge {
-  /** The Course node.*/
-  node: Course;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
 }
 
 export interface Course {
@@ -1112,38 +982,6 @@ export interface Course {
 
 export interface CourseMetadata {
   description: string;
-}
-
-/** A paginated list of Formsubmission edges. */
-export interface FormsubmissionConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Formsubmission edges.*/
-  edges: FormsubmissionEdge[];
-}
-
-/** An edge that contains a node of type Formsubmission and a cursor. */
-export interface FormsubmissionEdge {
-  /** The Formsubmission node.*/
-  node: Formsubmission;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Report edges. */
-export interface ReportConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Report edges.*/
-  edges: ReportEdge[];
-}
-
-/** An edge that contains a node of type Report and a cursor. */
-export interface ReportEdge {
-  /** The Report node.*/
-  node: Report;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
 }
 
 export interface Report {
@@ -1164,38 +1002,6 @@ export interface ReportMetadata {
 export enum ReportType {
   Grade = 'GRADE',
 }
-/** A paginated list of Tutoring edges. */
-export interface TutoringConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Tutoring edges.*/
-  edges: TutoringEdge[];
-}
-
-/** An edge that contains a node of type Tutoring and a cursor. */
-export interface TutoringEdge {
-  /** The Tutoring node.*/
-  node: Tutoring;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
-/** A paginated list of Withdraw edges. */
-export interface WithdrawConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Withdraw edges.*/
-  edges: WithdrawEdge[];
-}
-
-/** An edge that contains a node of type Withdraw and a cursor. */
-export interface WithdrawEdge {
-  /** The Withdraw node.*/
-  node: Withdraw;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
-}
-
 export interface Withdraw {
   id: string;
   created_at: string;
@@ -1320,6 +1126,22 @@ export interface SubjectEdge {
   cursor: string;
 }
 
+/** A paginated list of Assigmentsubmission edges. */
+export interface AssigmentsubmissionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Assigmentsubmission edges.*/
+  edges: AssigmentsubmissionEdge[];
+}
+
+/** An edge that contains a node of type Assigmentsubmission and a cursor. */
+export interface AssigmentsubmissionEdge {
+  /** The Assigmentsubmission node.*/
+  node: Assigmentsubmission;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
 /** A paginated list of Classtype edges. */
 export interface ClasstypeConnection {
   /** Pagination information about the list of edges.*/
@@ -1332,6 +1154,38 @@ export interface ClasstypeConnection {
 export interface ClasstypeEdge {
   /** The Classtype node.*/
   node: Classtype;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Examsession edges. */
+export interface ExamsessionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Examsession edges.*/
+  edges: ExamsessionEdge[];
+}
+
+/** An edge that contains a node of type Examsession and a cursor. */
+export interface ExamsessionEdge {
+  /** The Examsession node.*/
+  node: Examsession;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Report edges. */
+export interface ReportConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Report edges.*/
+  edges: ReportEdge[];
+}
+
+/** An edge that contains a node of type Report and a cursor. */
+export interface ReportEdge {
+  /** The Report node.*/
+  node: Report;
   /** A unique cursor that can be used for pagination.*/
   cursor: string;
 }
@@ -1352,6 +1206,86 @@ export interface QuizsessionEdge {
   cursor: string;
 }
 
+/** A paginated list of Consultation edges. */
+export interface ConsultationConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Consultation edges.*/
+  edges: ConsultationEdge[];
+}
+
+/** An edge that contains a node of type Consultation and a cursor. */
+export interface ConsultationEdge {
+  /** The Consultation node.*/
+  node: Consultation;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Absent edges. */
+export interface AbsentConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Absent edges.*/
+  edges: AbsentEdge[];
+}
+
+/** An edge that contains a node of type Absent and a cursor. */
+export interface AbsentEdge {
+  /** The Absent node.*/
+  node: Absent;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Agenda edges. */
+export interface AgendaConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Agenda edges.*/
+  edges: AgendaEdge[];
+}
+
+/** An edge that contains a node of type Agenda and a cursor. */
+export interface AgendaEdge {
+  /** The Agenda node.*/
+  node: Agenda;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Withdraw edges. */
+export interface WithdrawConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Withdraw edges.*/
+  edges: WithdrawEdge[];
+}
+
+/** An edge that contains a node of type Withdraw and a cursor. */
+export interface WithdrawEdge {
+  /** The Withdraw node.*/
+  node: Withdraw;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Chatroom edges. */
+export interface ChatroomConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Chatroom edges.*/
+  edges: ChatroomEdge[];
+}
+
+/** An edge that contains a node of type Chatroom and a cursor. */
+export interface ChatroomEdge {
+  /** The Chatroom node.*/
+  node: Chatroom;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
 /** A paginated list of Voucher edges. */
 export interface VoucherConnection {
   /** Pagination information about the list of edges.*/
@@ -1364,6 +1298,54 @@ export interface VoucherConnection {
 export interface VoucherEdge {
   /** The Voucher node.*/
   node: Voucher;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Submission edges. */
+export interface SubmissionConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Submission edges.*/
+  edges: SubmissionEdge[];
+}
+
+/** An edge that contains a node of type Submission and a cursor. */
+export interface SubmissionEdge {
+  /** The Submission node.*/
+  node: Submission;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Course edges. */
+export interface CourseConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Course edges.*/
+  edges: CourseEdge[];
+}
+
+/** An edge that contains a node of type Course and a cursor. */
+export interface CourseEdge {
+  /** The Course node.*/
+  node: Course;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
+/** A paginated list of Document edges. */
+export interface DocumentConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Document edges.*/
+  edges: DocumentEdge[];
+}
+
+/** An edge that contains a node of type Document and a cursor. */
+export interface DocumentEdge {
+  /** The Document node.*/
+  node: Document;
   /** A unique cursor that can be used for pagination.*/
   cursor: string;
 }
@@ -1446,6 +1428,12 @@ export interface AuthOutput {
 export interface RegisterInput {
   email: string;
   password: string;
+}
+
+export interface ExamplayGenericOutput {
+  status: Maybe<boolean>;
+  message: Maybe<string>;
+  examplay: Maybe<Examplay>;
 }
 
 export interface GenericOutput {
@@ -1537,16 +1525,23 @@ export interface CreateExam {
   subject_id: string;
   metadata?: string;
   is_odd_semester?: boolean;
+  hint?: string;
+  description?: string;
+  time_limit: number;
+  year_start: number;
+  year_end: number;
+  shuffle?: boolean;
+  show_result?: boolean;
   examsessions: CreateExamsessionHasMany;
   supervisors?: ConnectSupervisorBelongsToMany;
   questions: ConnectQuestionBelongsToMany;
 }
 
 export interface CreateExamsessionHasMany {
-  create: CreateExamsession[];
+  create: CreateExamsessionMany[];
 }
 
-export interface CreateExamsession {
+export interface CreateExamsessionMany {
   name: string;
   token?: string;
   open_at?: string;
@@ -1561,11 +1556,26 @@ export interface ConnectQuestionBelongsToMany {
   connect: string[];
 }
 
+export interface CreateExamsession {
+  name: string;
+  exam_id: string;
+  token?: string;
+  open_at?: string;
+  close_at?: string;
+}
+
+export interface CreateExamplay {
+  exam_id: string;
+  examsession_id: string;
+  start_at: string;
+  answers_map?: string;
+}
+
 export interface CreateAssigment {
   name: string;
   classroom_id: string;
   subject_id: string;
-  is_odd_semester: boolean;
+  is_odd_semester?: boolean;
   metadata?: string;
   close_at: string;
   documents?: BasicOneToMany;
@@ -1776,6 +1786,13 @@ export interface UpdateExam {
   examtype_id?: string;
   metadata?: string;
   is_odd_semester: boolean;
+  hint?: string;
+  description?: string;
+  time_limit?: number;
+  year_start?: number;
+  year_end?: number;
+  shuffle?: boolean;
+  show_result?: boolean;
   examsessions?: UpdateExamsessionHasMany;
   supervisors?: UpdateConnectSupervisorBelongsToMany;
   questions?: UpdateConnectQuestionBelongsToMany;
@@ -1791,6 +1808,24 @@ export interface UpdateConnectSupervisorBelongsToMany {
 
 export interface UpdateConnectQuestionBelongsToMany {
   sync: string[];
+}
+
+export interface UpdateExamplay {
+  last_activity?: string;
+  minute_passed?: number;
+  start_at?: string;
+  finish_at?: string;
+  grade?: number;
+  graded?: boolean;
+  answers_map?: string;
+}
+
+export interface UpdateExamsession {
+  name?: string;
+  exam_id?: string;
+  token?: string;
+  open_at?: string;
+  close_at?: string;
 }
 
 export interface UpdateAssigment {
@@ -1906,6 +1941,7 @@ export interface UpdateAssigmentsubmission {
   turned_at?: string;
   graded?: boolean;
   grade?: number;
+  assigment_id?: string;
   documents?: BasicOneToMany;
 }
 
@@ -2067,6 +2103,8 @@ export enum Trashed {
 export interface classtypesAllArgs {
   level?: number;
 }
+
+export interface examtypesAllArgs {}
 
 export interface subjectsAllArgs {
   level?: number;
@@ -2254,9 +2292,12 @@ export interface meArgs {}
 
 export interface notificationsArgs {}
 
+export interface candidateclassroomsArgs {}
+
 export interface classroomsArgs {
   name?: string;
   user_id?: string;
+  student_id?: string;
   /** Limits number of fetched items.*/
   first: number;
   /** A cursor after which elements are returned.*/
@@ -2322,6 +2363,7 @@ export interface schoolsArgs {
   district_id?: string;
   city_id?: string;
   province_id?: string;
+  teacher_id?: string;
   name?: string;
   npsn?: string;
   /** Limits number of fetched items.*/
@@ -2342,7 +2384,7 @@ export interface subjectsArgs {
 export interface examsArgs {
   name?: string;
   is_odd_semester?: boolean;
-  classtype_id?: string;
+  classroom_id?: string;
   subject_id?: string;
   examtype_id?: string;
   user_id?: string;
@@ -2540,6 +2582,7 @@ export interface questionsArgs {
 }
 
 export interface packagequestionsArgs {
+  name?: string;
   user_id?: string;
   subject_id?: string;
   classtype_id?: string;
@@ -2698,8 +2741,25 @@ export interface registerArgs {
   input: RegisterInput;
 }
 
+export interface submitExamTokenArgs {
+  examsession_id: string;
+  token: string;
+}
+
+export interface handleAbsentArgs {
+  uuid: string;
+}
+
+export interface joinClassroomArgs {
+  classroom_id: string;
+}
+
 export interface assignSubjectArgs {
   subject_id: string;
+}
+
+export interface joinSchoolArgs {
+  school_id: string;
 }
 
 export interface updateUserPasswordArgs {
@@ -2721,11 +2781,15 @@ export interface sendAccessRequestArgs {
 export interface markReadAllArgs {}
 
 export interface handleFollowArgs {
-  user_id: string;
+  accept_followers?: string[];
+  decline_followers?: string[];
+  remove_followers?: string[];
+  remove_following?: string[];
+  cancel_following?: string[];
 }
 
-export interface handleAcceptFollowArgs {
-  accepted?: string[];
+export interface handleFollowRequestArgs {
+  user_id: string;
 }
 
 export interface uploadDocumentArgs {
@@ -2764,6 +2828,14 @@ export interface createSubjectArgs {
 
 export interface createExamArgs {
   input: CreateExam;
+}
+
+export interface createExamsessionArgs {
+  input: CreateExamsession;
+}
+
+export interface createExamplayArgs {
+  input: CreateExamplay;
 }
 
 export interface createAssigmentArgs {
@@ -2885,6 +2957,16 @@ export interface updateExamArgs {
   input: UpdateExam;
 }
 
+export interface updateExamplayArgs {
+  id: string;
+  input: UpdateExamplay;
+}
+
+export interface updateExamsessionArgs {
+  id: string;
+  input: UpdateExamsession;
+}
+
 export interface updateAssigmentArgs {
   id: string;
   input: UpdateAssigment;
@@ -2966,7 +3048,7 @@ export interface updateExtracurricularArgs {
 }
 
 export interface updateAssigmentsubmissionArgs {
-  id: string;
+  id?: string;
   input: UpdateAssigmentsubmission;
 }
 

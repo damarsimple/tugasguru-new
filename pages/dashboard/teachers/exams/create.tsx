@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import moment from "moment";
 import { useRouter } from "next/dist/client/router";
 import React, { useState } from "react";
@@ -30,42 +30,13 @@ import {
   User,
 } from "../../../../types/type";
 
+export const exampleExamsession = {
+  name: "Sesi ke 1",
+  token: makeId(5).toUpperCase(),
+};
 export default function Create() {
-  const [handleCreateExam, { loading }] = useMutation(gql`
-    mutation CreateExam(
-      $name: String!
-      $subject_id: ID!
-      $classroom_id: ID!
-      $questions: [ID!]!
-      $supervisors: [ID!]!
-      $odd: Boolean
-      $examtype_id: ID!
-      $examsessions: [CreateExamsession!]!
-    ) {
-      createExam(
-        input: {
-          examsessions: { create: $examsessions }
-          examtype_id: $examtype_id
-          is_odd_semester: $odd
-          name: $name
-          subject_id: $subject_id
-          classroom_id: $classroom_id
-          questions: { connect: $questions }
-          supervisors: { connect: $supervisors }
-        }
-      ) {
-        id
-      }
-    }
-  `);
-
   const [subject, setSubject] = useState("");
   const [classroom, setClassroom] = useState("");
-
-  const exampleExamsession = {
-    name: "Sesi ke 1",
-    token: makeId(5).toUpperCase(),
-  };
 
   const [supervisors, setSupervisors] = useState<Array<User>>([]);
   const [questions, setQuestions] = useState<Array<Question>>([]);
@@ -123,6 +94,11 @@ export default function Create() {
         <TabPanel>
           <div>
             <Form<Exam, { createExam: Exam }>
+              beforeSubmit={(e) => {
+                if (questions.length == 0) {
+                  throw new Error("Anda belum memiliki soal !");
+                }
+              }}
               attributes={[
                 {
                   label: "Nama",
@@ -160,30 +136,30 @@ export default function Create() {
                 },
                 {
                   label: "Tahun Ajaran Awal",
-                  name: "metadata.year_start",
+                  name: "year_start",
                   type: "number",
                   required: true,
                 },
                 {
                   label: "Tahun Ajaran Akhir",
-                  name: "metadata.year_end",
+                  name: "year_end",
                   type: "number",
                   required: true,
                 },
                 {
                   label: "Batas Waktu (menit)",
-                  name: "metadata.time_limit",
+                  name: "time_limit",
                   type: "number",
                   required: true,
                 },
                 {
                   label: "Acak",
-                  name: "metadata.shuffle",
+                  name: "shuffle",
                   type: "checkbox",
                 },
                 {
                   label: "Izinkan Melihat Hasil",
-                  name: "metadata.show_result",
+                  name: "show_result",
                   type: "checkbox",
                 },
               ]}
@@ -220,7 +196,13 @@ export default function Create() {
                   $supervisors: [ID!]!
                   $odd: Boolean
                   $examtype_id: ID!
-                  $examsessions: [CreateExamsession!]!
+                  $metadata: String
+                  $time_limit: Int!
+                  $year_start: Int!
+                  $year_end: Int!
+                  $shuffle: Boolean
+                  $show_result: Boolean
+                  $examsessions: [CreateExamsessionMany!]!
                 ) {
                   createExam(
                     input: {
@@ -229,7 +211,15 @@ export default function Create() {
                       is_odd_semester: $odd
                       name: $name
                       subject_id: $subject_id
+                      metadata: $metadata
                       classroom_id: $classroom_id
+                      hint: $hint
+                      description: $description
+                      time_limit: $time_limit
+                      year_start: $year_start
+                      year_end: $year_end
+                      shuffle: $shuffle
+                      show_result: $show_result
                       questions: { connect: $questions }
                       supervisors: { connect: $supervisors }
                     }

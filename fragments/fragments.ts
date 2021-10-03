@@ -17,9 +17,11 @@ export const CoreUserInfoMinimalField = gql`
     username
     roles
     school {
+      id
       name
     }
     cover {
+      id
       path
     }
   }
@@ -54,6 +56,30 @@ export const CoreAnswerPlayField = gql`
     content
     attachment
     attachment_type
+  }
+`;
+
+export const CoreQuestionCopyField = gql`
+  ${CoreAnswerPlayField}
+  fragment CoreQuestionCopyField on QuestionCopy {
+    metadata {
+      uuid
+      type
+      content
+      correctanswer
+      answers {
+        ...CoreAnswerPlayField
+      }
+    }
+    documents {
+      id
+      path
+      roles
+      metadata {
+        original_name
+        type
+      }
+    }
   }
 `;
 

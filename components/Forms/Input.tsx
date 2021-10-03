@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
 import { SelectValue } from "./Form";
 
@@ -8,7 +8,7 @@ interface IProps {
   name?: string;
   value?: string;
   type?: string;
-  defaultValue?: string;
+  defaultValue?: any;
   information?: string;
   defaultChecked?: boolean;
   required?: boolean;
@@ -35,6 +35,7 @@ export default function Input({
   const [filled, setFilled] = useState(!!defaultValue);
   const [time, setTime] = useState(moment(defaultValue).format("hh:mm"));
   const [date, setDate] = useState(moment(defaultValue).format("YYYY-MM-DD"));
+
   if (type == "hidden")
     return <input type="hidden" name={name} defaultValue={defaultValue} />;
 
@@ -146,9 +147,10 @@ export default function Input({
                       onTextChange &&
                         onTextChange(
                           defaultValue ??
-                            moment(`${x.target.value} ${date}`, "").format(
-                              'hh:mm "YYYY-MM-DD'
-                            )
+                            moment(
+                              `${x.target.value} ${date}`,
+                              "hh:mm YYYY-MM-DD"
+                            ).format("hh:mm  YYYY-MM-DD")
                         );
                       setFilled(!!x.target.value);
                     }}
@@ -164,9 +166,10 @@ export default function Input({
                       onTextChange &&
                         onTextChange(
                           defaultValue ??
-                            moment(`${time} ${x.target.value}`, "").format(
-                              'hh:mm "YYYY-MM-DD'
-                            )
+                            moment(
+                              `${time} ${x.target.value}`,
+                              "hh:mm YYYY-MM-DD"
+                            ).format("hh:mm  YYYY-MM-DD")
                         );
                       setFilled(!!x.target.value);
                     }}

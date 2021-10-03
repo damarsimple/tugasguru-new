@@ -111,7 +111,7 @@ export default function Users() {
             type: "checkbox",
           },
         ]}
-        createQuery={gql`
+        mutationQuery={gql`
           mutation CreateUser(
             $name: String!
             $username: String!

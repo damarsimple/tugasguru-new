@@ -1,4 +1,5 @@
 import React from "react";
+import { Document } from "../../types/type";
 
 interface BaseModel {
   name: String;
@@ -15,7 +16,7 @@ export default function BaseCard({ name }: BaseModel) {
 export function BaseCardSkeleton() {
   return (
     <div className="shadow rounded p-4">
-      <h1 className="font-semibold text-center h-6 animate-pulse " />
+      <div className="font-semibold text-center bg-gray-200 h-6 animate-pulse " />
     </div>
   );
 }

@@ -174,21 +174,19 @@ BoxProps<T>) {
           <SearchBox onChange={setSearch} />
         </div>
       )}
-      <div className={className}>
-        {stillLoading ? (
-          <>
-            {
-              <SkeletonGrid
-                className={className}
-                total={perPage ?? 20}
-                SkeletonComponent={SkeletonComponent}
-              />
-            }
-          </>
-        ) : error ? (
-          <p>Error :( {error.message}</p>
-        ) : (
-          datas.map((e, i) => (
+      {stillLoading ? (
+        <>
+          <SkeletonGrid
+            className={className}
+            total={perPage ?? 20}
+            SkeletonComponent={SkeletonComponent}
+          />
+        </>
+      ) : error ? (
+        <p>Error :( {error.message}</p>
+      ) : (
+        <div className={className}>
+          {datas.map((e, i) => (
             <div key={`${e.node.id}-${i}`}>
               {withEditDelete && (
                 <div className="flex justify-between">
@@ -208,9 +206,9 @@ BoxProps<T>) {
               )}
               <MakeComponent {...e.node} />
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
       <div ref={ref}>
         {pageInfo?.hasNextPage && (
           <SkeletonGrid className={className} total={perPage ?? 20} />

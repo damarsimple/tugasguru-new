@@ -61,8 +61,6 @@ export default function Form<T, N>({
     { data: mutationData, loading: mutationLoading, error: mutationError },
   ] = useMutation<N>(mutationQuery, {});
 
-  const [inputMap, setInputMap] = useState<T | object>(defaultValueMap ?? {});
-
   const formRef = useRef(null);
 
   const checkHasMetadataField = () => {
@@ -72,18 +70,6 @@ export default function Form<T, N>({
     return false;
   };
 
-  const getMetadata = () => {
-    const metadata = {};
-    for (const x in inputMap as object) {
-      if (x.includes("metadata.")) {
-        //@ts-ignore
-        metadata[x.replace("metadata.", "")] = inputMap[x];
-      }
-    }
-
-    return JSON.stringify(metadata);
-  };
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
@@ -91,19 +77,29 @@ export default function Form<T, N>({
 
     for (const x of requireds) {
       //@ts-ignore
-      if (!inputMap[x] && !getDefault(x)) {
+      if (!defaultStore[fields][x] && !getDefault(x)) {
         toast.error("Anda belum mengisi " + x);
         return;
+      }
+    }
+
+    const metadata = {};
+    for (const x in defaultStore[fields as string] as object) {
+      if (x.includes("metadata.")) {
+        //@ts-ignore
+        metadata[x.replace("metadata.", "")] = defaultStore[fields][x];
       }
     }
 
     const submitMap = checkHasMetadataField()
       ? {
           ...defaultStore[fields as string],
-          ...inputMap,
-          metadata: getMetadata(),
+          metadata: JSON.stringify(metadata),
         }
-      : { ...defaultStore[fields as string], ...inputMap };
+      : {
+          ...defaultStore[fields as string],
+          ...defaultStore[fields as string],
+        };
 
     if (beforeSubmit) {
       try {
@@ -129,7 +125,7 @@ export default function Form<T, N>({
   const { defaultStore, setDefaultStore } = useDefaultMap();
 
   const handleValueChange = (e: string, x: boolean | string | number) => {
-    setInputMap({ ...inputMap, [e]: x });
+    // setInputMap({ ...defaultStore[fields as string], [e]: x });
     setDefaultStore({
       ...defaultStore,
       [fields as string]: {

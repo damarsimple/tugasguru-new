@@ -187,7 +187,7 @@ export default function AppContainer({
 
       <div className={fullScreen ? "h-screen" : ""}>
         {!without?.includes("navbar") && (
-          <nav className="bg-primary-base fixed top-0 w-full shadow  p-1 md:p-3 flex justify-between z-50 h-14">
+          <nav className="bg-primary-base fixed top-0 w-full shadow  p-1 md:p-3 flex justify-between z-20 h-14">
             <div>
               <Link href="/">
                 <a className="flex gap-1">

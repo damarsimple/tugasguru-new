@@ -60,7 +60,7 @@ export default function Classrooms() {
         </TabList>
         <TabPanel>
           <FormModal<Classroom>
-            createQuery={gql`
+            mutationQuery={gql`
               mutation createClassroom($subject_id: ID!) {
                 createClassroom(subject_id: $subject_id) {
                   status
@@ -159,7 +159,7 @@ export default function Classrooms() {
         <TabPanel>
           <div className="flex  gap-2">
             <FormModal
-              createQuery={gql`
+              mutationQuery={gql`
                 mutation AssignSubject($subject_id: ID!) {
                   assignSubject(subject_id: $subject_id) {
                     status

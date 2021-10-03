@@ -33,7 +33,7 @@ export default function UserCard(e: UserProp) {
       ) : (
         <Link href={"/users/" + e.username}>
           <a>
-            <Button color="GRAY">BIMBEL</Button>
+            <Button color="GRAY">{e.actionLabel ?? "PROFILE"}</Button>
           </a>
         </Link>
       )}
