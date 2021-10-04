@@ -61,9 +61,19 @@ export default function Classrooms() {
         <TabPanel>
           <FormModal<Classroom>
             mutationQuery={gql`
-              mutation createClassroom($subject_id: ID!) {
-                createClassroom(subject_id: $subject_id) {
-                  status
+              mutation createClassroom(
+                $school: ID!
+                $classtype: ID!
+                $name: String!
+              ) {
+                createClassroom(
+                  input: {
+                    school_id: $school
+                    classtype: $classtype
+                    name: $name
+                  }
+                ) {
+                  id
                 }
               }
             `}

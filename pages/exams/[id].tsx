@@ -4,7 +4,8 @@ import { groupBy, shuffle, uniq } from "lodash";
 import moment from "moment";
 import withRouter, { WithRouterProps } from "next/dist/client/with-router";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Countdown, { zeroPad } from "react-countdown";
 import { AiOutlineLoading } from "react-icons/ai";
 import { MdNotifications } from "react-icons/md";
 import QRCode from "react-qr-code";
@@ -61,6 +62,17 @@ function Id({ router }: WithRouterProps) {
         exam(id: $id) {
           id
           name
+          subject {
+            id
+            name
+          }
+          classroom {
+            id
+            user {
+              id
+              name
+            }
+          }
           questions {
             ...CoreQuestionPlayField
           }
@@ -182,8 +194,6 @@ function Id({ router }: WithRouterProps) {
     "metadata.type"
   );
 
-  const qKeys = Object.keys(questionsMaps);
-
   const indexMaps = Object.values(grouped)
     .flat()
     .map((e) => e.metadata?.uuid);
@@ -284,14 +294,52 @@ function Id({ router }: WithRouterProps) {
       },
     }).then((e) => {
       if (e.data?.handleExamplay.status) {
-        if (exam?.show_result) router.push("/exams/1/results");
+        if (exam?.show_result) router.push(`/exams/${exam.id}/results`);
         else router.push("/dashboard");
       }
     });
+
+    handleInterval.current && clearInterval(handleInterval.current);
   };
+
+  const renderer = ({
+    hours,
+    minutes,
+    seconds,
+  }: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  }) => (
+    <span>
+      {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
+    </span>
+  );
+
+  const handleInterval = useRef<any>(null);
+
+  const [endDate, setEndDate] = useState<undefined | Date>(undefined);
+
+  const handleBegin = () => {
+    if (!examplay || !exam) return;
+    console.log(exam.time_limit - examplay.minute_passed);
+
+    setEndDate(
+      moment()
+        .add(exam.time_limit - examplay.minute_passed, "minute")
+        .toDate()
+    );
+    setIsBegin(true);
+    handleInterval.current = setInterval(() => {
+      handleHeartBeat();
+    }, 60000);
+  };
+
   if (loading) return <LoadingView />;
 
   if (error) return <ErrorView error={error.message} />;
+
+  if (!exam) return <p>Unknown Error ...</p>;
 
   return (
     <div>
@@ -312,7 +360,15 @@ function Id({ router }: WithRouterProps) {
 
         <div className="flex gap-2 text-white">
           <button className="flex p-2 bg-gray-50 hover:bg-gray-200 text-sm text-gray-900 font-semibold rounded">
-            <MdNotifications size="1.5em" /> {10}
+            {endDate && (
+              <Countdown
+                date={endDate}
+                intervalDelay={0}
+                precision={3}
+                renderer={renderer}
+                onComplete={handleFinish}
+              />
+            )}
           </button>
         </div>
       </nav>
@@ -461,6 +517,9 @@ function Id({ router }: WithRouterProps) {
                     src={user?.cover?.path}
                   />
                   <h1 className="text-xl font-bold uppercase">{exam?.name}</h1>
+                  <p className="text-md font-bold uppercase">
+                    {exam?.classroom?.user?.name} - {exam.subject?.name}
+                  </p>
                   <p className="text-md">{exam?.hint}</p>
                   <p className="text-md">{exam?.time_limit} Menit</p>
                   <p className="text-md">
@@ -479,7 +538,7 @@ function Id({ router }: WithRouterProps) {
                           onClick={() => {
                             setExamsession(e);
                             setPrepareStage("TOKEN");
-                            console.log("logged");
+                            setToken("");
                           }}
                           disabled={!moment().isBetween(e.open_at, e.close_at)}
                           key={e.id}
@@ -498,6 +557,7 @@ function Id({ router }: WithRouterProps) {
                     onClick={() => {
                       setExamsession(undefined);
                       setPrepareStage("INITIAL");
+                      setToken("");
                     }}
                   >
                     KEMBALI
@@ -525,7 +585,8 @@ function Id({ router }: WithRouterProps) {
                   </Button>
                   <Button
                     onClick={() => {
-                      setIsBegin(true);
+                      setToken("");
+                      handleBegin();
                     }}
                     className="w-96"
                   >
