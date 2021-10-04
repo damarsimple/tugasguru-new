@@ -24,6 +24,7 @@ import { selectExtractor, selectObjectExtractor } from "../helpers/formatter";
 import { BsCheckAll } from "react-icons/bs";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
+import questions from "../pages/dashboard/teachers/questions";
 const firstId = makeId(5);
 const correctId = makeUUID();
 
@@ -364,6 +365,17 @@ export default function QuestionEditor() {
       name,
     };
 
+    let exists = false;
+    for (const x in y.questions) {
+      exists = true;
+      break;
+    }
+
+    if (!exists) {
+      toast.error("Anda belum memiliki soal !");
+      return;
+    }
+
     handleCreatePackage({
       variables: {
         ...y,
@@ -371,7 +383,7 @@ export default function QuestionEditor() {
     })
       .then((e) => {
         toast.success("Berhasil membuat paket soal");
-        router.back();
+        router.push("/dashboard/teachers/questions?index=1");
       })
       .catch((e) => toast.error("Gagal membuat paket soal " + e));
   };

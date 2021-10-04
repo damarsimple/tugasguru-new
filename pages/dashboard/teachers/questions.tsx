@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { WithRouterProps } from "next/dist/client/with-router";
 import React from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import Loader from "../../../components/BoxLoader";
@@ -12,10 +13,14 @@ import {
 } from "../../../fragments/fragments";
 import { Packagequestion } from "../../../types/type";
 
-export default function Questions() {
+export default function Questions({ router }: WithRouterProps) {
   return (
     <DashboardContainer>
-      <Tabs>
+      <Tabs
+        defaultIndex={
+          router?.query?.index ? parseInt(router.query.index as string) : 0
+        }
+      >
         <TabList>
           <Tab>Editor Soal</Tab>
           <Tab>Bank Soal</Tab>
