@@ -13,6 +13,7 @@ import DashboardContainer from "../../../components/Container/DashboardContainer
 import FormModal from "../../../components/FormModal";
 import { CorePageInfoField } from "../../../fragments/fragments";
 import { selectExtractor } from "../../../helpers/formatter";
+import useDebounces from "../../../hooks/useDebounces";
 import useTeacherData from "../../../hooks/useTeacherData";
 import { useUserStore } from "../../../store/user";
 import { Classroom, Subject } from "../../../types/type";
@@ -51,6 +52,8 @@ export default function Classrooms() {
       }
     }
   `);
+
+  const { ready, handleDebounce } = useDebounces();
   return (
     <DashboardContainer>
       <Tabs>
@@ -108,62 +111,65 @@ export default function Classrooms() {
             afterSubmit={() => {
               toast.success("Berhasil menambah");
               refetchSubject();
+              handleDebounce();
             }}
           />
-          <Loader<Classroom>
-            className="grid grid-cols-1 md:grid-cols-2 gap-3"
-            fetchPolicy="network-only"
-            Component={ClassroomCard}
-            fields="classrooms"
-            query={gql`
-              ${CorePageInfoField}
-              query GetUsers($first: Int!, $after: String, $user_id: ID) {
-                classrooms(first: $first, after: $after, user_id: $user_id) {
-                  edges {
-                    node {
-                      id
-                      name
+          {ready && (
+            <Loader<Classroom>
+              className="grid grid-cols-1 md:grid-cols-2 gap-3"
+              fetchPolicy="network-only"
+              Component={ClassroomCard}
+              fields="classrooms"
+              query={gql`
+                ${CorePageInfoField}
+                query GetUsers($first: Int!, $after: String, $user_id: ID) {
+                  classrooms(first: $first, after: $after, user_id: $user_id) {
+                    edges {
+                      node {
+                        id
+                        name
 
-                      school {
-                        id
-                        name
-                      }
-                      classtype {
-                        id
-                        level
-                      }
-                      user {
-                        name
-                        cover {
-                          path
-                        }
-                      }
-                      notifications {
-                        id
-                        type
-                        read_at
-                        data {
+                        school {
                           id
-                          message
-                          start_at
-                          finish_at
-                          type
                           name
-                          definition
+                        }
+                        classtype {
+                          id
+                          level
+                        }
+                        user {
+                          name
+                          cover {
+                            path
+                          }
+                        }
+                        notifications {
+                          id
+                          type
+                          read_at
+                          data {
+                            id
+                            message
+                            start_at
+                            finish_at
+                            type
+                            name
+                            definition
+                          }
                         }
                       }
                     }
-                  }
-                  pageInfo {
-                    ...CorePageInfoField
+                    pageInfo {
+                      ...CorePageInfoField
+                    }
                   }
                 }
-              }
-            `}
-            SkeletonComponent={ClassroomCardSkeleton}
-            perPage={10}
-            variables={{ user_id: user?.id }}
-          />
+              `}
+              SkeletonComponent={ClassroomCardSkeleton}
+              perPage={10}
+              variables={{ user_id: user?.id }}
+            />
+          )}
         </TabPanel>
 
         <TabPanel>
