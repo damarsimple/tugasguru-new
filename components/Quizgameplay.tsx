@@ -185,8 +185,8 @@ export default function Quizgameplay() {
   const percentage = (myquizplay?.grade ?? 0) / questions.length;
   const answerMap: { [e: string]: Answer } =
     myquizplay?.answers_map?.reduce((prev, current) => {
-      if (!current.question) return prev;
-      return { ...prev, [current.question]: current.answer };
+      if (!current.question || !current.question.metadata?.uuid) return prev;
+      return { ...prev, [current.question.metadata?.uuid]: current.answer };
     }, {}) ?? {};
 
   if (result) {
@@ -248,7 +248,7 @@ export default function Quizgameplay() {
                 correct={
                   answerMap[e.metadata.uuid]?.uuid == e.metadata?.correctanswer
                 }
-                myanswer={answerMap[e.metadata.uuid]?.uuid}
+                myanswer={answerMap[e.metadata.uuid]}
               />
             ) : (
               <></>

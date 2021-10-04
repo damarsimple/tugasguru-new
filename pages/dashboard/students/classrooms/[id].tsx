@@ -4,6 +4,10 @@ import React from "react";
 import DashboardContainer from "../../../../components/Container/DashboardContainer";
 
 function Id({ router }: { router: NextRouter }) {
-  return <DashboardContainer></DashboardContainer>;
+  return (
+    <DashboardContainer>
+      <div></div>
+    </DashboardContainer>
+  );
 }
 export default withRouter(Id);
