@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { MdClose, MdFileUpload, MdPlusOne } from "react-icons/md";
+import React, { useState } from "react";
+import { MdClose, MdPlusOne } from "react-icons/md";
 import { makeId, makeUUID } from "../helpers/generator";
-import {
-  Classtype,
-  Packagequestion,
-  Question,
-  QuestionType,
-  Subject,
-} from "../types/type";
+import { Question, QuestionType } from "../types/type";
 import Button from "./Button";
 import { Editor } from "./Editor";
 import Input from "./Forms/Input";
@@ -20,12 +14,9 @@ import useDebounces from "../hooks/useDebounces";
 //@ts-ignore
 import readXlsxFile from "read-excel-file";
 import useTeacherData from "../hooks/useTeacherData";
-import { selectExtractor, selectObjectExtractor } from "../helpers/formatter";
-import { BsCheckAll } from "react-icons/bs";
+import { selectExtractor } from "../helpers/formatter";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
-import questions from "../pages/dashboard/teachers/questions";
-const firstId = makeId(5);
 const correctId = makeUUID();
 
 type QMap = Record<string, Partial<Question>>;
@@ -414,6 +405,27 @@ export default function QuestionEditor() {
   };
 
   const { subjects, classtypes } = useTeacherData();
+  const [currentindex, setCurrentindex] = useState<number>(0);
+  const indexMaps = Object.values(grouped)
+    .flat()
+    .map((e) => e.metadata?.uuid);
+
+  const handleMove = (direction: "NEXT" | "PREV") => {
+    if (direction == "NEXT") {
+      const value = indexMaps.at(currentindex + 1);
+      if (value) {
+        setCurrentid(value);
+        setCurrentindex(currentindex + 1);
+      }
+    } else {
+      if (currentindex == 0) return;
+      const value = indexMaps.at(currentindex - 1);
+      if (value) {
+        setCurrentid(value);
+        setCurrentindex(currentindex - 1);
+      }
+    }
+  };
   return (
     <>
       <Modal open={openviewer} flip={flipViewer}>
@@ -504,12 +516,18 @@ export default function QuestionEditor() {
       <div className="grid grid-cols-12 h-screen gap-2">
         <div className="col-span-12 lg:col-span-8 shadow rounded p-4 flex flex-col gap-3">
           {currentid && ready && questionsMaps[currentid] ? (
-            <QuestionEditorView
-              onChange={(e) => {
-                setQuestionsMaps({ ...questionsMaps, [currentid]: e });
-              }}
-              question={questionsMaps[currentid]}
-            />
+            <>
+              <QuestionEditorView
+                onChange={(e) => {
+                  setQuestionsMaps({ ...questionsMaps, [currentid]: e });
+                }}
+                question={questionsMaps[currentid]}
+              />
+              <div className="flex gap-3">
+                <Button onClick={() => handleMove("PREV")}>SEBELUMNYA</Button>
+                <Button onClick={() => handleMove("NEXT")}>SELANJUTNYA</Button>
+              </div>
+            </>
           ) : (
             <>
               {Object.keys(QuestionType).map((e, i) => (

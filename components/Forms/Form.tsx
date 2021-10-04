@@ -15,6 +15,7 @@ export interface InputMap<T> {
   type?: string;
   label: string;
   required?: boolean;
+
   information?: string;
   values?: SelectValue[];
 }
@@ -41,6 +42,7 @@ interface FormProp<T, N> {
   successMessage?: string;
   fields: keyof N;
   submitName?: string;
+  disableSubmit?: boolean;
   onValueChange?: (name: string, value: string | number | boolean) => void;
 }
 
@@ -55,6 +57,7 @@ export default function Form<T, N>({
   successMessage,
   submitName,
   onValueChange,
+  disableSubmit,
 }: FormProp<T, N>) {
   const [
     mutateFunction,
@@ -156,7 +159,13 @@ export default function Form<T, N>({
           values={e.values}
         />
       ))}
-      <Button loading={mutationLoading} type="submit" color="BLUE">
+
+      <Button
+        disabled={disableSubmit}
+        loading={mutationLoading}
+        type="submit"
+        color="BLUE"
+      >
         {submitName ?? "SIMPAN"}
       </Button>
     </form>
