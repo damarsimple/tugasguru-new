@@ -62,14 +62,14 @@ export default function Classrooms() {
           <FormModal<Classroom>
             mutationQuery={gql`
               mutation createClassroom(
-                $school: ID!
-                $classtype: ID!
+                $school_id: ID!
+                $classtype_id: ID!
                 $name: String!
               ) {
                 createClassroom(
                   input: {
-                    school_id: $school
-                    classtype: $classtype
+                    school_id: $school_id
+                    classtype_id: $classtype_id
                     name: $name
                   }
                 ) {
