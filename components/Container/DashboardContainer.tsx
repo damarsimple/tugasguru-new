@@ -38,12 +38,23 @@ import { IoMdPaper } from "react-icons/io";
 import { toast } from "react-toastify";
 import { BiLeftArrow, BiTask } from "react-icons/bi";
 import { SiGoogleclassroom } from "react-icons/si";
+import create from "zustand";
 
 interface Route {
   name: string;
   url: string;
   icon: JSX.Element;
 }
+
+interface NavbarStore {
+  index: number;
+  setIndex: (e: number) => void;
+}
+
+export const useNavbarStore = create<NavbarStore>((set, get) => ({
+  index: 0,
+  setIndex: (index) => set({ index }),
+}));
 
 export default function DashboardContainer({
   admin,
@@ -54,225 +65,10 @@ export default function DashboardContainer({
   children: JSX.Element | JSX.Element[] | string;
   title?: string;
 }) {
-  const adminMenu: Route[] = [
-    {
-      name: "Dashboard",
-      url: "/admin",
-      icon: <AiFillHome size="1.5em" />,
-    },
-    {
-      name: "Pengguna",
-      url: "/admin/users",
-      icon: <MdSupervisorAccount size="1.5em" />,
-    },
-    {
-      name: "Mata Pelajaran",
-      url: "/admin/subjects",
-      icon: <IoMdPaper size="1.5em" />,
-    },
-    {
-      name: "Form Pengajuan",
-      url: "/admin/forms",
-      icon: <MdBook size="1.5em" />,
-    },
-    {
-      name: "Laporan",
-      url: "/admin/reports",
-      icon: <MdReport size="1.5em" />,
-    },
-    {
-      name: "Pengumuman",
-      url: "/admin/announcements",
-      icon: <GiMegaphone size="1.5em" />,
-    },
-    {
-      name: "Provinsi",
-      url: "/admin/provinces",
-      icon: <MdPlace size="1.5em" />,
-    },
-    {
-      name: "Kota / Kabupaten",
-      url: "/admin/cities",
-      icon: <MdPlace size="1.5em" />,
-    },
-    {
-      name: "Kecamatan / Kelurahan",
-      url: "/admin/districts",
-      icon: <MdPlace size="1.5em" />,
-    },
-
-    {
-      name: "Sekolah",
-      url: "/admin/schools",
-      icon: <MdSchool size="1.5em" />,
-    },
-    {
-      name: "Voucher",
-      url: "/admin/vouchers",
-      icon: <HiTicket size="1.5em" />,
-    },
-    {
-      name: "Transaksi",
-      url: "/admin/transactions",
-      icon: <GrTransaction size="1.5em" />,
-    },
-    {
-      name: "Withdraw",
-      url: "/admin/withdraws",
-      icon: <AiOutlineTransaction size="1.5em" />,
-    },
-    {
-      name: "Quiz",
-      url: "/admin/quizzez",
-      icon: <FaGamepad size="1.5em" />,
-    },
-  ];
-  const baseUserMenu: Route[] = [
-    {
-      name: "Dashboard",
-      url: "/dashboard",
-      icon: <AiFillHome size="1.5em" />,
-    },
-    {
-      name: "Pengaturan Profil",
-      url: "/dashboard/settings",
-      icon: <RiUserSettingsLine size="1.5em" />,
-    },
-    {
-      name: "Pengumuman",
-      url: "/dashboard/announcements",
-      icon: <GiMegaphone size="1.5em" />,
-    },
-    {
-      name: "Toko Konten",
-      url: "/shop",
-      icon: <MdStore size="1.5em" />,
-    },
-    {
-      name: "Cari Bimbel",
-      url: "/bimbel",
-      icon: <RiUserSearchFill size="1.5em" />,
-    },
-    {
-      name: "Bimbel Saya",
-      url: "/mybimbels",
-      icon: <FaChalkboardTeacher size="1.5em" />,
-    },
-    {
-      name: "Cari Teman",
-      url: "/dashboard/searchfriends",
-      icon: <MdSearch size="1.5em" />,
-    },
-    {
-      name: "Pengikut",
-      url: "/dashboard/friends",
-      icon: <GiShadowFollower size="1.5em" />,
-    },
-  ];
-
-  const Routes: { [e: string]: Route[] } = {
-    TEACHER: [
-      {
-        name: "Dashboard Bimbel",
-        url: "/dashboard/bimbels",
-        icon: <MdDashboard size="1.5em" color="white" />,
-      },
-      {
-        name: "Upgrade Akun",
-        url: "/dashboard/teachers/upgrades/",
-        icon: <GiUpgrade size="1.5em" color="white" />,
-      },
-      {
-        name: "Pengajuan",
-        url: "/dashboard/teachers/forms/",
-        icon: <FaMedal size="1.5em" color="white" />,
-      },
-      {
-        name: "Buat Soal dan Bank Soal",
-        url: "/dashboard/teachers/questions/",
-        icon: <RiBankCardFill size="1.5em" color="white" />,
-      },
-      {
-        name: "Ujian",
-        url: "/dashboard/teachers/exams",
-        icon: <BsNewspaper size="1.5em" color="white" />,
-      },
-      {
-        name: "Tugas",
-        url: "/dashboard/teachers/assigments",
-        icon: <BiTask size="1.5em" color="white" />,
-      },
-      {
-        name: "Atur Ruang Kelas dan Mata Pelajaran",
-        url: "/dashboard/teachers/classrooms",
-        icon: <MdSchool size="1.5em" color="white" />,
-      },
-      {
-        name: "Izin dan Konsultasi",
-        url: "/dashboard/teachers/consultations/",
-        icon: <FaHandsHelping size="1.5em" color="white" />,
-      },
-      {
-        name: "Kehadiran dan Nilai",
-        url: "/dashboard/teachers/grades/",
-        icon: <FaTasks size="1.5em" color="white" />,
-      },
-      {
-        name: "Buat Laporan dan Panggilan",
-        url: "/dashboard/teachers/reports/",
-        icon: <HiOutlineDocumentReport size="1.5em" color="white" />,
-      },
-      {
-        name: "Sekolah",
-        url: "/dashboard/teachers/schools",
-        icon: <MdSchool size="1.5em" color="white" />,
-      },
-      {
-        name: "Kepala Sekolah",
-        url: "/dashboard/teachers/headmasters/",
-        icon: <AiFillCrown size="1.5em" color="white" />,
-      },
-      {
-        name: "Admin Sekolah",
-        url: "/dashboard/teachers/admins/",
-        icon: <GrUserAdmin size="1.5em" color="white" />,
-      },
-      {
-        name: "Wali Kelas",
-        url: "/dashboard/teachers/homerooms/",
-        icon: <RiUserHeartLine size="1.5em" color="white" />,
-      },
-      {
-        name: "Guru BK",
-        url: "/dashboard/teachers/counselors/",
-        icon: <RiUserStarLine size="1.5em" color="white" />,
-      },
-    ],
-    STUDENT: [
-      {
-        name: "Ruang Kelas",
-        url: "/dashboard/students/classrooms/",
-        icon: <SiGoogleclassroom size="1.5em" color="white" />,
-      },
-      {
-        name: "Sekolah",
-        url: "/dashboard/students/school",
-        icon: <MdSchool size="1.5em" color="white" />,
-      },
-      {
-        name: "Ujian",
-        url: "/dashboard/students/exams",
-        icon: <BsNewspaper size="1.5em" color="white" />,
-      },
-      {
-        name: "Tugas",
-        url: "/dashboard/students/assigments",
-        icon: <BiTask size="1.5em" color="white" />,
-      },
-    ],
-  };
-
   const { pathname, push } = useRouter();
+
+  const { user } = useUserStore();
+  const { index, setIndex } = useNavbarStore();
 
   const RenderMenu = (e: Route) => (
     <Link href={e.url}>
@@ -289,9 +85,6 @@ export default function DashboardContainer({
       </a>
     </Link>
   );
-
-  const [index, setIndex] = useState(0);
-  const { user } = useUserStore();
 
   useEffect(() => {
     if (admin && !user?.is_admin) {
@@ -354,3 +147,221 @@ export default function DashboardContainer({
     </AppContainer>
   );
 }
+
+const adminMenu: Route[] = [
+  {
+    name: "Dashboard",
+    url: "/admin",
+    icon: <AiFillHome size="1.5em" />,
+  },
+  {
+    name: "Pengguna",
+    url: "/admin/users",
+    icon: <MdSupervisorAccount size="1.5em" />,
+  },
+  {
+    name: "Mata Pelajaran",
+    url: "/admin/subjects",
+    icon: <IoMdPaper size="1.5em" />,
+  },
+  {
+    name: "Form Pengajuan",
+    url: "/admin/forms",
+    icon: <MdBook size="1.5em" />,
+  },
+  {
+    name: "Laporan",
+    url: "/admin/reports",
+    icon: <MdReport size="1.5em" />,
+  },
+  {
+    name: "Pengumuman",
+    url: "/admin/announcements",
+    icon: <GiMegaphone size="1.5em" />,
+  },
+  {
+    name: "Provinsi",
+    url: "/admin/provinces",
+    icon: <MdPlace size="1.5em" />,
+  },
+  {
+    name: "Kota / Kabupaten",
+    url: "/admin/cities",
+    icon: <MdPlace size="1.5em" />,
+  },
+  {
+    name: "Kecamatan / Kelurahan",
+    url: "/admin/districts",
+    icon: <MdPlace size="1.5em" />,
+  },
+
+  {
+    name: "Sekolah",
+    url: "/admin/schools",
+    icon: <MdSchool size="1.5em" />,
+  },
+  {
+    name: "Voucher",
+    url: "/admin/vouchers",
+    icon: <HiTicket size="1.5em" />,
+  },
+  {
+    name: "Transaksi",
+    url: "/admin/transactions",
+    icon: <GrTransaction size="1.5em" />,
+  },
+  {
+    name: "Withdraw",
+    url: "/admin/withdraws",
+    icon: <AiOutlineTransaction size="1.5em" />,
+  },
+  {
+    name: "Quiz",
+    url: "/admin/quizzez",
+    icon: <FaGamepad size="1.5em" />,
+  },
+];
+const baseUserMenu: Route[] = [
+  {
+    name: "Dashboard",
+    url: "/dashboard",
+    icon: <AiFillHome size="1.5em" />,
+  },
+  {
+    name: "Pengaturan Profil",
+    url: "/dashboard/settings",
+    icon: <RiUserSettingsLine size="1.5em" />,
+  },
+  {
+    name: "Pengumuman",
+    url: "/dashboard/announcements",
+    icon: <GiMegaphone size="1.5em" />,
+  },
+  {
+    name: "Toko Konten",
+    url: "/shop",
+    icon: <MdStore size="1.5em" />,
+  },
+  {
+    name: "Cari Bimbel",
+    url: "/bimbel",
+    icon: <RiUserSearchFill size="1.5em" />,
+  },
+  {
+    name: "Bimbel Saya",
+    url: "/mybimbels",
+    icon: <FaChalkboardTeacher size="1.5em" />,
+  },
+  {
+    name: "Cari Teman",
+    url: "/dashboard/searchfriends",
+    icon: <MdSearch size="1.5em" />,
+  },
+  {
+    name: "Pengikut",
+    url: "/dashboard/friends",
+    icon: <GiShadowFollower size="1.5em" />,
+  },
+];
+
+const Routes: { [e: string]: Route[] } = {
+  TEACHER: [
+    {
+      name: "Dashboard Bimbel",
+      url: "/dashboard/bimbels",
+      icon: <MdDashboard size="1.5em" color="white" />,
+    },
+    {
+      name: "Upgrade Akun",
+      url: "/dashboard/teachers/upgrades/",
+      icon: <GiUpgrade size="1.5em" color="white" />,
+    },
+    {
+      name: "Pengajuan",
+      url: "/dashboard/teachers/forms/",
+      icon: <FaMedal size="1.5em" color="white" />,
+    },
+    {
+      name: "Buat Soal dan Bank Soal",
+      url: "/dashboard/teachers/questions/",
+      icon: <RiBankCardFill size="1.5em" color="white" />,
+    },
+    {
+      name: "Ujian",
+      url: "/dashboard/teachers/exams",
+      icon: <BsNewspaper size="1.5em" color="white" />,
+    },
+    {
+      name: "Tugas",
+      url: "/dashboard/teachers/assigments",
+      icon: <BiTask size="1.5em" color="white" />,
+    },
+    {
+      name: "Atur Ruang Kelas dan Mata Pelajaran",
+      url: "/dashboard/teachers/classrooms",
+      icon: <MdSchool size="1.5em" color="white" />,
+    },
+    {
+      name: "Izin dan Konsultasi",
+      url: "/dashboard/teachers/consultations/",
+      icon: <FaHandsHelping size="1.5em" color="white" />,
+    },
+    {
+      name: "Kehadiran dan Nilai",
+      url: "/dashboard/teachers/grades/",
+      icon: <FaTasks size="1.5em" color="white" />,
+    },
+    {
+      name: "Buat Laporan dan Panggilan",
+      url: "/dashboard/teachers/reports/",
+      icon: <HiOutlineDocumentReport size="1.5em" color="white" />,
+    },
+    {
+      name: "Sekolah",
+      url: "/dashboard/teachers/schools",
+      icon: <MdSchool size="1.5em" color="white" />,
+    },
+    {
+      name: "Kepala Sekolah",
+      url: "/dashboard/teachers/headmasters/",
+      icon: <AiFillCrown size="1.5em" color="white" />,
+    },
+    {
+      name: "Admin Sekolah",
+      url: "/dashboard/teachers/admins/",
+      icon: <GrUserAdmin size="1.5em" color="white" />,
+    },
+    {
+      name: "Wali Kelas",
+      url: "/dashboard/teachers/homerooms/",
+      icon: <RiUserHeartLine size="1.5em" color="white" />,
+    },
+    {
+      name: "Guru BK",
+      url: "/dashboard/teachers/counselors/",
+      icon: <RiUserStarLine size="1.5em" color="white" />,
+    },
+  ],
+  STUDENT: [
+    {
+      name: "Ruang Kelas",
+      url: "/dashboard/students/classrooms/",
+      icon: <SiGoogleclassroom size="1.5em" color="white" />,
+    },
+    {
+      name: "Sekolah",
+      url: "/dashboard/students/school",
+      icon: <MdSchool size="1.5em" color="white" />,
+    },
+    {
+      name: "Ujian",
+      url: "/dashboard/students/exams",
+      icon: <BsNewspaper size="1.5em" color="white" />,
+    },
+    {
+      name: "Tugas",
+      url: "/dashboard/students/assigments",
+      icon: <BiTask size="1.5em" color="white" />,
+    },
+  ],
+};
