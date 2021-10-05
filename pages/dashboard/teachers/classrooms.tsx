@@ -90,6 +90,13 @@ export default function Classrooms() {
                 required: true,
               },
               {
+                label: "Sekolah",
+                type: "select",
+                values: schools?.map(selectExtractor),
+                required: true,
+                name: "school_id",
+              },
+              {
                 label: "Tipe Kelas",
                 type: "select",
                 values: classtypes
@@ -99,13 +106,6 @@ export default function Classrooms() {
                   .map(selectExtractor),
                 required: true,
                 name: "classtype_id",
-              },
-              {
-                label: "Sekolah",
-                type: "select",
-                values: schools?.map(selectExtractor),
-                required: true,
-                name: "school_id",
               },
             ]}
             afterSubmit={() => {
