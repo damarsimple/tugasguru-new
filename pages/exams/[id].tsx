@@ -100,7 +100,7 @@ function Id({ router }: WithRouterProps) {
     `,
     {
       fetchPolicy: "network-only",
-      variables: { id },
+      variables: { id : id },
       onCompleted: (e) => {
         setExam(e.exam);
 
@@ -334,6 +334,8 @@ function Id({ router }: WithRouterProps) {
       handleHeartBeat();
     }, 60000);
   };
+
+  if (!id) return <p>id tidak ditemukan</p>;
 
   if (loading) return <LoadingView />;
 
