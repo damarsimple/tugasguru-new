@@ -97,7 +97,7 @@ export default function Classrooms() {
                 name: "school_id",
               },
               {
-                label: "Tipe Kelas",
+                label: "Kelas",
                 type: "select",
                 values: classtypes
                   ?.map((e) => {

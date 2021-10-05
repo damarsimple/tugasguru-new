@@ -576,7 +576,7 @@ export default function QuestionEditor() {
               onTextChange={setSubject}
             />
             <Input
-              label="Tipe Kelas"
+              label="Kelas"
               type="select"
               onTextChange={setClasstype}
               values={
