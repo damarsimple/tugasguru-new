@@ -4,6 +4,7 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { toast } from "react-toastify";
 import Button from "../../components/Button";
 import FollowCard from "../../components/Card/FollowCard";
+import ConfirmModal from "../../components/ConfirmModal";
 import DashboardContainer from "../../components/Container/DashboardContainer";
 import ImageContainer from "../../components/Container/ImageContainer";
 import { CoreUserInfoMinimalField } from "../../fragments/fragments";
@@ -170,12 +171,10 @@ export default function Friends() {
                 return (
                   <FollowCard user={e} key={e.id}>
                     <div className="flex gap-1">
-                      <Button
-                        loading={loading}
-                        onClick={() => handleRemove([e.id])}
-                      >
-                        Hapus Pengikut
-                      </Button>
+                      <ConfirmModal
+                        openMessage="HAPUS PENGIKUT"
+                        next={() => handleRemove([e.id])}
+                      />
                     </div>
                   </FollowCard>
                 );

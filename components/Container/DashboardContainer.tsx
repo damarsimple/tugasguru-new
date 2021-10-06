@@ -1,9 +1,10 @@
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   AiFillCrown,
   AiFillHome,
+  AiFillStop,
   AiOutlineBook,
   AiOutlineTransaction,
 } from "react-icons/ai";
@@ -17,6 +18,7 @@ import {
   MdBook,
   MdPlace,
   MdReport,
+  MdBookmark,
 } from "react-icons/md";
 import AppContainer from "../../components/Container/AppContainer";
 import {
@@ -28,9 +30,9 @@ import {
   RiAdminFill,
 } from "react-icons/ri";
 import { useUserStore } from "../../store/user";
-import { GiMegaphone } from "react-icons/gi";
+import { GiMegaphone, GiRank1 } from "react-icons/gi";
 import { HiOutlineDocumentReport, HiTicket } from "react-icons/hi";
-import { BsNewspaper } from "react-icons/bs";
+import { BsList, BsNewspaper } from "react-icons/bs";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiUpgrade, GiShadowFollower } from "react-icons/gi";
 import { GrFormSchedule, GrTransaction, GrUserAdmin } from "react-icons/gr";
@@ -62,7 +64,7 @@ export default function DashboardContainer({
   children,
 }: {
   admin?: boolean;
-  children: JSX.Element | JSX.Element[] | string;
+  children: ReactNode;
   title?: string;
 }) {
   const { pathname, push } = useRouter();
@@ -282,7 +284,7 @@ const Routes: { [e: string]: Route[] } = {
       icon: <FaMedal size="1.5em" color="white" />,
     },
     {
-      name: "Buat Soal dan Bank Soal",
+      name: "Bnk Soal",
       url: "/dashboard/teachers/questions/",
       icon: <RiBankCardFill size="1.5em" color="white" />,
     },
@@ -297,22 +299,42 @@ const Routes: { [e: string]: Route[] } = {
       icon: <BiTask size="1.5em" color="white" />,
     },
     {
-      name: "Atur Ruang Kelas dan Mata Pelajaran",
+      name: "Ruang Kelas",
       url: "/dashboard/teachers/classrooms",
       icon: <MdSchool size="1.5em" color="white" />,
     },
     {
-      name: "Izin dan Konsultasi",
+      name: "Mata Pelajaran",
+      url: "/dashboard/teachers/subjects",
+      icon: <MdBookmark size="1.5em" color="white" />,
+    },
+    {
+      name: "Izin",
+      url: "/dashboard/teachers/absents/",
+      icon: <AiFillStop size="1.5em" color="white" />,
+    },
+    {
+      name: "Konsultasi",
       url: "/dashboard/teachers/consultations/",
       icon: <FaHandsHelping size="1.5em" color="white" />,
     },
     {
-      name: "Kehadiran dan Nilai",
-      url: "/dashboard/teachers/grades/",
-      icon: <FaTasks size="1.5em" color="white" />,
+      name: "Kehadiran",
+      url: "/dashboard/teachers/agenda/",
+      icon: <BsList size="1.5em" color="white" />,
     },
     {
-      name: "Buat Laporan dan Panggilan",
+      name: "Nilai",
+      url: "/dashboard/teachers/grades/",
+      icon: <GiRank1 size="1.5em" color="white" />,
+    },
+    {
+      name: "Laporan",
+      url: "/dashboard/teachers/reports/",
+      icon: <HiOutlineDocumentReport size="1.5em" color="white" />,
+    },
+    {
+      name: "Panggilan",
       url: "/dashboard/teachers/reports/",
       icon: <HiOutlineDocumentReport size="1.5em" color="white" />,
     },

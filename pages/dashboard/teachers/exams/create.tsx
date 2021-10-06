@@ -12,6 +12,7 @@ import QuestionCard from "../../../../components/Card/QuestionCard";
 import UserCard, {
   UserCardSkeleton,
 } from "../../../../components/Card/UserCard";
+import ConfirmModal from "../../../../components/ConfirmModal";
 import DashboardContainer from "../../../../components/Container/DashboardContainer";
 import Form from "../../../../components/Forms/Form";
 import Input from "../../../../components/Forms/Input";
@@ -527,14 +528,12 @@ export default function Create() {
                   required
                   defaultValue={moment(e.close_at).add(1, "day").format()}
                 />
-                <Button
-                  onClick={() => {
+                <ConfirmModal
+                  openMessage="Hapus sesi ini"
+                  next={() => {
                     setExamsessions(examsessions.filter((x) => x.id != e.id));
                   }}
-                  color="RED"
-                >
-                  Hapus sesi ini
-                </Button>
+                />
               </div>
             ))}
           </TabPanel>
