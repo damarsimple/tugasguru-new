@@ -16,6 +16,7 @@ import Modal from "./Modal";
 import Form, { InputMap } from "./Forms/Form";
 import SearchBox from "./SearchBox";
 import { wildCardFormatter } from "../helpers/formatter";
+import ConfirmModal from "./ConfirmModal";
 
 interface Id {
   id: string;
@@ -199,9 +200,10 @@ BoxProps<T>) {
                   >
                     EDIT
                   </Button>
-                  <Button onClick={() => handleDelete(e.node)} color="RED">
-                    DELETE
-                  </Button>
+                  <ConfirmModal
+                    openMessage="HAPUS"
+                    next={() => handleDelete(e.node)}
+                  />
                 </div>
               )}
               <MakeComponent {...e.node} />
