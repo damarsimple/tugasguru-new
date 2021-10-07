@@ -82,7 +82,9 @@ export default function Subjects() {
       <div className="grid grid-cols-4 gap-3">
         {subjectsAll?.map((e) => (
           <div key={e.id}>
-            <BaseCard name={e.name} />
+            <div className="shadow rounded p-4">
+              <h1 className="text-lg font-semibold text-center">{e.name}</h1>
+            </div>
           </div>
         ))}
       </div>

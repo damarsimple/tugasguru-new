@@ -4,13 +4,9 @@ import React from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import Loader from "../../../components/BoxLoader";
 import PackageQuestionCard from "../../../components/Card/PackageQuestionCard";
-import QuestionCard from "../../../components/Card/QuestionCard";
 import DashboardContainer from "../../../components/Container/DashboardContainer";
 import QuestionEditor from "../../../components/QuestionEditor";
-import {
-  CorePageInfoField,
-  CoreQuestionPlayField,
-} from "../../../fragments/fragments";
+import { CorePageInfoField } from "../../../fragments/fragments";
 import { Packagequestion } from "../../../types/type";
 
 export default function Questions({ router }: WithRouterProps) {

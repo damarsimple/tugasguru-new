@@ -22,6 +22,8 @@ const correctId = makeUUID();
 type QMap = Record<string, Partial<Question>>;
 
 interface EditorStore {
+  currentid: undefined | string;
+  setCurrentid: (by: undefined | string) => void;
   questionsMaps: QMap;
   setQuestionsMaps: (e: QMap) => void;
 }
@@ -137,6 +139,8 @@ const MultiChoiceExample = {
 };
 
 export const useQuestionEditorStore = create<EditorStore>((set) => ({
+  currentid: undefined,
+  setCurrentid: (currentid: undefined | string) => set({ currentid }),
   questionsMaps: {},
   setQuestionsMaps: (questionsMaps: QMap) => set({ questionsMaps }),
 }));
@@ -235,9 +239,9 @@ const QuestionEditorView = ({
 export default function QuestionEditor() {
   const [openviewer, setOpenviewer] = useState(false);
   const [openexcel, setOpenexcel] = useState(false);
-  const [currentid, setCurrentid] = useState<undefined | string>(undefined);
 
-  const { questionsMaps, setQuestionsMaps } = useQuestionEditorStore();
+  const { questionsMaps, setQuestionsMaps, setCurrentid, currentid } =
+    useQuestionEditorStore();
 
   const grouped = groupBy(
     Object.keys(questionsMaps).map((id) => {
@@ -525,7 +529,9 @@ export default function QuestionEditor() {
               />
               <div className="flex gap-3">
                 <Button onClick={() => handleMove("PREV")}>SEBELUMNYA</Button>
-                <Button onClick={() => handleMove("NEXT")}>SELANJUTNYA</Button>
+                <Button color="GREEN" onClick={() => handleMove("NEXT")}>
+                  SELANJUTNYA
+                </Button>
               </div>
             </>
           ) : (
@@ -591,12 +597,12 @@ export default function QuestionEditor() {
             <Button color="RED" onClick={handleDelete}>
               hapus soal ini
             </Button>
-            <Button onClick={flipViewer}>lompat dan buat soal</Button>
+            <Button onClick={flipViewer}>pindah atau buat soal</Button>
             <Button onClick={flipExcel}>Upload EXCEL</Button>
             <Button onClick={checkAll}>CHECK SOAL</Button>
             {/* <Button>LOAD AUTOSAVE</Button> */}
             <Button loading={loading} onClick={handleSubmit}>
-              Buat paket soal
+              Simpan ke bank soal
             </Button>
           </div>
         </div>

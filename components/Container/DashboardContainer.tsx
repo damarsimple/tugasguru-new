@@ -90,9 +90,11 @@ export default function DashboardContainer({
 
   useEffect(() => {
     if (admin && !user?.is_admin) {
+      setIndex(1);
       push("/");
       toast.error("Anda tidak memiliki akses ke tempat ini \\:<");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, admin, push]);
 
   return (
@@ -284,7 +286,7 @@ const Routes: { [e: string]: Route[] } = {
       icon: <FaMedal size="1.5em" color="white" />,
     },
     {
-      name: "Bnk Soal",
+      name: "Bank Soal",
       url: "/dashboard/teachers/questions/",
       icon: <RiBankCardFill size="1.5em" color="white" />,
     },
