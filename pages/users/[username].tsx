@@ -27,7 +27,14 @@ import {
   CoreQuizCardMinimalField,
 } from "../../fragments/fragments";
 import { useUserStore } from "../../store/user";
-import { User, Quiz, Tutoring, Roles, GenericOutput } from "../../types/type";
+import {
+  User,
+  Quiz,
+  Tutoring,
+  Roles,
+  GenericOutput,
+  TutoringRequestOutput,
+} from "../../types/type";
 
 function Username({ router }: { router: NextRouter }) {
   const { username } = router.query;
@@ -142,10 +149,13 @@ function Username({ router }: { router: NextRouter }) {
           </Button>
         </div>
         <div className="p-4">
-          <Form<Tutoring, { createTutoring: Tutoring }>
+          <Form<
+            TutoringRequestOutput,
+            { sendTutoringRequest: TutoringRequestOutput }
+          >
             submitName="AJUKAN"
             successMessage="Berhasil mengajukan permintaan bimbel"
-            fields="createTutoring"
+            fields="sendTutoringRequest"
             attributes={[
               {
                 label: "Mulai Dari",
@@ -165,48 +175,48 @@ function Username({ router }: { router: NextRouter }) {
                 required: true,
               },
               {
+                label: "Catatan untuk guru",
+                name: "metadata.notes",
+              },
+              {
                 label: "Alamat anda",
                 name: "metadata.geolocation",
                 type: "hidden",
               },
             ]}
             mutationQuery={gql`
-              mutation UpdateUser(
-                $id: ID!
-                $username: String
-                $name: String
-                $phone: String
-                $address: String
-                $metadata: String
+              mutation SendTutoringRequest(
+                $user_id: ID!
+                $start_at: String!
+                $finish_at: String!
+                $metadata: String!
               ) {
-                updateUser(
-                  id: $id
+                sendTutoringRequest(
                   input: {
-                    name: $name
-                    username: $username
-                    phone: $phone
-                    address: $address
+                    user_id: $user_id
+                    start_at: $start_at
+                    finish_at: $finish_at
                     metadata: $metadata
                   }
                 ) {
-                  name
-                  username
-                  phone
-                  address
-                  metadata {
-                    degree
-                    specialty
-                    description_bimbel
-                  }
+                  status
+                  message
                 }
               }
             `}
-            defaultValueMap={{
-              metadata: {
-                address: "",
-                geolocation: JSON.stringify(geolocation),
-              },
+            afterSubmit={(e) => {
+              if (e.status) {
+                toast.success(e.message);
+              } else {
+                toast.error(e.message);
+              }
             }}
+            // defaultValueMap={{
+            //   metadata: {
+            //     address: "",
+            //     geolocation: JSON.stringify(geolocation),
+            //   },
+            // }}
           />
         </div>
       </Modal>

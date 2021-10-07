@@ -1,11 +1,7 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import React from "react";
-import { BiPlus } from "react-icons/bi";
-import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import { toast } from "react-toastify";
 import Loader from "../../../components/BoxLoader";
-import Button from "../../../components/Button";
-import BaseCard, { BaseCardSkeleton } from "../../../components/Card/BaseCard";
 import ClassroomCard, {
   ClassroomCardSkeleton,
 } from "../../../components/Card/ClassroomCard";
@@ -16,7 +12,7 @@ import { selectExtractor } from "../../../helpers/formatter";
 import useDebounces from "../../../hooks/useDebounces";
 import useTeacherData from "../../../hooks/useTeacherData";
 import { useUserStore } from "../../../store/user";
-import { Classroom, Subject } from "../../../types/type";
+import { Classroom } from "../../../types/type";
 
 export default function Classrooms() {
   const { user } = useUserStore();

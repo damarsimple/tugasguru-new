@@ -253,7 +253,7 @@ const baseUserMenu: Route[] = [
   },
   {
     name: "Bimbel Saya",
-    url: "/mybimbels",
+    url: "/dashboard/mybimbels",
     icon: <FaChalkboardTeacher size="1.5em" />,
   },
   {
@@ -272,7 +272,7 @@ const Routes: { [e: string]: Route[] } = {
   TEACHER: [
     {
       name: "Dashboard Bimbel",
-      url: "/dashboard/bimbels",
+      url: "/dashboard/teachers/bimbels",
       icon: <MdDashboard size="1.5em" color="white" />,
     },
     {

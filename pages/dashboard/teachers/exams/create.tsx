@@ -83,7 +83,7 @@ export default function Create() {
   const selectedSubject = subjects?.filter((e) => e.id == subject)[0];
 
   const filterVar = {
-    classtype_id: selectedClassroom?.id,
+    classtype_id: selectedClassroom?.classtype?.id,
     subject_id: selectedSubject?.id,
   };
 
@@ -153,7 +153,7 @@ export default function Create() {
       required: true,
     },
     {
-      label: "Acak",
+      label: "Acak Soal",
       name: "shuffle",
       type: "select",
       values: BOOLEAN_SELECT_VALUE,
