@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import Button from "../../components/Button";
@@ -106,13 +107,14 @@ export default function Mybimbels() {
                     Ya
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
-                    <a
-                      className="underline text-blue-400 hover:text-blue-600"
-                      href="/qr/uuid"
-                      target="_blank"
-                    >
-                      LINK QR
-                    </a>
+                    <Link href="/qr/uuid">
+                      <a
+                        className="underline text-blue-400 hover:text-blue-600"
+                        target="_blank"
+                      >
+                        LINK QR
+                      </a>
+                    </Link>
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
                     Ya
