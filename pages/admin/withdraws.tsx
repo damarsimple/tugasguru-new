@@ -4,6 +4,7 @@ import Loader from "../../components/BoxLoader";
 import BaseCard, { BaseCardSkeleton } from "../../components/Card/BaseCard";
 import DashboardContainer from "../../components/Container/DashboardContainer";
 import { CorePageInfoField } from "../../fragments/fragments";
+import { BOOLEAN_SELECT_VALUE } from "../../helpers/formatter";
 import { Withdraw } from "../../types/type";
 
 export default function Withdraws() {
@@ -61,7 +62,8 @@ export default function Withdraws() {
           {
             label: "Dibayar",
             name: "paid",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
         ]}
         deleteQuery={gql`

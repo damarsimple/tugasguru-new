@@ -18,6 +18,7 @@ import {
   CoreQuestionCopyField,
   CoreQuestionPlayField,
 } from "../../../../../fragments/fragments";
+import { BOOLEAN_SELECT_VALUE } from "../../../../../helpers/formatter";
 import { makeId } from "../../../../../helpers/generator";
 import {
   Answer,
@@ -170,7 +171,8 @@ function ID({ router }: { router: NextRouter }) {
           />
           <Input
             label="Sudah Dinilai"
-            type="checkbox"
+            type="select"
+            values={BOOLEAN_SELECT_VALUE}
             defaultValue={graded}
             onCheckChange={(e) => {
               setGraded(e);

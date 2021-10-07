@@ -4,7 +4,10 @@ import withRouter from "next/dist/client/with-router";
 import React from "react";
 import DashboardContainer from "../../../../components/Container/DashboardContainer";
 import Form from "../../../../components/Forms/Form";
-import { selectExtractor } from "../../../../helpers/formatter";
+import {
+  BOOLEAN_SELECT_VALUE,
+  selectExtractor,
+} from "../../../../helpers/formatter";
 import useTeacherData from "../../../../hooks/useTeacherData";
 import { Assigment } from "../../../../types/type";
 
@@ -37,7 +40,8 @@ function Create({ router }: { router: NextRouter }) {
             {
               label: "Semester Genap",
               name: "is_odd_semester",
-              type: "checkbox",
+              type: "select",
+              values: BOOLEAN_SELECT_VALUE,
             },
             {
               label: "Tutup Pada",

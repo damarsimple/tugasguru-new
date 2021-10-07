@@ -6,6 +6,7 @@ import DashboardContainer from "../../components/Container/DashboardContainer";
 import FormModal from "../../components/FormModal";
 import { CorePageInfoField } from "../../fragments/fragments";
 import {
+  BOOLEAN_SELECT_VALUE,
   selectExtractor,
   selectObjectExtractor,
 } from "../../helpers/formatter";
@@ -98,17 +99,20 @@ export default function Users() {
           {
             label: "Bimbel",
             name: "is_bimbel",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
           {
             label: "Bimbel Aktif",
             name: "is_bimbel_active",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
           {
             label: "Admin",
             name: "is_admin",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
         ]}
         mutationQuery={gql`
@@ -217,7 +221,8 @@ export default function Users() {
           {
             label: "Admin",
             name: "is_admin",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
           {
             label: "Nomor Telepon",
@@ -234,12 +239,14 @@ export default function Users() {
           {
             label: "Bimbel",
             name: "is_bimbel",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
           {
             label: "Bimbel Aktif",
             name: "is_bimbel_active",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
           {
             label: "Roles",

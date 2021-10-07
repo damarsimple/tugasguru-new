@@ -598,10 +598,14 @@ export default function QuestionEditor() {
               hapus soal ini
             </Button>
             <Button onClick={flipViewer}>pindah atau buat soal</Button>
-            <Button onClick={flipExcel}>Upload EXCEL</Button>
-            <Button onClick={checkAll}>CHECK SOAL</Button>
+            <Button onClick={flipExcel} color="PURPLE">
+              Upload EXCEL
+            </Button>
+            <Button onClick={checkAll} color="YELLOW">
+              CHECK SOAL
+            </Button>
             {/* <Button>LOAD AUTOSAVE</Button> */}
-            <Button loading={loading} onClick={handleSubmit}>
+            <Button color="GREEN" loading={loading} onClick={handleSubmit}>
               Simpan ke bank soal
             </Button>
           </div>

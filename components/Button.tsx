@@ -3,10 +3,11 @@ import React from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { BiPlus } from "react-icons/bi";
 
-type COLORS = "BLUE" | "YELLOW" | "RED" | "GRAY" | "GREEN";
+type COLORS = "BLUE" | "YELLOW" | "RED" | "GRAY" | "GREEN" | "PURPLE";
 
 const Colors = {
   BLUE: "bg-blue-500  hover:bg-blue-600 focus:ring-blue-200",
+  PURPLE: "bg-purple-500  hover:bg-purple-600 focus:ring-purple-200",
   YELLOW: "bg-yellow-500  hover:bg-yellow-600 focus:ring-yellow-200",
   RED: "bg-red-500  hover:bg-red-600 focus:ring-red-200",
   GRAY: "bg-gray-500  hover:bg-gray-600 focus:ring-gray-200",

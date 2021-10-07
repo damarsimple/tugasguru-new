@@ -20,7 +20,10 @@ import {
   CoreAnswerPlayField,
   CorePageInfoField,
 } from "../../../../fragments/fragments";
-import { selectExtractor } from "../../../../helpers/formatter";
+import {
+  BOOLEAN_SELECT_VALUE,
+  selectExtractor,
+} from "../../../../helpers/formatter";
 import { makeId } from "../../../../helpers/generator";
 import useTeacherData from "../../../../hooks/useTeacherData";
 import {
@@ -151,12 +154,14 @@ export default function Create() {
     {
       label: "Acak",
       name: "shuffle",
-      type: "checkbox",
+      type: "select",
+      values: BOOLEAN_SELECT_VALUE,
     },
     {
       label: "Izinkan Melihat Hasil",
       name: "show_result",
-      type: "checkbox",
+      type: "select",
+      values: BOOLEAN_SELECT_VALUE,
     },
   ];
 

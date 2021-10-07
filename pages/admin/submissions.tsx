@@ -4,6 +4,7 @@ import Loader from "../../components/BoxLoader";
 import BaseCard, { BaseCardSkeleton } from "../../components/Card/BaseCard";
 import DashboardContainer from "../../components/Container/DashboardContainer";
 import { CorePageInfoField } from "../../fragments/fragments";
+import { BOOLEAN_SELECT_VALUE } from "../../helpers/formatter";
 import { Submission } from "../../types/type";
 
 export default function Submissions() {
@@ -67,9 +68,10 @@ export default function Submissions() {
             type: "number",
           },
           {
-            label: "Dibayar",
+            label: "Bayar",
             name: "is_paid",
-            type: "checkbox",
+            type: "select",
+            values: BOOLEAN_SELECT_VALUE,
           },
           {
             label: "Harga",

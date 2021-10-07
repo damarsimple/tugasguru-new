@@ -5,6 +5,11 @@ export const formatCurrency = (e: number | undefined | null) =>
 
 export const wildCardFormatter = (e: string) => "%" + e + "%";
 
+export const BOOLEAN_SELECT_VALUE: SelectValue[] = [
+  { value: "false", name: "Tidak" },
+  { value: "true", name: "Ya" },
+];
+
 export const selectExtractor = (e: {
   id: string;
   name: string;

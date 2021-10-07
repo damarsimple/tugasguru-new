@@ -10,7 +10,10 @@ import DashboardContainer from "../../../components/Container/DashboardContainer
 import Input from "../../../components/Forms/Input";
 import Paper from "../../../components/Paper";
 import { CorePageInfoField } from "../../../fragments/fragments";
-import { selectExtractor } from "../../../helpers/formatter";
+import {
+  BOOLEAN_SELECT_VALUE,
+  selectExtractor,
+} from "../../../helpers/formatter";
 import { useUserStore } from "../../../store/user";
 import { User, Subject, Assigment } from "../../../types/type";
 
@@ -51,7 +54,8 @@ export default function Index() {
             required
           />
           <Input
-            type="checkbox"
+            type="select"
+            values={BOOLEAN_SELECT_VALUE}
             onCheckChange={setOdd}
             label="Semester Genap ?"
           />

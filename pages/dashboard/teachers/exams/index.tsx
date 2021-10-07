@@ -12,6 +12,7 @@ import Input from "../../../../components/Forms/Input";
 import Paper from "../../../../components/Paper";
 import { CorePageInfoField } from "../../../../fragments/fragments";
 import {
+  BOOLEAN_SELECT_VALUE,
   selectExtractor,
   wildCardFormatter,
 } from "../../../../helpers/formatter";
@@ -48,7 +49,8 @@ export default function Index() {
             onTextChange={setExamtype}
           />
           <Input
-            type="checkbox"
+            type="select"
+            values={BOOLEAN_SELECT_VALUE}
             onCheckChange={setOdd}
             label="Semester Genap ?"
           />

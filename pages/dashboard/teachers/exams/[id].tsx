@@ -16,7 +16,10 @@ import FormModal from "../../../../components/FormModal";
 import Form from "../../../../components/Forms/Form";
 import PaperLoading from "../../../../components/PaperLoading";
 import Table from "../../../../components/Table";
-import { selectExtractor } from "../../../../helpers/formatter";
+import {
+  BOOLEAN_SELECT_VALUE,
+  selectExtractor,
+} from "../../../../helpers/formatter";
 import useTeacherData from "../../../../hooks/useTeacherData";
 import {
   Exam,
@@ -221,12 +224,14 @@ function ID({ router }: { router: NextRouter }) {
               {
                 label: "Acak",
                 name: "metadata.shuffle",
-                type: "checkbox",
+                type: "select",
+                values: BOOLEAN_SELECT_VALUE,
               },
               {
                 label: "Izinkan Melihat Hasil",
                 name: "metadata.show_result",
-                type: "checkbox",
+                type: "select",
+                values: BOOLEAN_SELECT_VALUE,
               },
             ]}
             onValueChange={(name, value) => {
