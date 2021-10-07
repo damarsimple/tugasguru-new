@@ -16,7 +16,12 @@ export default function Modal({ open, flip, children }: ModalProp) {
         className="fixed inset-0 z-10 overflow-y-auto"
         onClose={flip}
       >
-        <div className="min-h-screen px-4 text-center">
+        <div
+          className="min-h-screen px-4 text-center"
+          style={{
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

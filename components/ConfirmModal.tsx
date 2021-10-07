@@ -25,22 +25,24 @@ export default function ConfirmModal<T>({
       </Button>
       {open && (
         <Modal open={open} flip={flip}>
-          <h1 className="text-lg font-semibold text-center">
-            {title ?? "Anda Yakin ?"}
-          </h1>
-          <div className="p-6 flex gap-2">
-            <Button
-              onClick={() => {
-                flip();
-                next();
-              }}
-              color="GREEN"
-            >
-              Yakin
-            </Button>
-            <Button color="RED" onClick={flip}>
-              BATAL
-            </Button>
+          <div className="p-4">
+            <h1 className="text-lg font-semibold text-center">
+              {title ?? "Anda Yakin ?"}
+            </h1>
+            <div className="p-6 flex gap-2">
+              <Button
+                onClick={() => {
+                  flip();
+                  next();
+                }}
+                color="GREEN"
+              >
+                Yakin
+              </Button>
+              <Button color="RED" onClick={flip}>
+                BATAL
+              </Button>
+            </div>
           </div>
         </Modal>
       )}
