@@ -4,9 +4,8 @@ import Link from "next/link";
 import React from "react";
 import { Classroom } from "../../types/type";
 import ImageContainer from "../Container/ImageContainer";
-import NotificationCard, {
+import {
   getNotificationFormat,
-  NotificationCardSkeleton,
   NotificationTranslationMap,
 } from "./NotificationCard";
 
@@ -18,11 +17,16 @@ export default function ClassroomCard({
   school,
 }: Classroom) {
   return (
-    <div className="shadow rounded">
+    <div
+      className="shadow rounded"
+      style={{
+        minHeight: 300,
+      }}
+    >
       <Link href={"/dashboard/classrooms/" + id}>
         <a>
           <div className="bg-blue-400 p-4 flex flex-col gap-2 text-white">
-            <h1 className="text-lg font-semibold text-center">{name}</h1>
+            <h1 className="text-lg font-semibold">{name}</h1>
             <div className="flex justify-between items-center">
               <div className="flex gap-2 items-center">
                 <ImageContainer
@@ -32,19 +36,14 @@ export default function ClassroomCard({
                 />{" "}
                 <p className="pt-2">{user.name}</p>
               </div>
-              <div className="flex gap-2 items-center">
-                <p className="pt-2">{school.name}</p>{" "}
-                <ImageContainer
-                  src={school.cover?.path}
-                  fallback="profile"
-                  className="rounded-full w-12 h-12"
-                />
-              </div>
             </div>
           </div>
         </a>
       </Link>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 overflow-x-auto pl-2 pt-2">
+        {notifications?.length == 0 && (
+          <p className="">tidak ada acara dikelas ini</p>
+        )}
         {take(notifications, 2)?.map(({ data, id }) => {
           const typeFormatted = getNotificationFormat(data?.type);
           return (
@@ -53,23 +52,14 @@ export default function ClassroomCard({
               href={"/dashboard/" + typeFormatted + "/" + data?.id}
             >
               <a>
-                <div
-                  className="mx-3 border-t-2 border-black hover:bg-gray-100"
-                  key={id}
-                >
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    {data?.name}
-                  </h2>
-                  <p className="text-gray-600">{data?.message}</p>
+                <div className="hover:bg-gray-100 flex gap-2" key={id}>
                   <p className="text-gray-600">
-                    {typeFormatted
-                      ? NotificationTranslationMap[typeFormatted]
-                      : typeFormatted}
-                  </p>
-                  <p className="text-gray-600">
-                    {moment(data?.start_at).format("HH:MM D/M")} sampai{" "}
                     {moment(data?.finish_at).format("HH:MM D/M")}{" "}
                   </p>
+                  <span>-</span>
+                  <h2 className="text-sm font-semibold text-gray-800">
+                    {data?.name}
+                  </h2>
                 </div>
               </a>
             </Link>
