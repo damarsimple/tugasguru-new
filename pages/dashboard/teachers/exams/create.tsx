@@ -3,6 +3,7 @@ import { isEmpty, xor } from "lodash";
 import moment from "moment";
 import { useRouter } from "next/dist/client/router";
 import React, { useState } from "react";
+import { MdInfoOutline } from "react-icons/md";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { toast } from "react-toastify";
 import Loader from "../../../../components/BoxLoader";
@@ -94,9 +95,9 @@ export default function Create() {
     "Pengawas",
   ];
 
-  const [requireds, setRequireds] = useState<string[]>([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [filled, setFilled] = useState<{ [e: string]: boolean }>({});
+  const [inputFilled, setInputfilled] = useState<{ [e: string]: boolean }>({});
 
   const FORM_ATTR = [
     {
@@ -193,7 +194,7 @@ export default function Create() {
       </div>
       <div className="flex flex-col gap-3">
         <div>
-          {filled["Detail Ujian"] && (
+          {filled["Detail Ujian"] ? (
             <Button
               onClick={() =>
                 setTabIndex(tabIndex > steps.length - 2 ? 0 : tabIndex + 1)
@@ -201,11 +202,20 @@ export default function Create() {
             >
               Selanjutnya
             </Button>
+          ) : (
+            <div className="flex gap-2">
+              <MdInfoOutline size="1.5em" />{" "}
+              <p className="text-lg italic">
+                {
+                  "Anda harus mengisi detail ujian sebelum melanjutkan ke langkah berikutnya"
+                }
+              </p>
+            </div>
           )}
         </div>
         <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
           <TabList className="hidden">
-            {steps?.map((e) => (
+            {steps.map((e) => (
               <Tab key={e}>Detail Ujian</Tab>
             ))}
           </TabList>
@@ -237,14 +247,22 @@ export default function Create() {
                     }
                   }
 
-                  if (!requireds.includes(name) && !!value) {
-                    const newRequired = [...requireds, name];
-                    setRequireds(newRequired);
-                    setFilled({
-                      ...filled,
-                      ["Detail Ujian"]: isEmpty(xor(newRequired, musts)),
-                    });
+                  const cp = { ...inputFilled };
+
+                  cp[name] = !!value;
+
+                  setInputfilled(cp);
+
+                  for (const x of musts) {
+                    if (!cp[x]) {
+                      return;
+                    }
                   }
+
+                  setFilled({
+                    ...filled,
+                    ["Detail Ujian"]: true,
+                  });
                 }}
                 addedValueMap={{
                   examsessions,
@@ -576,7 +594,7 @@ export default function Create() {
           </TabPanel>
         </Tabs>
         <div>
-          {filled["Detail Ujian"] && (
+          {filled["Detail Ujian"] ? (
             <Button
               onClick={() =>
                 setTabIndex(tabIndex > steps.length - 2 ? 0 : tabIndex + 1)
@@ -584,6 +602,15 @@ export default function Create() {
             >
               Selanjutnya
             </Button>
+          ) : (
+            <div className="flex gap-2">
+              <MdInfoOutline size="1.5em" />{" "}
+              <p className="text-lg italic">
+                {
+                  "Anda harus mengisi detail ujian sebelum melanjutkan ke langkah berikutnya"
+                }
+              </p>
+            </div>
           )}
         </div>
       </div>
