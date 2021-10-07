@@ -14,7 +14,7 @@ import "react-quill/dist/quill.snow.css";
 import create from "zustand";
 import { useNProgress } from "@tanem/react-nprogress";
 import { Router } from "next/dist/client/router";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import {
   ApolloClient,
   ApolloLink,
@@ -25,6 +25,7 @@ import { relayStylePagination } from "@apollo/client/utilities";
 import { QuizInvitePopup } from "../components/QuizInvitePopup";
 
 import moment from "moment-timezone";
+import { onError } from "@apollo/client/link/error";
 
 moment.tz.setDefault("Asia/Jakarta");
 
@@ -45,8 +46,23 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message }) => {
+      if (message == "Unauthenticated.") {
+        window.alert(
+          "Terdeteksi kesalahan autentikasi di akun anda mohon login ulang"
+        );
+        toast.error(
+          "Terdeteksi kesalahan autentikasi di akun anda mohon login ulang"
+        );
+      }
+    });
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
+
 export const client = new ApolloClient({
-  link: authLink.concat(uploadLink as unknown as ApolloLink),
+  link: authLink.concat(errorLink).concat(uploadLink as unknown as ApolloLink),
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
   cache: new InMemoryCache({
     typePolicies: {
