@@ -6,9 +6,11 @@ import Form, { InputMap } from "./Forms/Form";
 import Modal from "./Modal";
 
 export default function ConfirmModal<T>({
+  title,
   openMessage,
   next,
 }: {
+  title?: string;
   openMessage: string;
   next: () => void;
 }) {
@@ -23,7 +25,10 @@ export default function ConfirmModal<T>({
       </Button>
       {open && (
         <Modal open={open} flip={flip}>
-          <div className="p-6">
+          <h1 className="text-lg font-semibold text-center">
+            {title ?? "Anda Yakin ?"}
+          </h1>
+          <div className="p-6 flex gap-2">
             <Button
               onClick={() => {
                 flip();
@@ -34,7 +39,7 @@ export default function ConfirmModal<T>({
               Yakin
             </Button>
             <Button color="RED" onClick={flip}>
-              <MdClose color="white" size="1.5em" />
+              BATAL
             </Button>
           </div>
         </Modal>

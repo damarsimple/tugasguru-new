@@ -1,12 +1,14 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React from "react";
 import { toast } from "react-toastify";
+import Button from "../../../components/Button";
 import BaseCard from "../../../components/Card/BaseCard";
+import ConfirmModal from "../../../components/ConfirmModal";
 import DashboardContainer from "../../../components/Container/DashboardContainer";
 import FormModal from "../../../components/FormModal";
 import { selectExtractor } from "../../../helpers/formatter";
 import { useUserStore } from "../../../store/user";
-import { Subject } from "../../../types/type";
+import { GenericOutput, Subject } from "../../../types/type";
 
 export default function Subjects() {
   const { user } = useUserStore();
@@ -36,6 +38,17 @@ export default function Subjects() {
       subjectsAll {
         id
         name
+      }
+    }
+  `);
+
+  const [handleMutation] = useMutation<{
+    deleteUserSubject: GenericOutput;
+  }>(gql`
+    mutation ($id: ID!) {
+      deleteUserSubject(id: $id) {
+        status
+        message
       }
     }
   `);
@@ -82,8 +95,20 @@ export default function Subjects() {
       <div className="grid grid-cols-4 gap-3">
         {subjectsAll?.map((e) => (
           <div key={e.id}>
-            <div className="shadow rounded p-4">
-              <h1 className="text-lg font-semibold text-center">{e.name}</h1>
+            <div className="shadow rounded p-4 grid grid-cols-12">
+              <div className="col-span-10 flex items-center">
+                <h1 className="text-lg font-semibold text-center">{e.name}</h1>
+              </div>
+              <ConfirmModal
+                title={`Anda yakin menghapus ${e.name} dari mata pelajaran yang anda ajarkan ?`}
+                openMessage="X"
+                next={() => {
+                  handleMutation({ variables: { id: e.id } }).then((e) => {
+                    toast.warn(e?.data?.deleteUserSubject.message);
+                    refetchSubject();
+                  });
+                }}
+              />
             </div>
           </div>
         ))}
