@@ -283,6 +283,7 @@ export default function Create() {
                     $year_start: Int!
                     $year_end: Int!
                     $shuffle: Boolean
+                    $hint: String
                     $show_result: Boolean
                     $examsessions: [CreateExamsessionMany!]!
                   ) {
