@@ -40,31 +40,43 @@ export default function ClassroomCard({
           </div>
         </a>
       </Link>
-      <div className="flex flex-col gap-2 overflow-x-auto pl-2 pt-2">
-        {notifications?.length == 0 && (
-          <p className="">tidak ada acara dikelas ini</p>
-        )}
-        {take(notifications, 2)?.map(({ data, id }) => {
-          const typeFormatted = getNotificationFormat(data?.type);
-          return (
-            <Link
-              key={id}
-              href={"/dashboard/" + typeFormatted + "/" + data?.id}
-            >
-              <a>
-                <div className="hover:bg-gray-100 flex gap-2" key={id}>
-                  <p className="text-gray-600">
-                    {moment(data?.finish_at).format("HH:MM D/M")}{" "}
-                  </p>
-                  <span>-</span>
-                  <h2 className="text-sm font-semibold text-gray-800">
-                    {data?.name}
-                  </h2>
-                </div>
-              </a>
-            </Link>
-          );
-        })}
+      <div className="flex justify-between flex-col gap-2">
+        <div className="flex flex-col gap-2 overflow-x-auto pl-2 pt-2">
+          {notifications?.length == 0 && (
+            <p className="">tidak ada acara dikelas ini</p>
+          )}
+          {take(notifications, 2)?.map(({ data, id }) => {
+            const typeFormatted = getNotificationFormat(data?.type);
+            return (
+              <Link
+                key={id}
+                href={"/dashboard/" + typeFormatted + "/" + data?.id}
+              >
+                <a>
+                  <div className="hover:bg-gray-100 flex gap-2" key={id}>
+                    <p className="text-gray-600">
+                      {moment(data?.finish_at).format("HH:MM D/M")}{" "}
+                    </p>
+                    <span>-</span>
+                    <h2 className="text-sm font-semibold text-gray-800">
+                      {data?.name}
+                    </h2>
+                  </div>
+                </a>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
+            <ImageContainer
+              src={school.cover?.path}
+              fallback="profile"
+              className="rounded-full w-12 h-12"
+            />{" "}
+            <p className="pt-2">{school.name}</p>
+          </div>
+        </div>
       </div>
     </div>
   );
