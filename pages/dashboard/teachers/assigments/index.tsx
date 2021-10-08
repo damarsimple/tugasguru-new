@@ -28,7 +28,7 @@ export default function Index() {
   return (
     <DashboardContainer>
       <div className="flex flex-col gap-2">
-        <Button href="/dashboard/teachers/exams/create">
+        <Button href="/dashboard/teachers/assigments/create">
           <BiPlus />
           Buat tugas baru
         </Button>
