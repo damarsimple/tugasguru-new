@@ -12,7 +12,7 @@ interface UserProp extends User {
 
 export default function UserCard(e: UserProp) {
   return (
-    <div className="flex flex-col gap-2 text-center shadow rounded p-4">
+    <div className="flex flex-col gap-2 text-center shadow rounded p-4 border-2 border-blue-500">
       <div className="flex justify-center">
         <ImageContainer
           fallback="profile"
@@ -33,7 +33,7 @@ export default function UserCard(e: UserProp) {
       ) : (
         <Link href={"/users/" + e.username}>
           <a>
-            <Button color="GRAY">{e.actionLabel ?? "PROFILE"}</Button>
+            <Button color="BLUE">{e.actionLabel ?? "PROFILE"}</Button>
           </a>
         </Link>
       )}
@@ -43,7 +43,7 @@ export default function UserCard(e: UserProp) {
 
 export function UserCardSkeleton() {
   return (
-    <div className="flex flex-col gap-2 text-center shadow rounded p-4">
+    <div className="flex flex-col gap-2 text-center shadow rounded p-4 border-2 border-blue-500">
       <div className="flex justify-center">
         <div className="rounded-full h-36 w-36 animate-pulse bg-gray-200" />
       </div>

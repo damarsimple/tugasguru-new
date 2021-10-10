@@ -57,7 +57,7 @@ export default function Index() {
             type="select"
             values={BOOLEAN_SELECT_VALUE}
             onCheckChange={setOdd}
-            label="Semester Genap ?"
+            label="Semester Genap"
           />
           <Input
             type="select"

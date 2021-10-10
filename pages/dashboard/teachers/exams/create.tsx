@@ -392,6 +392,7 @@ export default function Create() {
                         <div>
                           <PackageQuestionCard {...e} />
                           <Button
+                            color="GREEN"
                             onClick={() => {
                               setQuestions([...questions, ...e.questions]);
                               setFilled({

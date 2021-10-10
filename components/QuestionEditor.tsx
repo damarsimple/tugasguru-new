@@ -146,15 +146,20 @@ export const useQuestionEditorStore = create<EditorStore>((set) => ({
 }));
 
 const QuestionEditorView = ({
+  index,
   question,
   onChange,
 }: {
+  index: number;
   question: Partial<Question>;
   onChange: (e: Partial<Question>) => void;
 }) => {
   return (
     <>
       <div className="flex flex-col gap-2">
+        <h1>
+          Soal Nomor {1} {question.metadata?.type}
+        </h1>
         <Editor
           defaultValue={question.metadata?.content}
           onChange={(e) => {
@@ -522,6 +527,7 @@ export default function QuestionEditor() {
           {currentid && ready && questionsMaps[currentid] ? (
             <>
               <QuestionEditorView
+                index={1}
                 onChange={(e) => {
                   setQuestionsMaps({ ...questionsMaps, [currentid]: e });
                 }}

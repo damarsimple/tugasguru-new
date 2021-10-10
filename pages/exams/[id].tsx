@@ -100,7 +100,7 @@ function Id({ router }: WithRouterProps) {
     `,
     {
       fetchPolicy: "network-only",
-      variables: { id : id },
+      variables: { id: id },
       onCompleted: (e) => {
         setExam(e.exam);
 
@@ -322,11 +322,11 @@ function Id({ router }: WithRouterProps) {
 
   const handleBegin = () => {
     if (!examplay || !exam) return;
-    console.log(exam.time_limit - examplay.minute_passed);
+    console.log(exam.time_limit - (examplay?.minute_passed ?? 0));
 
     setEndDate(
       moment()
-        .add(exam.time_limit - examplay.minute_passed, "minute")
+        .add(exam.time_limit - (examplay?.minute_passed ?? 0), "minute")
         .toDate()
     );
     setIsBegin(true);

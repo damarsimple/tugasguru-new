@@ -76,15 +76,15 @@ function ID({ router }: { router: NextRouter }) {
     {
       variables: { id },
       onCompleted: (e) => {
-        setStagingGrade(e.examplay.grade);
-        setGraded(e.examplay.graded);
+        setStagingGrade(e.examplay.grade ?? 0);
+        setGraded(e.examplay.graded ?? false);
         if (e.examplay.answers_map) {
           const cp: { [e: string]: number } = {};
           const comment: { [e: string]: string } = {};
 
           for (const x of e.examplay.answers_map) {
-            if (x.question.metadata?.uuid) {
-              cp[x.question.metadata?.uuid] = x.grade;
+            if (x.question && x.question.metadata?.uuid) {
+              cp[x.question.metadata?.uuid] = x.grade ?? 0;
               comment[x.question.metadata?.uuid] = x.comment ?? "";
             }
           }
@@ -127,12 +127,13 @@ function ID({ router }: { router: NextRouter }) {
     const mapped: AnswerMap[] = [];
 
     for (const x of examplay?.answers_map ?? []) {
-      mapped.push({
-        answer: x.answer,
-        grade: gradeMap[x.question.metadata?.uuid ?? ""],
-        comment: gradeComment[x.question.metadata?.uuid ?? ""],
-        question: x.question,
-      });
+      if (x.question)
+        mapped.push({
+          answer: x.answer,
+          grade: gradeMap[x.question.metadata?.uuid ?? ""],
+          comment: gradeComment[x.question.metadata?.uuid ?? ""],
+          question: x.question,
+        });
     }
 
     handleUpdate({
@@ -254,19 +255,27 @@ function ID({ router }: { router: NextRouter }) {
             <div className="grid grid-cols-12" key={i}>
               <div className="col-span-10">
                 <QuestionCard
-                  myanswer={e.answer}
+                  myanswer={e.answer ?? undefined}
                   {...(e.question as Question)}
                   key={i}
                   index={i + 1}
-                  grade={gradeMap[e.question.metadata?.uuid ?? ""]}
-                  correct={gradeMap[e.question.metadata?.uuid ?? ""] > 75}
+                  grade={
+                    (e.question && gradeMap[e.question.metadata?.uuid ?? ""]) ??
+                    undefined
+                  }
+                  correct={
+                    ((e.question &&
+                      gradeMap[e.question.metadata?.uuid ?? ""]) ??
+                      0) > 75
+                  }
                 />
               </div>
               <div className="col-span-2">
                 <Button
                   onClick={() => {
                     flipQuestion();
-                    setSelectedQuestion(e.question.metadata?.uuid);
+                    if (e.question)
+                      setSelectedQuestion(e.question.metadata?.uuid);
                   }}
                   color="BLUE"
                   className="h-full"

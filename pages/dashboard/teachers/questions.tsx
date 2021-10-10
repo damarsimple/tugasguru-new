@@ -19,6 +19,7 @@ export default function Questions({ router }: WithRouterProps) {
       >
         <TabList>
           <Tab>Editor Soal</Tab>
+          <Tab>Preview Soal</Tab>
           <Tab>Bank Soal</Tab>
         </TabList>
         <TabPanel>
@@ -66,6 +67,7 @@ export default function Questions({ router }: WithRouterProps) {
             // SkeletonComponent={QuestionCard}
           />
         </TabPanel>
+        <TabPanel></TabPanel>
       </Tabs>
     </DashboardContainer>
   );

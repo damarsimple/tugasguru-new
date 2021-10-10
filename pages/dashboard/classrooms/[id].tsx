@@ -8,11 +8,20 @@ import { BaseCardSkeleton } from "../../../components/Card/BaseCard";
 import ExamCard from "../../../components/Card/ExamCard";
 import UserCard from "../../../components/Card/UserCard";
 import DashboardContainer from "../../../components/Container/DashboardContainer";
+import Table from "../../../components/Table";
 import {
   CorePageInfoField,
   CoreUserInfoMinimalField,
 } from "../../../fragments/fragments";
-import { Assigment, Classroom, Exam } from "../../../types/type";
+import { useUserStore } from "../../../store/user";
+import {
+  Agenda,
+  Assigment,
+  Assigmentsubmission,
+  Classroom,
+  Exam,
+  Examplay,
+} from "../../../types/type";
 
 function Id({ router }: WithRouterProps) {
   const { id } = router.query;
@@ -38,6 +47,8 @@ function Id({ router }: WithRouterProps) {
     }
   );
 
+  const { user } = useUserStore();
+
   return (
     <DashboardContainer>
       <Tabs>
@@ -45,6 +56,14 @@ function Id({ router }: WithRouterProps) {
           <Tab>Anggota Kelas</Tab>
           <Tab>Ujian</Tab>
           <Tab>Tugas</Tab>
+          {user?.id == classroom?.user.id && (
+            <>
+              <Tab>Kehadiran</Tab>
+              <Tab>Nilai Tugas</Tab>
+              <Tab>Nilai Ujian</Tab>
+              <Tab>Pengaturan Kelas</Tab>
+            </>
+          )}
         </TabList>
         <TabPanel className="flex flex-col gap-2">
           <h2 className="font-semibold text-xl">Guru</h2>
@@ -148,6 +167,193 @@ function Id({ router }: WithRouterProps) {
             SkeletonComponent={BaseCardSkeleton}
           />
         </TabPanel>
+        {user?.id == classroom?.user.id && (
+          <>
+            <TabPanel>
+              <Table<Agenda>
+                query={gql`
+                  ${CorePageInfoField}
+                  query GetAssigments(
+                    $first: Int!
+                    $after: String
+                    $name: String
+                    $classroom_id: ID
+                  ) {
+                    agendas(
+                      first: $first
+                      after: $after
+                      name: $name
+                      classroom_id: $classroom_id
+                    ) {
+                      edges {
+                        node {
+                          id
+                          name
+                          uuid
+                          attendances {
+                            id
+                            user {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                      pageInfo {
+                        ...CorePageInfoField
+                      }
+                    }
+                  }
+                `}
+                perPage={10}
+                fields={"agendas"}
+                fetchPolicy="network-only"
+                withSearchbar
+                variables={{
+                  classroom_id: id,
+                }}
+                headers={[
+                  {
+                    name: "name",
+                    label: "Nama Absensi",
+                  },
+                  {
+                    name: "uuid",
+                    label: "UUID",
+                  },
+                  {
+                    // @ts-ignore
+                    name: "attendances",
+                    label: "Absensi",
+                    formatter: (e) =>
+                      Array.isArray(e) && e.map((x) => x.user.name).join(", "),
+                  },
+                ]}
+              />
+            </TabPanel>
+            <TabPanel>
+              <Table<Assigmentsubmission>
+                query={gql`
+                  ${CorePageInfoField}
+                  query GetAssigmentsSubmissions(
+                    $first: Int!
+                    $after: String
+                    $classroom_id: ID
+                  ) {
+                    assigmentsubmissions(
+                      first: $first
+                      after: $after
+                      classroom_id: $classroom_id
+                    ) {
+                      edges {
+                        node {
+                          id
+                          grade
+                          user {
+                            name
+                            id
+                          }
+                          assigment {
+                            name
+                            id
+                          }
+                        }
+                      }
+                      pageInfo {
+                        ...CorePageInfoField
+                      }
+                    }
+                  }
+                `}
+                perPage={10}
+                fields={"assigmentsubmissions"}
+                fetchPolicy="network-only"
+                variables={{
+                  classroom_id: id,
+                }}
+                headers={[
+                  {
+                    name: "assigment.name",
+                    label: "Nama Tugas",
+                  },
+                  {
+                    name: "user.name",
+                    label: "Pengumpul",
+                  },
+                  {
+                    name: "grade",
+                    label: "nilai",
+                  },
+                ]}
+              />
+            </TabPanel>
+            <TabPanel>
+              <Table<Examplay>
+                query={gql`
+                  ${CorePageInfoField}
+                  query GetExamplays(
+                    $first: Int!
+                    $after: String
+                    $classroom_id: ID
+                  ) {
+                    examplays(
+                      first: $first
+                      after: $after
+                      classroom_id: $classroom_id
+                    ) {
+                      edges {
+                        node {
+                          id
+                          grade
+                          user {
+                            name
+                            id
+                          }
+                          examsession {
+                            name
+                            id
+                          }
+                          exam {
+                            name
+                            id
+                          }
+                        }
+                      }
+                      pageInfo {
+                        ...CorePageInfoField
+                      }
+                    }
+                  }
+                `}
+                perPage={10}
+                fields={"examplays"}
+                fetchPolicy="network-only"
+                variables={{
+                  classroom_id: id,
+                }}
+                headers={[
+                  {
+                    name: "exam.name",
+                    label: "Nama Ujian",
+                  },
+                  {
+                    name: "examsession.name",
+                    label: "Sesi Ujian",
+                  },
+                  {
+                    name: "user.name",
+                    label: "Pengumpul",
+                  },
+                  {
+                    name: "grade",
+                    label: "nilai",
+                  },
+                ]}
+              />
+            </TabPanel>
+            <TabPanel>Pengaturan Kelas</TabPanel>
+          </>
+        )}
       </Tabs>
     </DashboardContainer>
   );

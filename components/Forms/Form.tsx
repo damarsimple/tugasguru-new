@@ -97,10 +97,12 @@ export default function Form<T, N>({
     const submitMap = checkHasMetadataField()
       ? {
           ...defaultStore[fields as string],
-          metadata: JSON.stringify(metadata),
+          metadata: JSON.stringify({
+            ...get(addedValueMap, "metadata"),
+            ...metadata,
+          }),
         }
       : {
-          ...defaultStore[fields as string],
           ...defaultStore[fields as string],
         };
 

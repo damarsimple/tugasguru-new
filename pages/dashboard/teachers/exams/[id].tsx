@@ -16,6 +16,7 @@ import FormModal from "../../../../components/FormModal";
 import Form from "../../../../components/Forms/Form";
 import PaperLoading from "../../../../components/PaperLoading";
 import Table from "../../../../components/Table";
+import { CorePageInfoField } from "../../../../fragments/fragments";
 import {
   BOOLEAN_SELECT_VALUE,
   selectExtractor,
@@ -99,13 +100,7 @@ function ID({ router }: { router: NextRouter }) {
               }
             }
           }
-          examsessions {
-            id
-            name
-            token
-            open_at
-            close_at
-          }
+
           hint
           description
           year_start
@@ -343,9 +338,9 @@ function ID({ router }: { router: NextRouter }) {
               refetch();
             }}
           />
-          {exam?.examsessions && (
+          {exam && (
             <Table<Examsession>
-              data={exam.examsessions}
+              withSearchbar
               headers={[
                 {
                   label: "Nama sesi",
@@ -364,6 +359,77 @@ function ID({ router }: { router: NextRouter }) {
                   name: "close_at",
                 },
               ]}
+              fields={"examsessions"}
+              variables={{ id: exam.id }}
+              query={gql`
+                ${CorePageInfoField}
+                query getExamsessions($id: ID!, $name: String) {
+                  examsessions(exam_id: $id, name: $name) {
+                    edges {
+                      node {
+                        id
+                        name
+                        token
+                        open_at
+                        close_at
+                      }
+                    }
+                    pageInfo {
+                      ...CorePageInfoField
+                    }
+                  }
+                }
+              `}
+              editAttributes={[
+                {
+                  label: "Nama Sesi",
+                  name: "name",
+                },
+                {
+                  label: "Token",
+                  name: "token",
+                },
+                {
+                  label: "Dibuka Pada",
+                  name: "open_at",
+                  type: "datetime",
+                },
+                {
+                  label: "Ditutup Pada",
+                  name: "close_at",
+                  type: "datetime",
+                },
+              ]}
+              editQuery={gql`
+                mutation UpdateExamsession(
+                  $id: ID!
+                  $name: String
+                  $token: String
+                  $open_at: String
+                  $close_at: String
+                ) {
+                  updateExamsession(
+                    id: $id
+                    input: {
+                      name: $name
+                      token: $token
+                      open_at: $open_at
+                      close_at: $close_at
+                    }
+                  ) {
+                    id
+                  }
+                }
+              `}
+              editFields="updateExamsession"
+              deleteQuery={gql`
+                mutation DeleteExamsession($id: ID!) {
+                  deleteExamsession(id: $id) {
+                    id
+                  }
+                }
+              `}
+              withAction
             />
           )}
         </TabPanel>

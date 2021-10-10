@@ -20,7 +20,7 @@ export default function ConfirmModal<T>({
 
   return (
     <>
-      <Button className="mb-4" color="RED" onClick={flip}>
+      <Button className="mb-4 min-h-full" color="RED" onClick={flip}>
         {openMessage ?? "BUAT DATA"}
       </Button>
       {open && (

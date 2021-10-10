@@ -60,6 +60,13 @@ input[type=number] {
     background: none;
 } */
 
+.react-tabs__tab--selected {
+    background: lightblue;
+    border-color: blue;
+    color: #000;
+    border-radius: 5px 5px 0 0;
+}
+
 .ql-snow .ql-tooltip {
     background-color: #fff;
     border: 1px solid #ccc;

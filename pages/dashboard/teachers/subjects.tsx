@@ -6,9 +6,12 @@ import BaseCard from "../../../components/Card/BaseCard";
 import ConfirmModal from "../../../components/ConfirmModal";
 import DashboardContainer from "../../../components/Container/DashboardContainer";
 import FormModal from "../../../components/FormModal";
-import { selectExtractor } from "../../../helpers/formatter";
+import {
+  selectExtractor,
+  selectObjectExtractor,
+} from "../../../helpers/formatter";
 import { useUserStore } from "../../../store/user";
-import { GenericOutput, Subject } from "../../../types/type";
+import { GenericOutput, Subject, SubjectType } from "../../../types/type";
 
 export default function Subjects() {
   const { user } = useUserStore();
@@ -53,6 +56,8 @@ export default function Subjects() {
     }
   `);
 
+  const mysubjects = subjectsAll?.map((e) => e.id);
+
   return (
     <DashboardContainer>
       <div className="flex  gap-2">
@@ -71,13 +76,52 @@ export default function Subjects() {
             {
               label: "Mata Pelajaran",
               type: "select",
-              values: allSubjects?.map(selectExtractor),
+              values: allSubjects
+                ?.filter((e) => !mysubjects?.includes(e.id))
+                .map(selectExtractor),
               required: true,
               name: "subject_id",
             },
           ]}
           afterSubmit={() => {
             toast.success("Berhasil menambah");
+            refetchSubject();
+          }}
+        />
+        <FormModal
+          mutationQuery={gql`
+            mutation CreateReportAdmin($metadata: String) {
+              createReportAdmin(
+                input: {
+                  receiver_id: "1"
+                  name: "Pengajuan Mata Pelajaran"
+                  type: ADD_SUBJECT
+                  metadata: $metadata
+                }
+              ) {
+                id
+              }
+            }
+          `}
+          openMessage="ajukan mata pelajaran"
+          fields={"createReportAdmin"}
+          submitName="Ajukan"
+          editAttributes={[
+            {
+              label: "Nama Mata Pelajaran",
+              required: true,
+              name: "metadata.name",
+            },
+            {
+              label: "Tipe Mata Pelajaran",
+              required: true,
+              type: "select",
+              values: selectObjectExtractor(SubjectType),
+              name: "metadata.content",
+            },
+          ]}
+          afterSubmit={() => {
+            toast.success("Berhasil mengajukan");
             refetchSubject();
           }}
         />

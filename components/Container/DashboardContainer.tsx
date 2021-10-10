@@ -1,14 +1,13 @@
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
 import {
   AiFillCrown,
   AiFillHome,
   AiFillStop,
-  AiOutlineBook,
   AiOutlineTransaction,
 } from "react-icons/ai";
-import { FaGamepad, FaHandsHelping, FaMedal, FaTasks } from "react-icons/fa";
+import { FaGamepad, FaHandsHelping, FaMedal } from "react-icons/fa";
 import {
   MdStore,
   MdSearch,
@@ -35,10 +34,10 @@ import { HiOutlineDocumentReport, HiTicket } from "react-icons/hi";
 import { BsList, BsNewspaper } from "react-icons/bs";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiUpgrade, GiShadowFollower } from "react-icons/gi";
-import { GrFormSchedule, GrTransaction, GrUserAdmin } from "react-icons/gr";
+import { GrTransaction, GrUserAdmin } from "react-icons/gr";
 import { IoMdPaper } from "react-icons/io";
 import { toast } from "react-toastify";
-import { BiLeftArrow, BiTask } from "react-icons/bi";
+import { BiTask } from "react-icons/bi";
 import { SiGoogleclassroom } from "react-icons/si";
 import create from "zustand";
 
@@ -169,12 +168,7 @@ const adminMenu: Route[] = [
     icon: <IoMdPaper size="1.5em" />,
   },
   {
-    name: "Form Pengajuan",
-    url: "/admin/forms",
-    icon: <MdBook size="1.5em" />,
-  },
-  {
-    name: "Laporan",
+    name: "Laporan dan Pengajuan",
     url: "/admin/reports",
     icon: <MdReport size="1.5em" />,
   },
@@ -337,7 +331,7 @@ const Routes: { [e: string]: Route[] } = {
     },
     {
       name: "Panggilan",
-      url: "/dashboard/teachers/reports/",
+      url: "/dashboard/teachers/calls/",
       icon: <HiOutlineDocumentReport size="1.5em" color="white" />,
     },
     {

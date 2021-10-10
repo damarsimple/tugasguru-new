@@ -41,7 +41,7 @@ export default function Classrooms() {
           }
         `}
         openMessage="buat ruang kelas baru"
-        fields={"assignSubject"}
+        fields={"createClassroom"}
         submitName="Tambah"
         editAttributes={[
           {

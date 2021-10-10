@@ -27,7 +27,7 @@ function Id({ router }: { router: NextRouter }) {
   } = useQuery<{ assigment: Assigment }>(
     gql`
       ${CoreAssigmentsubmissionField}
-      query GetAssigment($id: ID) {
+      query GetAssigment($id: ID!) {
         assigment(id: $id) {
           id
           name
@@ -70,8 +70,8 @@ function Id({ router }: { router: NextRouter }) {
   const [updateSubmission] = useMutation(
     gql`
       mutation UpdateSubmission(
-        $id: ID
-        $assigment_id: ID
+        $id: ID!
+        $assigment_id: ID!
         $grade: Float
         $graded: Boolean
         $turned: Boolean
@@ -172,6 +172,7 @@ function Id({ router }: { router: NextRouter }) {
               updateSubmission({
                 variables: {
                   id: assigment?.myassigmentsubmission?.id,
+                  assigment_id: assigment?.id,
                   documents: { connect: [e.id] },
                 },
               });
@@ -193,6 +194,7 @@ function Id({ router }: { router: NextRouter }) {
               updateSubmission({
                 variables: {
                   id: submission?.id,
+                  assigment_id: assigment?.id,
                   grade,
                   graded: true,
                 },

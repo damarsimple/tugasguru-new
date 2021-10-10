@@ -190,7 +190,7 @@ BoxProps<T>) {
           {datas.map((e, i) => (
             <div key={`${e.node.id}-${i}`}>
               {withEditDelete && (
-                <div className="flex justify-between">
+                <div className="flex justify-between h-10">
                   <Button
                     color="YELLOW"
                     onClick={() => {

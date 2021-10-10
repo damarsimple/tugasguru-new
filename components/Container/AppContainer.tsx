@@ -12,12 +12,13 @@ import {
   MdSearch,
   MdShoppingCart,
 } from "react-icons/md";
+import { toast } from "react-toastify";
 import { formatCurrency } from "../../helpers/formatter";
 import echo from "../../services/echo";
 import { useAuthStore } from "../../store/auth";
 import { useNotificationStore } from "../../store/notifications";
 import { useUserStore } from "../../store/user";
-import { Notification } from "../../types/type";
+import { BasicNotification, Notification } from "../../types/type";
 import ImageContainer from "./ImageContainer";
 
 type Except = "navbar" | "margin";
@@ -99,6 +100,9 @@ export default function AppContainer({
       .private("App.Models.User." + user.id)
       .notification((e: Notification) => {
         setNotifications([...notifications, e]);
+        toast.info(
+          e.data?.name ?? (e as unknown as BasicNotification)?.message
+        );
       });
   }, [user]);
 

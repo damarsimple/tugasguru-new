@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 // *******************************************************
 // *******************************************************
 //
@@ -247,6 +248,7 @@ export interface Transaction {
   tax: number;
   discount: number;
   paid: boolean;
+  payment_url: Maybe<string>;
   voucher: Maybe<Voucher>;
   status: TransactionStatus;
   payment_method: string;
@@ -423,6 +425,8 @@ export interface Tutoring {
 
 export interface TutoringMetadata {
   address: string;
+  notes: Maybe<string>;
+  reject_reason: Maybe<string>;
   geolocation: string;
 }
 
@@ -442,7 +446,7 @@ export interface Agenda {
   metadata: Maybe<AgendaMetadata>;
   start_at: string;
   finish_at: string;
-  attendances: Maybe<AttendanceConnection>;
+  attendances: Attendance[];
 }
 
 export type Agendaable = Meeting | Examsession | Tutoring;
@@ -518,20 +522,20 @@ export interface Examplay {
   exam: Exam;
   examsession: Examsession;
   user: User;
-  last_activity: string;
-  minute_passed: number;
-  start_at: string;
-  finish_at: string;
-  grade: number;
-  graded: boolean;
+  last_activity: Maybe<string>;
+  minute_passed: Maybe<number>;
+  start_at: Maybe<string>;
+  finish_at: Maybe<string>;
+  grade: Maybe<number>;
+  graded: Maybe<boolean>;
   answers_map: Maybe<AnswerMap[]>;
 }
 
 export interface AnswerMap {
   comment: Maybe<string>;
-  grade: number;
-  question: QuestionCopy;
-  answer: Answer;
+  grade: Maybe<number>;
+  question: Maybe<QuestionCopy>;
+  answer: Maybe<Answer>;
 }
 
 export interface QuestionCopy {
@@ -583,22 +587,6 @@ export interface ExamplayEdge {
 export interface AgendaMetadata {
   reason: Maybe<string>;
   description: Maybe<string>;
-}
-
-/** A paginated list of Attendance edges. */
-export interface AttendanceConnection {
-  /** Pagination information about the list of edges.*/
-  pageInfo: PageInfo;
-  /** A list of Attendance edges.*/
-  edges: AttendanceEdge[];
-}
-
-/** An edge that contains a node of type Attendance and a cursor. */
-export interface AttendanceEdge {
-  /** The Attendance node.*/
-  node: Attendance;
-  /** A unique cursor that can be used for pagination.*/
-  cursor: string;
 }
 
 export interface Attendance {
@@ -993,14 +981,26 @@ export interface Report {
   name: string;
   metadata: Maybe<ReportMetadata>;
   type: ReportType;
+  rejected_reason: Maybe<string>;
+  status: ReportStatus;
 }
 
 export interface ReportMetadata {
-  content: string;
+  name: Maybe<string>;
+  content: Maybe<string>;
+  data: Maybe<string>;
 }
 
 export enum ReportType {
   Grade = 'GRADE',
+  Add_subject = 'ADD_SUBJECT',
+  Content_violation = 'CONTENT_VIOLATION',
+  Parent_call = 'PARENT_CALL',
+}
+export enum ReportStatus {
+  Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  Approved = 'APPROVED',
 }
 export interface Withdraw {
   id: string;
@@ -1238,6 +1238,22 @@ export interface AbsentEdge {
   cursor: string;
 }
 
+/** A paginated list of Attendance edges. */
+export interface AttendanceConnection {
+  /** Pagination information about the list of edges.*/
+  pageInfo: PageInfo;
+  /** A list of Attendance edges.*/
+  edges: AttendanceEdge[];
+}
+
+/** An edge that contains a node of type Attendance and a cursor. */
+export interface AttendanceEdge {
+  /** The Attendance node.*/
+  node: Attendance;
+  /** A unique cursor that can be used for pagination.*/
+  cursor: string;
+}
+
 /** A paginated list of Agenda edges. */
 export interface AgendaConnection {
   /** Pagination information about the list of edges.*/
@@ -1430,15 +1446,20 @@ export interface RegisterInput {
   password: string;
 }
 
+export interface GenericOutput {
+  status: Maybe<boolean>;
+  message: Maybe<string>;
+}
+
+export enum ExamplayReportType {
+  Beat = 'BEAT',
+  Finish = 'FINISH',
+  Save = 'SAVE',
+}
 export interface ExamplayGenericOutput {
   status: Maybe<boolean>;
   message: Maybe<string>;
   examplay: Maybe<Examplay>;
-}
-
-export interface GenericOutput {
-  status: Maybe<boolean>;
-  message: Maybe<string>;
 }
 
 export interface UpdatePasswordInput {
@@ -1606,6 +1627,13 @@ export interface CreateReport {
   type: ReportType;
 }
 
+export interface CreateReportAdmin {
+  name: string;
+  receiver_id: string;
+  metadata?: string;
+  type: ReportType;
+}
+
 export interface CreateQuiz {
   subject_id: string;
   metadata?: string;
@@ -1630,6 +1658,7 @@ export interface CreateQuizPlay {
 export interface CreateConsultation {
   consultant_id: string;
   name: string;
+  school_id: string;
   metadata?: string;
 }
 
@@ -1850,6 +1879,8 @@ export interface UpdateMeeting {
 
 export interface UpdateReport {
   name?: string;
+  status?: ReportStatus;
+  rejected_reason?: string;
   metadata?: string;
 }
 
@@ -2122,7 +2153,7 @@ export interface districtsAllArgs {
 }
 
 export interface userArgs {
-  id?: string;
+  id: string;
 }
 
 export interface userFindArgs {
@@ -2141,151 +2172,151 @@ export interface userFindArgs {
 }
 
 export interface announcementArgs {
-  id?: string;
+  id: string;
 }
 
 export interface questionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface agendaArgs {
-  id?: string;
+  id: string;
 }
 
 export interface absentArgs {
-  id?: string;
+  id: string;
 }
 
 export interface formsubmissionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface submissionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface attendanceArgs {
-  id?: string;
+  id: string;
 }
 
 export interface tutoringArgs {
-  id?: string;
+  id: string;
 }
 
 export interface extracurricularArgs {
-  id?: string;
+  id: string;
 }
 
 export interface chatArgs {
-  id?: string;
+  id: string;
 }
 
 export interface examplayArgs {
-  id?: string;
+  id: string;
 }
 
 export interface chatroomArgs {
-  id?: string;
+  id: string;
 }
 
 export interface quizplayArgs {
-  id?: string;
+  id: string;
 }
 
 export interface quizsessionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface classroomArgs {
-  id?: string;
+  id: string;
 }
 
 export interface packagequestionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface examtypeArgs {
-  id?: string;
+  id: string;
 }
 
 export interface meetingArgs {
-  id?: string;
+  id: string;
 }
 
 export interface courseArgs {
-  id?: string;
+  id: string;
 }
 
 export interface consultationArgs {
-  id?: string;
+  id: string;
 }
 
 export interface assigmentArgs {
-  id?: string;
+  id: string;
 }
 
 export interface cityArgs {
-  id?: string;
+  id: string;
 }
 
 export interface reportArgs {
-  id?: string;
+  id: string;
 }
 
 export interface schoolArgs {
-  id?: string;
+  id: string;
 }
 
 export interface classtypeArgs {
-  id?: string;
+  id: string;
 }
 
 export interface subjectArgs {
-  id?: string;
+  id: string;
 }
 
 export interface districtArgs {
-  id?: string;
+  id: string;
 }
 
 export interface voucherArgs {
-  id?: string;
+  id: string;
 }
 
 export interface examArgs {
-  id?: string;
+  id: string;
 }
 
 export interface provinceArgs {
-  id?: string;
+  id: string;
 }
 
 export interface majorArgs {
-  id?: string;
+  id: string;
 }
 
 export interface quizArgs {
-  id?: string;
+  id: string;
 }
 
 export interface withdrawArgs {
-  id?: string;
+  id: string;
 }
 
 export interface assigmentsubmissionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface transactionArgs {
-  id?: string;
+  id: string;
 }
 
 export interface accessArgs {
-  id?: string;
+  id: string;
 }
 
 export interface documentArgs {
-  id?: string;
+  id: string;
 }
 
 export interface meArgs {}
@@ -2413,6 +2444,7 @@ export interface assigmentsubmissionsArgs {
   subject_id?: string;
   assigment_id?: string;
   user_id?: string;
+  classroom_id?: string;
   edited_times?: number;
   turned_at?: string;
   graded?: boolean;
@@ -2449,6 +2481,7 @@ export interface examplaysArgs {
   exam_id?: string;
   examsession_id?: string;
   user_id?: string;
+  classroom_id?: string;
   last_activity?: string;
   start_at?: string;
   finish_at?: string;
@@ -2558,7 +2591,9 @@ export interface attendancesArgs {
 
 export interface agendasArgs {
   user_id?: string;
+  name?: string;
   uuid?: string;
+  classroom_id?: string;
   agendaable_id?: string;
   agendaable_type?: string;
   start_at?: string;
@@ -2741,12 +2776,23 @@ export interface registerArgs {
   input: RegisterInput;
 }
 
+export interface deleteUserSubjectArgs {
+  id: string;
+}
+
+export interface handleExamplayArgs {
+  type: ExamplayReportType;
+  id: string;
+  answers_maps: string;
+  last_activity: string;
+}
+
 export interface submitExamTokenArgs {
   examsession_id: string;
   token: string;
 }
 
-export interface handleAbsentArgs {
+export interface handleQRAttendanceArgs {
   uuid: string;
 }
 
@@ -2852,6 +2898,10 @@ export interface createMeetingArgs {
 
 export interface createReportArgs {
   input: CreateReport;
+}
+
+export interface createReportAdminArgs {
+  input: CreateReportAdmin;
 }
 
 export interface createQuizArgs {
