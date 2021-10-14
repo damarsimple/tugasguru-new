@@ -381,6 +381,7 @@ export interface Meeting {
   created_at: string;
   updated_at: string;
   name: string;
+  uuid: string;
   metadata: Maybe<MeetingMetadata>;
   classroom: Classroom;
   finish_at: string;
@@ -406,7 +407,6 @@ export enum MeetingMedia {
   Document = 'DOCUMENT',
 }
 export enum MeetingContentType {
-  Article = 'ARTICLE',
   Draw = 'DRAW',
 }
 export interface Tutoring {
@@ -1614,6 +1614,7 @@ export interface CreateClasstype {
 
 export interface CreateMeeting {
   name: string;
+  uuid: string;
   classroom_id: string;
   metadata?: string;
   open_at: string;

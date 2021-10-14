@@ -1,3 +1,6 @@
+import { useQuery, gql, useMutation } from "@apollo/client";
+import axios from "axios";
+import { PresenceChannel } from "laravel-echo/dist/channel";
 import withRouter, { WithRouterProps } from "next/dist/client/with-router";
 import React, {
   forwardRef,
@@ -18,9 +21,20 @@ import { MdClose, MdPresentToAll, MdSend } from "react-icons/md";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import ImageContainer from "../../components/Container/ImageContainer";
 import { SelectValue } from "../../components/Forms/Form";
-import Input from "../../components/Forms/Input";
 import SearchBox from "../../components/SearchBox";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import echo from "../../services/echo";
+import { useUserStore } from "../../store/user";
+import { Meeting } from "../../types/type";
+import Peer from "simple-peer";
+const iceConfig = {
+  iceServers: [
+    {
+      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+    },
+  ],
+  iceCandidatePoolSize: 10,
+};
 
 const IconButton = ({
   children,
@@ -67,13 +81,123 @@ export const Select = ({
 
 function Id({ router }: WithRouterProps) {
   const { id } = router.query;
+  const { user } = useUserStore();
+  const {
+    data: { meeting } = {},
+    loading,
+    error,
+  } = useQuery<{ meeting: Meeting }>(
+    gql`
+      query GetMeeting($id: ID!) {
+        meeting(id: $id) {
+          id
+          created_at
+          updated_at
+          name
+          uuid
+          metadata {
+            attachment_id
+            attachment_type
+            media
+            description
+            content_type
+            content
+          }
+          classroom {
+            id
+            created_at
+            updated_at
+            name
+            user {
+              id
+              name
+            }
+          }
+          finish_at
+          open_at
+        }
+      }
+    `,
+    {
+      variables: {
+        id,
+      },
+      onCompleted: async ({ meeting }) => {
+        const presence = echo.join(`meeting.${meeting.id}`);
+
+        //@ts-ignore
+        channel.current = presence;
+
+        presence.listen("RTCNegotiation", async (e: any) => {
+          const data = e.data;
+          if (user?.id == e.user_id) return;
+          if (e.type == "new-ice-candidate") {
+          }
+          if (e.type == "offer") {
+          }
+
+          if (e.type == "callUser") {
+            // const stream = await getCaptureWebcam({
+            //   video: true,
+            // });
+
+            setStreamType("video");
+            const signal = e.data;
+            setSignal(signal);
+            const peer = new Peer({
+              initiator: false,
+              trickle: false,
+              stream: new MediaStream(),
+            });
+            peer.on("signal", (data) => {
+              HandleRTC({
+                variables: {
+                  id,
+                  type: "answerCall",
+                  data: JSON.stringify(data),
+                },
+              }).then((e) => {
+                HandleRTC({
+                  variables: {
+                    id,
+                    type: "callAccepted",
+                    data: JSON.stringify(data),
+                  },
+                });
+              });
+            });
+            peer.on("stream", (stream) => {
+              if (videoRef.current) videoRef.current.srcObject = stream;
+            });
+
+            peer.signal(signal);
+          }
+        });
+      },
+    }
+  );
+
+  const channel = useRef<PresenceChannel>(null);
+
+  const [HandleRTC] = useMutation(gql`
+    mutation MeetingRTCNegotiationMutation(
+      $id: ID!
+      $data: String
+      $type: String!
+    ) {
+      MeetingRTCNegotiation(meeting_id: $id, data: $data, type: $type) {
+        status
+        message
+      }
+    }
+  `);
 
   const [openLeftMenu, setOpenLeftMenu] = useState<
     "" | "Setting" | "Participant" | "Info" | "Chat" | "Document"
   >("");
   const { width } = useWindowDimensions();
 
-  const startCaptureDisplay = async (
+  const getCaptureDisplay = async (
     displayMediaOptions?: DisplayMediaStreamConstraints
   ) => {
     let captureStream: MediaStream | null = null;
@@ -88,7 +212,7 @@ function Id({ router }: WithRouterProps) {
     return captureStream;
   };
 
-  const startCaptureWebcam = async (
+  const getCaptureWebcam = async (
     displayMediaOptions?: DisplayMediaStreamConstraints
   ) => {
     let captureStream: MediaStream | null = null;
@@ -114,7 +238,7 @@ function Id({ router }: WithRouterProps) {
     setStreamType(streamType == "video" ? streamType : "");
 
     //@ts-ignore
-    speakerStream.current = await startCaptureWebcam({
+    speakerStream.current = await getCaptureWebcam({
       video: true,
     });
 
@@ -139,16 +263,20 @@ function Id({ router }: WithRouterProps) {
     setSpeakerVideoOn(false);
   };
 
+  const [signal, setSignal] = useState<any>(undefined);
+
   const handleShareScreen = async () => {
     setStreamType("video");
 
-    //@ts-ignore
-    mediaStream.current = await startCaptureDisplay({
+    const stream = await getCaptureDisplay({
       video: {
         //@ts-ignore
         cursor: "always",
       },
+      audio: {},
     });
+    //@ts-ignore
+    mediaStream.current = stream;
 
     const track = mediaStream.current?.getTracks()[0];
 
@@ -165,6 +293,31 @@ function Id({ router }: WithRouterProps) {
     setActiveScreenShare(true);
 
     if (speakerVideoOn) injectSpeaker();
+
+    // socket.on("me", (id) => {
+    //   setMe(id);
+    // });
+    if (!stream) return;
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream: stream,
+    });
+    peer.on("signal", (data) => {
+      HandleRTC({
+        variables: {
+          id,
+          type: "callUser",
+          data: JSON.stringify(data),
+        },
+      });
+    });
+    peer.on("stream", (stream) => {
+      // if (videoRef.current) videoRef.current.srcObject = stream;
+    });
+    channel.current?.listen("RTCNegotiation", (e: any) => {
+      if (e.type == "callAccepted") peer.signal(e.data);
+    });
   };
 
   const handleOffScreenShare = async () => {
@@ -198,7 +351,7 @@ function Id({ router }: WithRouterProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const pollVolumeRef = useRef<number>(null);
   const handleCaptureMic = async () => {
-    const audioStream = await startCaptureWebcam({
+    const audioStream = await getCaptureWebcam({
       audio: true,
     });
     //@ts-ignore
@@ -335,12 +488,20 @@ function Id({ router }: WithRouterProps) {
         >
           {speakerVideoOn && streamType != "" && (
             <div className="absolute bottom-0 right-0 h-56 w-56">
-              <video className="w-full h-full bruh1" ref={speakerVideoRef} />
+              <video
+                autoPlay
+                className="w-full h-full bruh1"
+                ref={speakerVideoRef}
+              />
             </div>
           )}
           {streamType == "" &&
             (speakerVideoOn ? (
-              <video className="w-full h-full bruh2" ref={speakerVideoRef} />
+              <video
+                autoPlay
+                className="w-full h-full bruh2"
+                ref={speakerVideoRef}
+              />
             ) : (
               <ImageContainer
                 fallback="profile"
@@ -368,7 +529,7 @@ function Id({ router }: WithRouterProps) {
             />
           )}
           {streamType == "video" && (
-            <video className="w-full h-full bruh3" ref={videoRef} />
+            <video autoPlay className="w-full h-full bruh3" ref={videoRef} />
           )}
         </div>
         {!!openLeftMenu && (
