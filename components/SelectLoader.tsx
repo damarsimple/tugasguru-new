@@ -53,6 +53,7 @@ export default function SelectLoader<T extends BasicModel>({
   });
 
   const mainData = get(data, fields);
+
   const datas: { node: T }[] = mainData?.edges ?? [];
   const pageInfo: PaginatorInfo = mainData?.pageInfo;
 
@@ -72,6 +73,11 @@ export default function SelectLoader<T extends BasicModel>({
     }
   }, [fetchMore, inView, pageInfo]);
 
+  console.log(
+    datas?.map(({ node }) => {
+      return { label: node.name, value: node.id };
+    })
+  );
   return (
     <Select
       attributes={
