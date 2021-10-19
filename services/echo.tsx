@@ -14,7 +14,8 @@ axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
 // Add a request interceptor
 httpClient.interceptors.request.use(function (config) {
   const { token } = useAuthStore.getState();
-  config.headers.Authorization = token ? `Bearer ${token}` : "";
+  if (config.headers)
+    config.headers.Authorization = token ? `Bearer ${token}` : "";
   console.log(token);
   return config;
 });
