@@ -520,7 +520,9 @@ export default function Create() {
                 Download ke pdf
               </Button>
             </div>
-            <embed src={blobUrl} width="100%" height="800px" />
+            <object data={blobUrl} type="application/pdf">
+              <embed src={blobUrl} type="application/pdf" />
+            </object>
           </TabPanel>
         </Tabs>
       </div>
