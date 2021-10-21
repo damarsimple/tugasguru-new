@@ -1,20 +1,24 @@
 import gql from "graphql-tag";
 import React, { useState } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import DashboardContainer from "../../../components/Container/DashboardContainer";
-import Input from "../../../components/Forms/Input";
-import Paper from "../../../components/Paper";
-import Table from "../../../components/Table";
-import { CorePageInfoField } from "../../../fragments/fragments";
-import { selectExtractor } from "../../../helpers/formatter";
-import useTeacherData from "../../../hooks/useTeacherData";
-import { Assigmentsubmission, Examplay } from "../../../types/type";
+import Button from "../../../../components/Button";
+import DashboardContainer from "../../../../components/Container/DashboardContainer";
+import Input from "../../../../components/Forms/Input";
+import Paper from "../../../../components/Paper";
+import Table from "../../../../components/Table";
+import { CorePageInfoField } from "../../../../fragments/fragments";
+import { selectExtractor } from "../../../../helpers/formatter";
+import useTeacherData from "../../../../hooks/useTeacherData";
+import { Assigmentsubmission, Examplay } from "../../../../types/type";
 
 export default function Grades() {
   const [classroom, setClassroom] = useState<undefined | string>(undefined);
   const { myclassrooms } = useTeacherData();
   return (
     <DashboardContainer>
+      <Button href="/dashboard/teachers/grades/create">
+        Buat Laporan Nilai
+      </Button>
       <Paper name="Filter">
         <Input
           type="select"

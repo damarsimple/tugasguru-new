@@ -143,7 +143,6 @@ export default function Reports() {
           />
         </TabPanel>
         <TabPanel>
-          {" "}
           <Table<Report>
             fetchPolicy="network-only"
             withAction

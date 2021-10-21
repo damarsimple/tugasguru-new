@@ -27,6 +27,7 @@ import echo from "../../services/echo";
 import { useUserStore } from "../../store/user";
 import { Meeting } from "../../types/type";
 import Peer from "simple-peer";
+import { SimpleSelect } from "../../components/SimpleSelect";
 const iceConfig = {
   iceServers: [
     {
@@ -53,30 +54,6 @@ const IconButton = ({
   >
     {children}
   </button>
-);
-
-export const Select = ({
-  onChange,
-  values,
-  label,
-}: {
-  onChange: (e: string) => void;
-  values: SelectValue[];
-  label: string;
-}) => (
-  <div className="gap-2 flex flex-col">
-    <label className="font-semibold">{label}</label>
-    <select
-      onChange={(e) => onChange(e.target.value)}
-      className="p-4 shadow rounded w-full"
-    >
-      {values.map((e) => (
-        <option key={e.name} value={e.value}>
-          {e.name}
-        </option>
-      ))}
-    </select>
-  </div>
 );
 
 function Id({ router }: WithRouterProps) {
@@ -549,16 +526,28 @@ function Id({ router }: WithRouterProps) {
                     <Tab>Screen Share</Tab>
                   </TabList>
                   <TabPanel className="p-4">
-                    <Select label="Camera" onChange={() => {}} values={[]} />
-                    <Select label="Resolusi" onChange={() => {}} values={[]} />
+                    <SimpleSelect
+                      label="Camera"
+                      onChange={() => {}}
+                      values={[]}
+                    />
+                    <SimpleSelect
+                      label="Resolusi"
+                      onChange={() => {}}
+                      values={[]}
+                    />
                   </TabPanel>
                   <TabPanel className="p-4">
-                    <Select
+                    <SimpleSelect
                       label="Microphone"
                       onChange={() => {}}
                       values={[]}
                     />
-                    <Select label="Speaker" onChange={() => {}} values={[]} />
+                    <SimpleSelect
+                      label="Speaker"
+                      onChange={() => {}}
+                      values={[]}
+                    />
                   </TabPanel>
                   <TabPanel className="p-4"></TabPanel>
                 </Tabs>

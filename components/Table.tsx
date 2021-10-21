@@ -67,6 +67,7 @@ export default function Table<T>({
   editQuery,
   deleteQuery,
   editAttributes,
+  actionButton: ActionButton,
 }: {
   withSearchbar?: boolean;
   withAction?: boolean;
@@ -80,6 +81,7 @@ export default function Table<T>({
   deleteQuery?: DocumentNode;
   editAttributes?: InputMap<T>[];
   headers: TableHeader<T>[];
+  actionButton?: (e: T) => JSX.Element;
 }) {
   const [search, setSearch] = useState("");
 
@@ -159,6 +161,7 @@ export default function Table<T>({
                       refetch();
                     }}
                   />
+                  {ActionButton && ActionButton(e.node)}
                 </td>
               )}
             </tr>

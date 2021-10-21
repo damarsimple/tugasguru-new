@@ -13,7 +13,7 @@ import ImageContainer from "./Container/ImageContainer";
 import VideoContainer from "./Container/VideoContainer";
 import Paper from "./Paper";
 
-export const UPLOAD_IMAGE_MUTATION = gql`
+export const UPLOAD_DOCUMENT_MUTATION = gql`
   mutation (
     $file: Upload!
     $type: String!
@@ -57,8 +57,9 @@ export default function DocumentUploader(e: {
   const [document, setDocument] = useState<null | undefined | Document>(null);
   const [crop, setCrop] = useState<Partial<Crop>>({ ...e.crop });
   const [cropped, setCropped] = useState(false);
+
   const [mutateFunction, { loading: mutationLoading, error: mutationError }] =
-    useMutation<{ uploadDocument: Document }>(UPLOAD_IMAGE_MUTATION);
+    useMutation<{ uploadDocument: Document }>(UPLOAD_DOCUMENT_MUTATION);
 
   const handleUpload = async () => {
     if (!imgRef.current || !file) return;
