@@ -29,6 +29,7 @@ import { makeId, makeUUID } from "../../helpers/generator";
 import useDebounces from "../../hooks/useDebounces";
 import { useExamStore } from "../../store/exam";
 import { useUserStore } from "../../store/user";
+import { getTranslation } from "../../translation";
 import {
   Answer,
   AnswerMap,
@@ -397,7 +398,7 @@ function Id({ router }: WithRouterProps) {
                   {Object.keys(QuestionType).map((e, i) => (
                     <div key={i} className="flex flex-col gap-2">
                       <div className="grid grid-cols-2">
-                        <h1>{(QuestionType as any)[e]}</h1>
+                        <h1>{getTranslation((QuestionType as any)[e])}</h1>
                       </div>
                       <div className="p-4 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                         {grouped[(QuestionType as any)[e]]?.map((e, x) => (

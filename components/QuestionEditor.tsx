@@ -17,6 +17,7 @@ import useTeacherData from "../hooks/useTeacherData";
 import { selectExtractor } from "../helpers/formatter";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
+import { getTranslation } from "../translation";
 const correctId = makeUUID();
 
 type QMap = Record<string, Partial<Question>>;
@@ -443,7 +444,7 @@ export default function QuestionEditor() {
             {Object.keys(QuestionType).map((e, i) => (
               <div key={i} className="flex flex-col gap-2">
                 <div className="grid grid-cols-2">
-                  <h1>{(QuestionType as any)[e]}</h1>
+                  <h1>{getTranslation((QuestionType as any)[e])}</h1>
                   <Button
                     onClick={() => {
                       const id = makeId(5);
@@ -569,7 +570,7 @@ export default function QuestionEditor() {
                         setCurrentid(id);
                       }}
                     >
-                      Buat soal {(QuestionType as any)[e]}
+                      Buat soal {getTranslation((QuestionType as any)[e])}
                     </Button>
                   </div>
                 </div>

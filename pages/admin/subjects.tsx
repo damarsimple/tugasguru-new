@@ -5,6 +5,7 @@ import BaseCard, { BaseCardSkeleton } from "../../components/Card/BaseCard";
 import DashboardContainer from "../../components/Container/DashboardContainer";
 import { CorePageInfoField } from "../../fragments/fragments";
 import { selectObjectExtractor } from "../../helpers/formatter";
+import { getTranslation } from "../../translation";
 import { Subject, SubjectType } from "../../types/type";
 
 export default function Subjects() {
@@ -62,7 +63,10 @@ export default function Subjects() {
             label: "Tipe",
             name: "type",
             type: "select",
-            values: selectObjectExtractor(SubjectType),
+            values: selectObjectExtractor(SubjectType).map((e) => ({
+              ...e,
+              name: getTranslation(e.name),
+            })),
           },
         ]}
         deleteQuery={gql`

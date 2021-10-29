@@ -11,6 +11,7 @@ import {
   selectObjectExtractor,
 } from "../../../helpers/formatter";
 import { useUserStore } from "../../../store/user";
+import { getTranslation } from "../../../translation";
 import { GenericOutput, Subject, SubjectType } from "../../../types/type";
 
 export default function Subjects() {
@@ -116,7 +117,10 @@ export default function Subjects() {
               label: "Tipe Mata Pelajaran",
               required: true,
               type: "select",
-              values: selectObjectExtractor(SubjectType),
+              values: selectObjectExtractor(SubjectType).map((e) => ({
+                ...e,
+                name: getTranslation(e.name),
+              })),
               name: "metadata.content",
             },
           ]}
