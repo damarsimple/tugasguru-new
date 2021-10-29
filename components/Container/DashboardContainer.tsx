@@ -37,7 +37,7 @@ import { GiUpgrade, GiShadowFollower } from "react-icons/gi";
 import { GrTransaction, GrUserAdmin } from "react-icons/gr";
 import { IoMdPaper } from "react-icons/io";
 import { toast } from "react-toastify";
-import { BiTask } from "react-icons/bi";
+import { BiTask, BiVideo } from "react-icons/bi";
 import { SiGoogleclassroom } from "react-icons/si";
 import create from "zustand";
 
@@ -293,6 +293,11 @@ const Routes: { [e: string]: Route[] } = {
       name: "Tugas",
       url: "/dashboard/teachers/assigments",
       icon: <BiTask size="1.5em" color="white" />,
+    },
+    {
+      name: "Pertemuan",
+      url: "/dashboard/teachers/meetings",
+      icon: <BiVideo size="1.5em" color="white" />,
     },
     {
       name: "Ruang Kelas",
